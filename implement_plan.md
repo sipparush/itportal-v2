@@ -30,17 +30,17 @@ Tech Stack: Next.js (App Router), React, Tailwind CSS.
     - Simple form (Username, Password).
     - "Forgot Password" link (placeholder).
     - Clear validation feedback.
-- [ ] **Home (Dashboard) Page (`/home`):**
+- [x] **Home (Dashboard) Page (`/home`):**
     - Main dashboard after login.
     - Quick links to common IT tasks (Ticket status, Requests, Knowledge Base).
-- [ ] **Contact Page (`/contact`):**
+- [x] **Contact Page (`/contact`):**
     - Contact form or IT support contact details.
     - Map or Office location info.
 
-### Phase 3: Components & Navigation
-- [ ] **Navigation Bar:** Responsive, clear labels.
-- [ ] **Footer:** Copyright, simple links.
-- [ ] **Card Component:** Reusable for dashboard widgets.
+### Phase 3: Components & Navigation (Completed with Pages)
+- [x] **Navigation Bar:** Responsive, clear labels.
+- [x] **Footer:** Copyright, simple links.
+- [x] **Card Component:** Implemented directly in pages.
 
 ## Execution Order
 1. Define styles.
