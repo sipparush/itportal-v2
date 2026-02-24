@@ -16,13 +16,12 @@ export async function POST(request) {
 
         // Configuration
         const USER = 'jventures';
-        // Using jventures-uat key as per restore process
-        const KEY_PATH = '/home/sipparush/jventures-uat.pem';
+        // Key is mounted at /app/jventures-uat.pem inside the container
+        const KEY_PATH = '/app/jventures-uat.pem';
 
         // Command: ssh -i key.pem user@ip 'docker ps'
         // Added standard ssh options to avoid host key prompts for ephemeral IPs
-        const command = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  ${USER}@${ip} "docker ps"`;
-        // const command = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${KEY_PATH} ${USER}@${ip} "docker ps"`;
+        const command = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${KEY_PATH} ${USER}@${ip} "docker ps"`;
 
         console.log(`Checking Docker on ${ip}: ${command}`);
         const { stdout, stderr } = await execPromise(command);

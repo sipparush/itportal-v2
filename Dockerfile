@@ -34,35 +34,34 @@ RUN apk add --no-cache \
     git \
     && aws --version
 
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Use existing node user (UID 1000) instead of creating new one
+# RUN addgroup --system --gid 1001 nodejs
+# RUN adduser --system --uid 1001 nextjs
 
 # Set home directory explicitly
-ENV HOME=/home/nextjs
+ENV HOME=/home/node
 
 # Configure AWS Credentials
-RUN mkdir -p /home/nextjs/.aws && \
-    chown -R nextjs:nodejs /home/nextjs/.aws
+RUN mkdir -p /home/node/.aws && \
+    chown -R node:node /home/node/.aws
 
 # Create script first
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Switch to user nextjs to configure credentials
-USER nextjs
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["npm", "start"]
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
-# Fallback: Copy full .next folder and node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
+# Copy full .next folder and node_modules with correct ownership
+COPY --from=builder --chown=node:node /app/.next ./.next
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
-USER nextjs
+# Ensure permissions for node user (non-recursive to save time, COPY handles contents)
+RUN chown node:node /app
+
+# Switch to user node
+USER node
 
 EXPOSE 3000
 
@@ -70,4 +69,5 @@ ENV PORT 3000
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["npm", "start"]

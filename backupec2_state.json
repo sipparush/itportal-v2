@@ -166,8 +166,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-02081116f80209804",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0d2533f948b3acb35",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-24"
   },
   {
     "id": 18,
