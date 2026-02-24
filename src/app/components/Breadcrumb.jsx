@@ -1,10 +1,24 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function Breadcrumb() {
     const pathname = usePathname();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // Check login status on component mount
+        const checkLoginStatus = () => {
+            const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            setIsLoggedIn(loggedIn);
+        };
+
+        checkLoginStatus();
+        window.addEventListener('storage', checkLoginStatus);
+        return () => window.removeEventListener('storage', checkLoginStatus);
+    }, []);
 
     // Define route mapping for prettier names
     const routeNameMap = {
@@ -31,11 +45,14 @@ export default function Breadcrumb() {
         <nav className="flex px-4 sm:px-6 lg:px-8 py-3 bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
             <div className="max-w-7xl w-full mx-auto">
                 <ol className="inline-flex items-center space-x-1 md:space-x-3">
-                    {/* Root Item: Dashboard */}
+                    {/* Root Item: Dashboard or Home */}
                     <li className="inline-flex items-center">
-                        <Link href="/home" className="text-gray-500 hover:text-blue-600 font-medium text-sm flex items-center">
+                        <Link
+                            href={isLoggedIn ? "/home" : "/"}
+                            className="text-gray-500 hover:text-blue-600 font-medium text-sm flex items-center"
+                        >
                             <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                            แดชบอร์ด
+                            {isLoggedIn ? 'แดชบอร์ด' : 'หน้าแรก'}
                         </Link>
                     </li>
 

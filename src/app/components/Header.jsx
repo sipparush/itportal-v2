@@ -54,12 +54,14 @@ export default function Header() {
                         >
                             หน้าแรก
                         </Link>
-                        <Link
-                            href="/home"
-                            className={`text-sm font-medium transition-colors border-b-2 py-5 ${pathname === '/home' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600 hover:border-gray-300'}`}
-                        >
-                            แดชบอร์ด
-                        </Link>
+                        {isLoggedIn && (
+                            <Link
+                                href="/home"
+                                className={`text-sm font-medium transition-colors border-b-2 py-5 ${pathname === '/home' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600 hover:border-gray-300'}`}
+                            >
+                                แดชบอร์ด
+                            </Link>
+                        )}
                         <Link
                             href="/contact"
                             className={`text-sm font-medium transition-colors border-b-2 py-5 ${pathname === '/contact' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600 hover:border-gray-300'}`}

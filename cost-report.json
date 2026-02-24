@@ -1,0 +1,472 @@
+{
+    "GroupDefinitions": [
+        {
+            "Type": "TAG",
+            "Key": "project"
+        }
+    ],
+    "ResultsByTime": [
+        {
+            "TimePeriod": {
+                "Start": "2026-01-01",
+                "End": "2026-01-31"
+            },
+            "Total": {},
+            "Groups": [
+                {
+                    "Keys": [
+                        "project$"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "55.1500919918",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Kidd-jreward"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "14.3262602715",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Kidd-tdem"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "95.497197441",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Meen-ekyc"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "123.6265010385",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Meen-klai"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "227.3408595246",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Meen-n8n"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "67.3322639356",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Meen-oneid"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "166.5056902009",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Meen-pahcredit"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "58.8694011317",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Meen-sg"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "12.9717492509",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-New-mobilecare"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "38.1141382546",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$chg-Term-jfinconnect"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "62.11193606",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$crm"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "0.0004527634",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$lb"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "36.7086364762",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Kidd-acb"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "10.6282622277",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Kidd-hmeter"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "6.838709674",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Kidd-join"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "441.3597111483",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Kidd-loan-suggest"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "1.367741956",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Kidd-pah"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "225.0140805854",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Kidd-tdem"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "4.1313951706",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Nan-agm"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "14.7091253422",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Nueng-mamori"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "7.522761779",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-Nueng-ndid"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "251.4925544917",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-dcf"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "1.103225804",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-ec2"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "0.743225832",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-eip"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "13.83910702",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-hmeter"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "22.774193537",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-jnft"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "63.16619191",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-loan-suggest"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "0.490322588",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-mamori"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "2.700359122",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-os"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "0.3824533826",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-p2p"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "2.598709705",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-rescue"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "0.367741941",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-share"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "325.3223173999",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-all-thaid"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "2.8786833842",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$non-nan-agm"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "2.7010860308",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$pah non-Kidd-pah"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "7.8744763164",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$pahnon-Kidd-acb"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "5.2803984597",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$pahnon-Kidd-pah"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "2.188387119",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$u24-DLP-UAT-GW-19"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "3.419354837",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$uat-non-charge-all-centralize log"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "6.838709674",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "project$uat-non-charge-all-dcf"
+                    ],
+                    "Metrics": {
+                        "NetUnblendedCost": {
+                            "Amount": "3.077419348",
+                            "Unit": "USD"
+                        }
+                    }
+                }
+            ],
+            "Estimated": false
+        }
+    ],
+    "DimensionValueAttributes": []
+}

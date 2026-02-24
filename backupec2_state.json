@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "name": "jvc-dv-aps-pcl-uat02",
+    "resourceId": "i-08430429abbcbcdbc",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08430429abbcbcdbc",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-047f5adb25fb49b7c",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 2,
+    "name": "jvc-dv-aps-jfc-uat01",
+    "resourceId": "i-0d107e7caa8ffddb7",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0d107e7caa8ffddb7",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-019458202599c7778",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 3,
+    "name": "jvc-dv-aps-jmp-uat01",
+    "resourceId": "i-087d3eb505d726e21",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-087d3eb505d726e21",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-041ab6794126d372c",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 4,
+    "name": "jvc-dv-aps-jfc-dev01",
+    "resourceId": "i-00e6660fe0987bf0a",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-00e6660fe0987bf0a",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-096ae5256b4e487fd",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-23"
+  },
+  {
+    "id": 5,
+    "name": "jvc-dv-aps-thd-uat01",
+    "resourceId": "i-094db19ccd3d8916d",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-094db19ccd3d8916d",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-024cdff928c9afa82",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 6,
+    "name": "del_at_30Dec2025_jvc-dv-aps-pah-sit01",
+    "resourceId": "i-08e36a26bf7d77543",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08e36a26bf7d77543",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-01fcabe15be7b4dc7",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-23"
+  },
+  {
+    "id": 7,
+    "name": "jvc-dv-aps-agm-uat01",
+    "resourceId": "i-0ca1d05f34252f168",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ca1d05f34252f168",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c36639e922f61065",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 8,
+    "name": "klaidev_public",
+    "resourceId": "i-0e1983b981edc6114",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0e1983b981edc6114",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c6c5fcee19fa8c83",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 9,
+    "name": "jvc-dv-aps-jfc-dev02",
+    "resourceId": "i-012228aa7ab882882",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-012228aa7ab882882",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0bcb7f23431595de8",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 10,
+    "name": "del_at_15Dec2025_jvc-dv-gtw-pah-minio",
+    "resourceId": "i-04ba0e4dab4f123c9",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-04ba0e4dab4f123c9",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-05d6a79480d6143cb",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 11,
+    "name": "jvc-dv-aps-one-uat02",
+    "resourceId": "i-051d8200164591895",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-051d8200164591895",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-00a7a76e5c0a709c4",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 12,
+    "name": "del_at_15Dec2025_jvc-dv-pah_adv-sit01",
+    "resourceId": "i-04b4911c766f8baf5",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-04b4911c766f8baf5",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0e4389b3c15659ab2",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 13,
+    "name": "jvc-dv-web-pah-uat33",
+    "resourceId": "i-0d190ff1f801429d3",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0d190ff1f801429d3",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0861aad69b1dde7fe",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 14,
+    "name": "mobilecare_gitlab-runner",
+    "resourceId": "i-0991eba516f5f574d",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0991eba516f5f574d",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-01ba47a2713b6085f",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 15,
+    "name": "back-mobilecare-as-dv-p02",
+    "resourceId": "i-03a14a6d6fa561957",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-03a14a6d6fa561957",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0016984ac4052a814",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 16,
+    "name": "tracking-as-dv-u01-public",
+    "resourceId": "i-05aef7771205cefce",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-05aef7771205cefce",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-099cfd4bfec9859ed",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Completed",
+    "testDate": "2026-02-24"
+  },
+  {
+    "id": 17,
+    "name": "tyo-dv-aps-tdm-dev02",
+    "resourceId": "i-02081116f80209804",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-02081116f80209804",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0d2533f948b3acb35",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 18,
+    "name": "otpapp-jvc-dv-u01",
+    "resourceId": "i-03caf14afd359ad9b",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-03caf14afd359ad9b",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0b2e73925042a110c",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 19,
+    "name": "jvc-dv-jkn-pub-uat03",
+    "resourceId": "i-05c8a88968d1e229e",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-05c8a88968d1e229e",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0cc2d2e3f100cb04e",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 20,
+    "name": "jvc-dv-jkn-prv-uat02",
+    "resourceId": "i-0ef384f9ad8a6800c",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ef384f9ad8a6800c",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0522aad8507025fc7",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 21,
+    "name": "jvc-dv-aps-pot-uat01",
+    "resourceId": "i-01f1d18e52d1488dd",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-01f1d18e52d1488dd",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c06e04e507332bf4",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 22,
+    "name": "pahportal-as-dv-u01",
+    "resourceId": "i-0c80b3036772ae1fe",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0c80b3036772ae1fe",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0288ee04d9d076181",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 23,
+    "name": "jvc-dv-aps-ekc-uat01",
+    "resourceId": "i-0554d8d53339e833a",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0554d8d53339e833a",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0790fe597cce74e5c",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 24,
+    "name": "shared-dv-aps-git-uat01",
+    "resourceId": "i-082f5fc3594a0072e",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-082f5fc3594a0072e",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c35972294faf863e",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 25,
+    "name": "jvc-dv-aps-jon-uat01",
+    "resourceId": "i-05119ad87843f5395",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-05119ad87843f5395",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0022d14980ba6127d",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 26,
+    "name": "jvc-dv-aps-one-uat01",
+    "resourceId": "i-0f111751f0dd232e3",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0f111751f0dd232e3",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0fab65112af698987",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 27,
+    "name": "agm-drp-linux-joe-u02",
+    "resourceId": "i-0b52e6dbba6baa72f",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0b52e6dbba6baa72f",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0e8d4e15c28869277",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 28,
+    "name": "jvc-dv-aps-jrw-uat02",
+    "resourceId": "i-0ee074cca0ddb8ef3",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ee074cca0ddb8ef3",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-046eeee58bfe23905",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 29,
+    "name": "jvc-dv-sql-jon-uat01",
+    "resourceId": "i-0ccc00fe3bb61887f",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ccc00fe3bb61887f",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0db2040cddfb37db0",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 30,
+    "name": "jvc-dv-aps-pcl-uat01",
+    "resourceId": "i-0b2d4bfb4afdfe7cd",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0b2d4bfb4afdfe7cd",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c57617c6374569c2",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 31,
+    "name": "tyo-dv-aps-tdm-dev01",
+    "resourceId": "i-0a347ad0b8200f671",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0a347ad0b8200f671",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-00c71dccf1ea477f8",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 32,
+    "name": "front-mobilecare-as-dv-p01",
+    "resourceId": "i-08c6c1fa173ef3785",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08c6c1fa173ef3785",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0509c23fedfabef10",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 33,
+    "name": "jvc-dv-aps-jfc-dev03",
+    "resourceId": "i-08a69f4194d338eb2",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08a69f4194d338eb2",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-028c53fa5da314939",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 34,
+    "name": "jvc-dv-web-pah-uat20",
+    "resourceId": "i-04518579204dd53ab",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-04518579204dd53ab",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-04767a23ea620e44f",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  },
+  {
+    "id": 35,
+    "name": "sgc-dv-aps-pcl-uat01",
+    "resourceId": "i-0831baad9eb1af9b2",
+    "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0831baad9eb1af9b2",
+    "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0162a9df7b535b4ba",
+    "creationDate": "2026-02-23T17:00:00.000Z",
+    "status": "Available",
+    "testDate": "-"
+  }
+]

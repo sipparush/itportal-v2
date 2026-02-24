@@ -1,0 +1,152 @@
+{
+    "RecoveryPoints": [
+        {
+            "RecoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0e0a15b18c82b7a88",
+            "BackupVaultName": "JVC-NONPROD-VAULT",
+            "BackupVaultArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-vault:JVC-NONPROD-VAULT",
+            "ResourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-00e6660fe0987bf0a",
+            "ResourceType": "EC2",
+            "CreatedBy": {
+                "BackupPlanId": "ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-plan:ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanVersion": "NjE1ZTQyODQtNzEwNC00OTIwLThmM2QtNDMyNDMyOTllZDI3",
+                "BackupRuleId": "9f5ed2f2-b268-4726-bbed-62b65a52c2de"
+            },
+            "IamRoleArn": "arn:aws:iam::852123960434:role/JVC-AWS-BACKUP",
+            "Status": "COMPLETED",
+            "CreationDate": "2026-02-23T00:00:00+07:00",
+            "InitiationDate": "2026-02-23T00:11:59.105000+07:00",
+            "CompletionDate": "2026-02-23T00:17:26.279000+07:00",
+            "BackupSizeInBytes": 53687091200,
+            "CalculatedLifecycle": {
+                "DeleteAt": "2026-02-24T00:00:00+07:00"
+            },
+            "Lifecycle": {
+                "DeleteAfterDays": 1
+            },
+            "EncryptionKeyArn": "arn:aws:kms:ap-southeast-1:852123960434:key/def81ef6-9827-47ae-8d8a-0fcc9bae9ab2",
+            "IsEncrypted": true,
+            "IsParent": false,
+            "ResourceName": "jvc-dv-aps-jfc-dev01",
+            "VaultType": "BACKUP_VAULT"
+        },
+        {
+            "RecoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-02a72f5660d1875a5",
+            "BackupVaultName": "JVC-NONPROD-VAULT",
+            "BackupVaultArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-vault:JVC-NONPROD-VAULT",
+            "ResourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-05aef7771205cefce",
+            "ResourceType": "EC2",
+            "CreatedBy": {
+                "BackupPlanId": "ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-plan:ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanVersion": "NjE1ZTQyODQtNzEwNC00OTIwLThmM2QtNDMyNDMyOTllZDI3",
+                "BackupRuleId": "9f5ed2f2-b268-4726-bbed-62b65a52c2de"
+            },
+            "IamRoleArn": "arn:aws:iam::852123960434:role/JVC-AWS-BACKUP",
+            "Status": "COMPLETED",
+            "CreationDate": "2026-02-23T00:00:00+07:00",
+            "InitiationDate": "2026-02-23T00:21:59.396000+07:00",
+            "CompletionDate": "2026-02-23T00:27:04.732000+07:00",
+            "BackupSizeInBytes": 536870912000,
+            "CalculatedLifecycle": {
+                "DeleteAt": "2026-02-24T00:00:00+07:00"
+            },
+            "Lifecycle": {
+                "DeleteAfterDays": 1
+            },
+            "IsEncrypted": false,
+            "IsParent": false,
+            "ResourceName": "tracking-as-dv-u01-public",
+            "VaultType": "BACKUP_VAULT"
+        },
+        {
+            "RecoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-09f7a77b024b92d8e",
+            "BackupVaultName": "JVC-NONPROD-VAULT",
+            "BackupVaultArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-vault:JVC-NONPROD-VAULT",
+            "ResourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08c6c1fa173ef3785",
+            "ResourceType": "EC2",
+            "CreatedBy": {
+                "BackupPlanId": "ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-plan:ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanVersion": "NjE1ZTQyODQtNzEwNC00OTIwLThmM2QtNDMyNDMyOTllZDI3",
+                "BackupRuleId": "9f5ed2f2-b268-4726-bbed-62b65a52c2de"
+            },
+            "IamRoleArn": "arn:aws:iam::852123960434:role/JVC-AWS-BACKUP",
+            "Status": "COMPLETED",
+            "CreationDate": "2026-02-23T00:00:00+07:00",
+            "InitiationDate": "2026-02-23T00:18:22.873000+07:00",
+            "CompletionDate": "2026-02-23T00:24:44.117000+07:00",
+            "BackupSizeInBytes": 42949672960,
+            "CalculatedLifecycle": {
+                "DeleteAt": "2026-02-24T00:00:00+07:00"
+            },
+            "Lifecycle": {
+                "DeleteAfterDays": 1
+            },
+            "IsEncrypted": false,
+            "IsParent": false,
+            "ResourceName": "front-mobilecare-as-dv-p01",
+            "VaultType": "BACKUP_VAULT"
+        },
+        {
+            "RecoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-08f328c1f5a65c744",
+            "BackupVaultName": "JVC-NONPROD-VAULT",
+            "BackupVaultArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-vault:JVC-NONPROD-VAULT",
+            "ResourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0d107e7caa8ffddb7",
+            "ResourceType": "EC2",
+            "CreatedBy": {
+                "BackupPlanId": "ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-plan:ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanVersion": "NjE1ZTQyODQtNzEwNC00OTIwLThmM2QtNDMyNDMyOTllZDI3",
+                "BackupRuleId": "9f5ed2f2-b268-4726-bbed-62b65a52c2de"
+            },
+            "IamRoleArn": "arn:aws:iam::852123960434:role/JVC-AWS-BACKUP",
+            "Status": "COMPLETED",
+            "CreationDate": "2026-02-23T00:00:00+07:00",
+            "InitiationDate": "2026-02-23T00:12:13.849000+07:00",
+            "CompletionDate": "2026-02-23T00:20:38.420000+07:00",
+            "BackupSizeInBytes": 53687091200,
+            "CalculatedLifecycle": {
+                "DeleteAt": "2026-02-24T00:00:00+07:00"
+            },
+            "Lifecycle": {
+                "DeleteAfterDays": 1
+            },
+            "EncryptionKeyArn": "arn:aws:kms:ap-southeast-1:852123960434:key/def81ef6-9827-47ae-8d8a-0fcc9bae9ab2",
+            "IsEncrypted": true,
+            "IsParent": false,
+            "ResourceName": "jvc-dv-aps-jfc-uat01",
+            "VaultType": "BACKUP_VAULT"
+        },
+        {
+            "RecoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-028db87a09391c14c",
+            "BackupVaultName": "JVC-NONPROD-VAULT",
+            "BackupVaultArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-vault:JVC-NONPROD-VAULT",
+            "ResourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-02081116f80209804",
+            "ResourceType": "EC2",
+            "CreatedBy": {
+                "BackupPlanId": "ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanArn": "arn:aws:backup:ap-southeast-1:852123960434:backup-plan:ee385a51-84e1-491f-9ed6-a73d33f9d5cd",
+                "BackupPlanVersion": "NjE1ZTQyODQtNzEwNC00OTIwLThmM2QtNDMyNDMyOTllZDI3",
+                "BackupRuleId": "9f5ed2f2-b268-4726-bbed-62b65a52c2de"
+            },
+            "IamRoleArn": "arn:aws:iam::852123960434:role/JVC-AWS-BACKUP",
+            "Status": "COMPLETED",
+            "CreationDate": "2026-02-23T00:00:00+07:00",
+            "InitiationDate": "2026-02-23T00:20:18.119000+07:00",
+            "CompletionDate": "2026-02-23T00:29:17.224000+07:00",
+            "BackupSizeInBytes": 53687091200,
+            "CalculatedLifecycle": {
+                "DeleteAt": "2026-02-24T00:00:00+07:00"
+            },
+            "Lifecycle": {
+                "DeleteAfterDays": 1
+            },
+            "IsEncrypted": false,
+            "IsParent": false,
+            "ResourceName": "tyo-dv-aps-tdm-dev02",
+            "VaultType": "BACKUP_VAULT"
+        }
+    ],
+    "NextToken": "eyJOZXh0VG9rZW4iOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiA1fQ=="
+}

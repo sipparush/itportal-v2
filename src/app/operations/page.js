@@ -88,21 +88,21 @@ export default function OperationsPage() {
                                 <div className="bg-red-50 rounded-lg p-4 border border-red-100">
                                     <ul className="space-y-3">
                                         <li>
-                                            <a href="https://kong-ui.jfin.network/" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                                            <a href="/operations/aws/prod/mapurl" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
                                                 <span className="font-medium">Map URL to Endpoint</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                                            <a href="/operations/aws/prod/adduser" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-                                                <span className="font-medium">Add User Access</span>
+                                                <span className="font-medium">Add User Access(OS or VPN)</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                                <span className="font-medium">Request EC2 Instance</span>
+                                                <span className="font-medium">Create EC2 Instance</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -118,21 +118,45 @@ export default function OperationsPage() {
                                 <div className="bg-green-50 rounded-lg p-4 border border-green-100">
                                     <ul className="space-y-3">
                                         <li>
-                                            <a href="https://kong-ui-uat.jfin.network/" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                            <Link href="/operations/aws/nonprod/mapurl" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
                                                 <span className="font-medium">Map URL to Endpoint (Dev)</span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/operations/aws/nonprod/adduser" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                                                <span className="font-medium">Add User Access (OS or VPN)</span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <a href="/operations/aws/nonprod/backup-readiness" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                                <span className="font-medium">EC2 Backup Readiness</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                            <a href="/operations/aws/nonprod/deploy-uat" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                                <span className="font-medium">Deploy to UAT</span>
+                                                <span className="font-medium">Deploy to UAT (t3.small with staging)</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                                 <span className="font-medium">Create Test S3 Bucket</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                                <span className="font-medium">List EC2 Instances</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/operations/aws/nonprod/billing" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                                <span className="font-medium">Billing and cost explorer</span>
                                             </a>
                                         </li>
                                     </ul>

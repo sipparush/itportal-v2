@@ -7,7 +7,7 @@ export default function Home() {
       <section className="text-center space-y-6 py-12 md:py-20">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
           ศูนย์บริการไอทีครบวงจร
-          <span className="block text-blue-600 mt-2">เพื่อพนักงานทุกคน</span>
+          <span className="block text-blue-600 mt-2">เพื่อ JVC</span>
         </h1>
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-600 leading-relaxed">
           แจ้งปัญหา ขออุปกรณ์ หรือค้นหาข้อมูลช่วยเหลือเบื้องต้นได้ที่นี่

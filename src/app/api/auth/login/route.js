@@ -23,6 +23,40 @@ export async function POST(request) {
             });
         }
 
+        if (username === 'sipparush.la' && password === 'password') {
+
+            // Simulate creating a session token
+            const token = 'mock-jwt-token-12345';
+
+            return NextResponse.json({
+                success: true,
+                message: 'Login successful',
+                token,
+                user: {
+                    id: 2,
+                    name: 'Sipparush Laekan',
+                    role: 'user'
+                }
+            });
+        }
+
+        if (username === 'chokanan.pa' && password === 'password') {
+
+            // Simulate creating a session token
+            const token = 'mock-jwt-token-12345';
+
+            return NextResponse.json({
+                success: true,
+                message: 'Login successful',
+                token,
+                user: {
+                    id: 3,
+                    name: 'Chokanan Pa',
+                    role: 'user'
+                }
+            });
+        }
+
         return NextResponse.json(
             { success: false, message: 'Invalid username or password' },
             { status: 401 }
