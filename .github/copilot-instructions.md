@@ -1,5 +1,5 @@
 always explain in Thai.
-focus on security concept.
+
 
 สร้างไฟล์ implement_plan.md ที่มีแผนที่จะดำเนินการ พร้อมทั้ง มี checklist เพื่อแสดงสถานะของ tasks  และรออนุมัติแผนก่อนดำเนินการ
 
