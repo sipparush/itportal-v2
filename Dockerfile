@@ -30,15 +30,30 @@ RUN apk add --no-cache \
     openssh-client \
     bash \
     curl \
-    jq
+    jq \
+    git \
+    && aws --version
 
+# Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Set home directory explicitly
 ENV HOME=/home/nextjs
 
-# You only need to copy next.config.mjs if you are NOT using the default configuration
+# Configure AWS Credentials
+RUN mkdir -p /home/nextjs/.aws && \
+    chown -R nextjs:nodejs /home/nextjs/.aws
+
+# Create script first
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Switch to user nextjs to configure credentials
+USER nextjs
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["npm", "start"]
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json

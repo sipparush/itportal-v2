@@ -13,14 +13,17 @@ services:
       - ./backupec2_state.json:/app/backupec2_state.json
       # Mount raw data directory
       - ./raw-data:/app/raw-data
-      # Mount AWS credentials (read-only recommended)
-      # WARNING: Ensure the container user has permission to read these files.
-      # You might need to adjust ownership or run as root if permissions fail.
-      - ~/.aws:/home/nextjs/.aws:ro
+      # Terminate SSH key mapping if needed
+      # - /path/to/key.pem:/home/nextjs/key.pem:ro
     environment:
       - NODE_ENV=production
       - AWS_PROFILE=aws_nonprod
       - AWS_REGION=ap-southeast-1
+      # Pass credentials as environment variables from .env
+      - AWS_ACCESS_KEY_ID_PROD=${AWS_ACCESS_KEY_ID_PROD}
+      - AWS_SECRET_ACCESS_KEY_PROD=${AWS_SECRET_ACCESS_KEY_PROD}
+      - AWS_ACCESS_KEY_ID_NONPROD=${AWS_ACCESS_KEY_ID_NONPROD}
+      - AWS_SECRET_ACCESS_KEY_NONPROD=${AWS_SECRET_ACCESS_KEY_NONPROD}
     # Check if we need to set user explicitly if UID mismatch causes permission issues
     # user: "${UID}:${GID}" 
     restart: unless-stopped
