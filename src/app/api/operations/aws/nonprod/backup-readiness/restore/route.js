@@ -37,10 +37,10 @@ export async function POST(request) {
             try {
                 // List recovery points for this specific resource, sorted by creation date descending
                 const listCmd = `aws backup list-recovery-points-by-resource --resource-arn ${constructedResourceArn} --query "RecoveryPoints | sort_by(@, &CreationDate) | [-1].RecoveryPointArn" --output text --profile ${PROFILE} --region ${REGION}`;
-                
+
                 const { stdout: latestArn } = await execPromise(listCmd);
                 const freshArn = latestArn.trim();
-                
+
                 if (freshArn && freshArn !== 'None') {
                     targetAmiId = freshArn.split('/').pop();
                     console.log(`Found Latest Recovery Point via ResourceArn: ${targetAmiId}`);
@@ -51,7 +51,7 @@ export async function POST(request) {
                 console.warn('Failed to fetch latest by ResourceArn, falling back to provided ARN', e.message);
             }
         } else {
-             console.warn('No ResourceArn provided. Skipping latest recovery point lookup.');
+            console.warn('No ResourceArn provided. Skipping latest recovery point lookup.');
         }
 
         // Priority 2: Use provided recoveryPointArn if fresh lookup failed or wasn't attempted
@@ -67,7 +67,7 @@ export async function POST(request) {
                 const { stdout: amiStdout } = await execPromise(checkAmiCmd);
                 const amiData = JSON.parse(amiStdout);
                 if (!amiData.Images || amiData.Images.length === 0) {
-                     return NextResponse.json({ success: false, message: `AMI ID ${targetAmiId} not found. Launch failed.` }, { status: 404 });
+                    return NextResponse.json({ success: false, message: `AMI ID ${targetAmiId} not found. Launch failed.` }, { status: 404 });
                 }
             } catch (amiError) {
                 console.error('AMI Check Failed:', amiError.message);

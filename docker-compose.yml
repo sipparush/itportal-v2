@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: itportal-v2
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount state file for persistence
+      - ./backupec2_state.json:/app/backupec2_state.json
+      # Mount raw data directory
+      - ./raw-data:/app/raw-data
+      # Mount AWS credentials (read-only recommended)
+      # WARNING: Ensure the container user has permission to read these files.
+      # You might need to adjust ownership or run as root if permissions fail.
+      - ~/.aws:/home/nextjs/.aws:ro
+    environment:
+      - NODE_ENV=production
+      - AWS_PROFILE=aws_nonprod
+      - AWS_REGION=ap-southeast-1
+    # Check if we need to set user explicitly if UID mismatch causes permission issues
+    # user: "${UID}:${GID}" 
+    restart: unless-stopped

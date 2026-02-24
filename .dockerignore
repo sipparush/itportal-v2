@@ -1,0 +1,15 @@
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.next
+.git
+.gitignore
+*.md
+raw-data
+backupec2_state.json
+backupec2_state.txt
+full_test_result.md
+implement_plan.md
+Jenkinsfile

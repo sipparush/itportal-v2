@@ -103,9 +103,9 @@ function BackupReadinessPage() {
 
             if (data.success) {
                 // Keep the date and status 'Completed' in the main list so it doesn't disappear
-                const updatedBackups = backups.map(b => 
-                    b.name === backupName 
-                        ? { ...b, status: 'Completed', testDate: new Date().toISOString().split('T')[0] } 
+                const updatedBackups = backups.map(b =>
+                    b.name === backupName
+                        ? { ...b, status: 'Completed', testDate: new Date().toISOString().split('T')[0] }
                         : b
                 );
                 setBackups(updatedBackups);
@@ -170,7 +170,7 @@ function BackupReadinessPage() {
                     <h1 className="text-3xl font-bold text-gray-800 mb-2">Backup Readiness</h1>
                     <p className="text-gray-600">EC2 backup readiness dashboard showing restore status and verification.</p>
                 </div>
-                <button 
+                <button
                     onClick={() => loadBackups(true)}
                     disabled={loadingList}
                     className={`flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors ${loadingList ? 'opacity-70 cursor-wait' : ''}`}
