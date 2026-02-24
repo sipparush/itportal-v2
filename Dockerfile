@@ -60,6 +60,10 @@ COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 # Ensure permissions for node user (non-recursive to save time, COPY handles contents)
 RUN chown node:node /app
 
+# Copy existing state file and set permissions
+COPY backupec2_state.json /app/backupec2_state.json
+RUN chmod 666 /app/backupec2_state.json
+
 # Switch to user node
 USER node
 
