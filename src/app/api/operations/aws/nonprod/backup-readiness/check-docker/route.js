@@ -21,7 +21,8 @@ export async function POST(request) {
 
         // Command: ssh -i key.pem user@ip 'docker ps'
         // Added standard ssh options to avoid host key prompts for ephemeral IPs
-        const command = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${KEY_PATH} ${USER}@${ip} "docker ps"`;
+        const command = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  ${USER}@${ip} "docker ps"`;
+        // const command = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${KEY_PATH} ${USER}@${ip} "docker ps"`;
 
         console.log(`Checking Docker on ${ip}: ${command}`);
         const { stdout, stderr } = await execPromise(command);
