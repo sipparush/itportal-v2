@@ -177,10 +177,15 @@ export default function OperationsPage() {
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-gray-800">BytePlus Operations</h2>
                         <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
-                            <h3 className="font-semibold text-gray-800">CDN Usage</h3>
-                            <p className="text-sm text-gray-600">MyTraffic: 450 GB / Month</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">Create VPN Account</h3>
+                            <p className="text-sm text-gray-600 mb-3">ไปยังหน้าสำหรับกรอกข้อมูลและสร้างไฟล์ VPN (.ovpn)</p>
+                            <Link
+                                href="/operations/byteplus/create-vpn"
+                                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium !text-white hover:bg-blue-700"
+                            >
+                                Open Create VPN Form
+                            </Link>
                         </div>
-                        {/* Add BytePlus specific content here */}
                     </div>
                 )}
 

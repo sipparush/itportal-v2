@@ -186,8 +186,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-05c8a88968d1e229e",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0cc2d2e3f100cb04e",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 20,
@@ -206,8 +206,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-01f1d18e52d1488dd",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c06e04e507332bf4",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 22,
@@ -216,8 +216,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0c80b3036772ae1fe",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0288ee04d9d076181",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 23,
