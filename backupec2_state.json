@@ -136,8 +136,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0991eba516f5f574d",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-01ba47a2713b6085f",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 15,
@@ -196,8 +196,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ef384f9ad8a6800c",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0522aad8507025fc7",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 21,
@@ -226,8 +226,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0554d8d53339e833a",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0790fe597cce74e5c",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 24,
@@ -236,8 +236,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-082f5fc3594a0072e",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c35972294faf863e",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 25,
@@ -246,8 +246,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-05119ad87843f5395",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0022d14980ba6127d",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 26,
@@ -256,8 +256,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0f111751f0dd232e3",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0fab65112af698987",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 27,
@@ -266,8 +266,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0b52e6dbba6baa72f",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0e8d4e15c28869277",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 28,
@@ -276,8 +276,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ee074cca0ddb8ef3",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-046eeee58bfe23905",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-27"
   },
   {
     "id": 29,
@@ -286,8 +286,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0ccc00fe3bb61887f",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0db2040cddfb37db0",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 30,
@@ -296,8 +296,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0b2d4bfb4afdfe7cd",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0c57617c6374569c2",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-27"
   },
   {
     "id": 31,
@@ -306,8 +306,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-0a347ad0b8200f671",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-00c71dccf1ea477f8",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 32,
@@ -316,8 +316,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08c6c1fa173ef3785",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-0509c23fedfabef10",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-27"
   },
   {
     "id": 33,
@@ -326,8 +326,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-08a69f4194d338eb2",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-028c53fa5da314939",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-27"
   },
   {
     "id": 34,
@@ -336,8 +336,8 @@
     "resourceArn": "arn:aws:ec2:ap-southeast-1:852123960434:instance/i-04518579204dd53ab",
     "recoveryPointArn": "arn:aws:ec2:ap-southeast-1::image/ami-04767a23ea620e44f",
     "creationDate": "2026-02-23T17:00:00.000Z",
-    "status": "Available",
-    "testDate": "-"
+    "status": "Completed",
+    "testDate": "2026-02-26"
   },
   {
     "id": 35,

@@ -6,6 +6,354 @@
 วันที่: 25 กุมภาพันธ์ 2026
 ผู้ดำเนินการ: GitHub Copilot
 
+## Request ใหม่: แก้ Breadcrumb ซ้ำในหน้า BytePlus Edit Map URL (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- หน้า `http://localhost:3000/operations/byteplus/edit-map-url` แสดง breadcrumb มากกว่า 1 ชุด
+- ต้องการให้เหลือ breadcrumb เพียงชุดเดียว
+
+### แผนดำเนินการรอบนี้
+- [x] แก้ไฟล์ `src/app/operations/byteplus/edit-map-url/page.js`
+    - [x] ลบ `<nav aria-label="Breadcrumb">` ภายในหน้าเพื่อตัด breadcrumb ซ้ำ
+    - [x] คง breadcrumb กลางจาก layout (`src/app/components/Breadcrumb.jsx`) ไว้เป็นแหล่งเดียว
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทดสอบหน้า `GET /operations/byteplus/edit-map-url` ว่าแสดง breadcrumb ชุดเดียว
+- [x] บันทึกผลการทดสอบใน `full_test_result.md`
+- [x] อัปเดตสถานะใน `implement_plan.md` หลังงานเสร็จ
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/operations/byteplus/edit-map-url/page.js`
+- `full_test_result.md`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- `GET /operations/byteplus/edit-map-url` ได้ `200`
+- ตรวจ syntax ของไฟล์ `src/app/operations/byteplus/edit-map-url/page.js` ไม่พบ error
+- ตรวจ HTML หน้าเว็บพบ `aria-label="Breadcrumb"` เหลือ `1` ชุด
+
+## Request ใหม่: ตั้งชื่อ Service ซ้ำแบบต่อท้าย _count (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- ตอนสร้าง service หากชื่อโดเมนซ้ำ แต่ `path` ไม่ซ้ำ ให้ตั้งชื่อ service ต่อท้ายด้วย `_<count>`
+- ตัวอย่าง: `svc_example`, `svc_example_1`, `svc_example_2`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ API `src/app/api/operations/byteplus/map-url/route.js`
+    - [x] ตรวจสอบ service ชื่อฐาน (`svc_<url>`) ว่ามีอยู่แล้วหรือไม่
+    - [x] ถ้ามีและ path ต่างกัน ให้ลองชื่อถัดไป (`_1`, `_2`, ...)
+    - [x] ถ้ามีและ path เดิม ให้ตอบกลับข้อความว่า mapping นี้มีอยู่แล้ว (ไม่สร้างซ้ำ)
+    - [x] คงลำดับ create service ก่อน create route ตามเดิม
+- [x] ปรับ response ให้ส่งชื่อ service ที่ถูกเลือกจริงกลับไป frontend
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทดสอบเคสซ้ำ path และไม่ซ้ำ path
+- [x] อัปเดตผลใน `full_test_result.md` และสถานะใน `implement_plan.md`
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/api/operations/byteplus/map-url/route.js`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- เคสโดเมน+path ซ้ำ (`example.com` + `/path1`) ได้ `409` พร้อมข้อความว่า mapping มีอยู่แล้ว
+- เคสโดเมนซ้ำแต่ path ใหม่ (`example.com` + `/path2`) ได้ `200`
+- ระบบตั้งชื่อ service อัตโนมัติเป็น `svc_example.com_1` และ route เป็น `route_example.com_1`
+
+## Request ใหม่: แก้เคส Service มีอยู่แต่ Route หาย ในหน้า Edit (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- กรณี `Create service failed: UNIQUE...` แต่หน้า Edit หา `fqdn` ไม่เจอ
+- ต้องทำให้ใช้งาน Edit ได้ต่อ โดยรองรับเคสมี service แต่ route หาย
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ API `src/app/api/operations/byteplus/edit-map-url/route.js`
+    - [x] เมื่อไม่พบ route ให้ลองค้น service จากชื่อ `svc_<fqdn>`
+    - [x] ถ้าพบ service ให้ถือว่าโหลดได้ (routeMissing=true)
+    - [x] ตอน `edit` หาก route หาย ให้สร้าง route ใหม่อัตโนมัติ
+    - [x] ตอน `delete` หาก route หาย ให้ลบ service ต่อได้โดยไม่ fail
+- [x] ปรับ frontend หน้า Edit ให้แสดงสถานะเตือนเมื่อ route หาย
+- [x] ตรวจ syntax/error และทดสอบกับ `example.com`
+- [x] อัปเดตผลลง `full_test_result.md` และสถานะใน `implement_plan.md`
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/api/operations/byteplus/edit-map-url/route.js`
+- `src/app/operations/byteplus/edit-map-url/page.js`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- `fetch example.com` ได้ `200` พร้อม `routeMissing=true` (พบ service แม้ route หาย)
+- `edit example.com` ได้ `200` และระบบสร้าง route กลับให้อัตโนมัติ
+- `fetch example.com` หลัง edit ได้ `routeMissing=false` และค่าปลายทางอัปเดตถูกต้อง
+
+## Request ใหม่: แก้เคส Edit example.com แล้ว Fail (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- ผู้ใช้ทดสอบ `edit example.com` แล้ว fail
+- ผลตรวจซ้ำ API ตอนนี้ได้ `404` และ message `Fetch route failed: Not found`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับข้อความ error สำหรับเคส `fqdn` ไม่พบ ให้เป็นข้อความที่ผู้ใช้เข้าใจง่าย (เช่น `ไม่พบ FQDN นี้ในระบบ`)
+- [x] ปรับ frontend หน้า Edit ให้แสดง guidance เมื่อไม่พบข้อมูล (เช่น แนะนำให้ create ก่อน)
+- [x] คง HTTP status ที่ถูกต้อง (`404`) สำหรับ not found
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทดสอบซ้ำเคส `edit example.com` และยืนยันข้อความใหม่บนหน้าเว็บ
+- [x] อัปเดตผลใน `full_test_result.md` และสถานะใน `implement_plan.md`
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/api/operations/byteplus/edit-map-url/route.js`
+- `src/app/operations/byteplus/edit-map-url/page.js`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- `fetch example.com` ได้ `404` พร้อม message ใหม่: `ไม่พบ FQDN นี้ในระบบ (example.com) กรุณาสร้าง mapping ก่อน`
+- `edit example.com` ได้ `404` พร้อม message เดียวกัน
+- หน้า Edit รองรับการแสดง guidance link ไปหน้า Create เมื่อไม่พบ FQDN
+
+## Request ใหม่: BytePlus - Edit URL to Endpoint (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- เพิ่มฟังก์ชัน `Edit URL to endpoint` ในแท็บ BytePlus
+- ในแท็บ BytePlus ให้แสดงเป็นลิงก์ไปหน้า input form
+- หน้า form รับค่า `fqdn` เพื่อดึงข้อมูลเดิมมาแสดงในฟอร์ม
+- มีปุ่ม `Edit` และ `Delete`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับหน้า BytePlus tab ให้เพิ่มลิงก์ไปหน้า `Edit URL to Endpoint`
+- [x] สร้างหน้า form สำหรับค้นหาด้วย `fqdn`
+    - [x] มีช่องกรอก `fqdn` และปุ่มโหลดข้อมูล
+    - [x] ดึงข้อมูล service/route ที่เกี่ยวข้องมาเติมในฟอร์ม
+    - [x] มีปุ่ม `Edit` สำหรับอัปเดตค่า
+    - [x] มีปุ่ม `Delete` สำหรับลบ route/service
+- [x] สร้าง API route ใหม่ฝั่ง BytePlus สำหรับ
+    - [x] fetch by `fqdn`
+    - [x] update by `fqdn`
+    - [x] delete by `fqdn`
+- [x] เพิ่ม validation และ error message ที่อ่านง่าย
+- [x] รันทดสอบ flow (fetch -> edit -> delete)
+- [x] อัปเดตผลลง `full_test_result.md` และสถานะใน `implement_plan.md`
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/operations/page.js`
+- `src/app/operations/byteplus/edit-map-url/page.js`
+- `src/app/api/operations/byteplus/edit-map-url/route.js`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- หน้า `GET /operations/byteplus/edit-map-url` ได้ `200`
+- ทดสอบครบ flow ด้วยโดเมนทดสอบ:
+  - `fetch` ได้ข้อมูลเดิมจาก `fqdn`
+  - `edit` เปลี่ยนค่าเป็น `scheme=https`, `endpoint=127.0.0.1:3004`, `path=/v2` สำเร็จ
+  - `fetch` ซ้ำหลัง edit พบค่าที่อัปเดตแล้ว
+  - `delete` สำเร็จ และ `fetch` หลังลบได้ `404` (`Fetch route failed: Not found`)
+
+## Request ใหม่: ส่งข้อความ Create Fail ไปหน้า Frontend (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- หาก create ไม่สำเร็จ (ทั้ง service/route) ให้ส่ง error message ที่อ่านได้ชัดเจนไปแสดงที่หน้า frontend
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ API `src/app/api/operations/byteplus/map-url/route.js`
+    - [x] เมื่อ create service fail ให้ส่ง `message` ที่มีรายละเอียดจากปลายทาง (เช่น duplicate name)
+    - [x] เมื่อ create route fail ให้ส่ง `message` ที่มีรายละเอียดจากปลายทาง
+    - [x] คงโครงสร้างข้อมูล debug เดิม (`steps`, status, response) ไว้
+- [x] ปรับ frontend `src/app/operations/byteplus/map-url/page.js`
+    - [x] แสดง `message` จาก API โดยตรงเมื่อไม่สำเร็จ
+    - [x] รองรับ fallback การแสดงข้อความจากฟิลด์ error อื่น (ถ้ามี)
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทดสอบเคส create fail และยืนยันว่า frontend แสดงข้อความชัดเจน
+- [x] อัปเดตผลใน `full_test_result.md` และสถานะใน `implement_plan.md`
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/api/operations/byteplus/map-url/route.js`
+- `src/app/operations/byteplus/map-url/page.js`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- ทดสอบ create fail เคสชื่อซ้ำ (`url=example.com`) ได้ `HTTP 409`
+- API ส่งข้อความชัดเจน: `Create service failed: UNIQUE violation detected on '{name="svc_example.com"}'`
+- Frontend ใช้ `message` จาก API แสดงผล error ได้โดยตรง
+
+## Request ใหม่: ปรับ BytePlus Map URL ให้รองรับ Scheme (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- ปรับ input form ของ `Map URL to endpoint` ให้รับค่า `scheme` เพิ่มเติมเป็น dropdown (`http`, `https`)
+- เปลี่ยน input จาก `Endpoint IP:Port` เป็นรูปแบบ `scheme://endpoint_ip:port/path`
+- ใช้ค่า `scheme` ที่รับมาสร้าง URL สำหรับคำสั่ง create service
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับหน้า form `src/app/operations/byteplus/map-url/page.js`
+    - [x] เพิ่ม dropdown `scheme` (`http`, `https`)
+    - [x] แยก input endpoint เป็น `endpoint ip:port` และ `path` (default `/`) โดยแสดงผลประกอบเป็น `scheme://endpoint_ip:port/path`
+    - [x] ส่งค่า `scheme` ไป API
+    - [x] เอา ช่องรับค่า path ไปต่อท้าย ช่องรับค่า url
+- [x] ปรับ API `src/app/api/operations/byteplus/map-url/route.js`
+    - [x] รับค่า `scheme` และ validate (`http`/`https` เท่านั้น)
+    - [x] สร้าง `targetUrl` เป็น `<scheme>://<endpoint_ip>:<endpoint_port><path>`
+    - [x] คงลำดับ create service ก่อน create route ตามเดิม
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] รันทดสอบฟอร์มและ API
+- [x] อัปเดตผลใน `full_test_result.md` และสถานะในเอกสารนี้
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/operations/byteplus/map-url/page.js`
+- `src/app/api/operations/byteplus/map-url/route.js`
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- validation scheme: `POST` ด้วย `scheme=ftp` ได้ `400 Bad Request`
+- ทดสอบจริง: `POST` ด้วย `scheme=https`, `endpoint=10.240.1.114:3000`, `path=/path1` ได้ `200`
+- ยืนยัน `targetUrl` ที่สร้างเป็น `https://10.240.1.114:3000/path1`
+
+## Request ใหม่: BytePlus - Map URL to Endpoint (Approved)
+
+สถานะ: ✅ Completed
+
+รายละเอียดคำขอ:
+- เพิ่มฟังก์ชัน `Map URL to endpoint` ในแท็บ BytePlus
+- ในแท็บ BytePlus ให้แสดงเป็นลิงก์ไปหน้า input form
+- ฟอร์มรับค่า `url`, `endpoint ip:port`, และ `path` (default = `/`)
+- สร้าง `service_name` รูปแบบ `svc_<url>` และ `route_name` รูปแบบ `route_<url>`
+- เรียก API ตาม curl ที่กำหนดสำหรับสร้าง service และ route
+- เพิ่มลิงก์ `Advance config` ไปที่ `http://10.224.100.4:1337/#!/services`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับหน้า BytePlus tab ให้เป็นลิงก์ไปหน้าฟอร์ม `Map URL to Endpoint`
+- [x] สร้าง/ปรับหน้า input form ในเส้นทาง BytePlus สำหรับรับค่า
+    - [x] `url` (ตัวอย่าง `example.com`)
+    - [x] `endpoint ip:port`
+    - [x] `path` (default `/`)
+    - [x] ลิงก์ `Advance config` ไป `http://10.224.100.4:1337/#!/services`
+- [x] สร้าง API route ฝั่ง BytePlus สำหรับ map URL
+    - [x] generate `service_name=svc_<url>` และ `route_name=route_<url>`
+    - [x] เรียก create service:
+                `POST http://10.224.100.4:8005/services`
+    - [x] เรียก create route:
+                `POST http://10.224.100.4:8005/<service_name>/routes`
+- [x] เพิ่ม validation และ error message ที่อ่านง่าย
+- [ ] ทดสอบ flow หน้าเว็บและ API แบบ end-to-end
+    - [x] route หน้าใหม่ `GET /operations/byteplus/map-url`
+    - [x] API validation `POST /api/operations/byteplus/map-url` (missing fields)
+    - [x] API create service/route แบบเชื่อมต่อจริงกับปลายทาง `10.224.100.4:8005`
+- [x] บันทึกผลลง `full_test_result.md` และอัปเดตสถานะในเอกสารนี้
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/operations/page.js`
+- `src/app/operations/byteplus/map-url/page.js`
+- `src/app/api/operations/byteplus/map-url/route.js`
+
+### ผลตรวจสอบนักพัฒนา (2026-02-26)
+- `GET /operations/byteplus/map-url` = `200`
+- API validation: `POST {}` ได้ `{"success":false,"message":"Missing required fields: url and endpoint"}`
+- API เคสส่งข้อมูลครบยังไม่สามารถยืนยันผลปลายทางได้ในรอบนี้ (ตอบ `500` จาก local execution)
+
+### ผลทดสอบ Senior QA (2026-02-26)
+- ทดสอบจริงผ่าน `POST /api/operations/byteplus/map-url` ด้วย payload ครบ
+- ผลลัพธ์: `500 Internal Server Error`
+- รายละเอียด error:
+    - `Create route failed`
+    - `routeStatus=404`
+    - `routeResponse=Workspace '<service_name>' not found`
+
+### ข้อเสนอเพื่อรออนุมัติปรับแก้
+- [x] ปรับ endpoint สำหรับ create route ให้รองรับเส้นทางที่ใช้งานได้จริง (`/services/<service_name>/routes`) โดยยังคงรองรับ requirement เดิม
+- [x] Retest Senior QA จนผ่านเคสสร้างทั้ง service และ route
+
+### ผลหลังแก้ไขรอบอนุมัติ (2026-02-26)
+- ยังคงสร้าง `service` ก่อน `route` เสมอ และเพิ่ม `steps` ใน response เพื่อยืนยันลำดับ
+- เพิ่มการลอง endpoint route แบบ requirement ก่อน (`/<service_name>/routes`) และ fallback ไป endpoint ที่รองรับจริง (`/services/<service_name>/routes`)
+- Senior QA retest ผ่านครบ: API ตอบ `200`, `success=true`, และสร้างได้ทั้ง service + route
+
+## Request ใหม่: Backup Readiness SSH Fallback (Approved)
+
+สถานะ: ✅ Implemented (QA Tested)
+
+รายละเอียดคำขอ:
+- ฟังก์ชัน `backup-readiness` (aws-nonprod) ให้พยายาม SSH ด้วยลำดับดังนี้
+    1) `user: ubuntu` + `key: jventures-uat.pem`
+    2) ถ้าไม่สำเร็จ ให้ fallback เป็น `user: jventures` + `key: id_ed25519`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ API `src/app/api/operations/aws/nonprod/backup-readiness/check-docker/route.js`
+    - [x] เพิ่มลำดับการลอง SSH แบบ fallback ตาม requirement
+    - [x] เก็บ error ของรอบแรกไว้ใน response เพื่อช่วย debug เมื่อ fallback ล้มเหลวด้วย
+    - [x] คง SSH options เดิม (`StrictHostKeyChecking=no`, `UserKnownHostsFile=/dev/null`) และเพิ่ม `BatchMode/ConnectTimeout`
+- [x] รองรับ key path แบบยืดหยุ่นสำหรับทั้งสอง key
+    - [x] `jventures-uat.pem`: env / `~/.ssh` / `/app` / project root
+    - [x] `id_ed25519`: env / `~/.ssh/id_ed25519` / `/app/id_ed25519` / project root
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทำ Senior QA test กับ `check-docker` และบันทึกผลลง `full_test_result.md`
+- [x] อัปเดตสถานะใน `implement_plan.md` หลังทดสอบ
+
+### ผลทดสอบรอบนี้ (2026-02-26)
+- `POST /api/operations/aws/nonprod/backup-readiness/check-docker` ด้วย `ip=10.240.1.114`
+- ระบบลองลำดับที่ 1: `ubuntu + jventures-uat.pem` แล้วไม่ผ่าน auth (`Permission denied`)
+- ระบบ fallback ลำดับที่ 2: `jventures + id_ed25519` และเชื่อมต่อได้ แต่ปลายทางตอบ `docker: command not found`
+
+## Request ใหม่: แก้ Check Docker สำหรับ 10.240.1.114 และถอดโค้ดทดสอบ 10.240.1.103 (Approved)
+
+สถานะ: ✅ Completed
+
+## Request ใหม่: AWS PROD - Create EC2 Instance Form + Backend Config (Approved)
+
+สถานะ: 🚧 Implemented (Waiting Senior QA Full Test)
+วันที่: 4 มีนาคม 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- ที่หน้า `operations > aws > prod` เมนู `Create EC2 Instance` ให้เปลี่ยนจากลิงก์เดิมเป็นการเปิดหน้า input form ใหม่
+- รูปแบบหน้า input form ให้ใช้งานเหมือนหน้า `Deploy to UAT` ฝั่ง Non-Production
+- ค่า backend สำหรับฟีเจอร์ใหม่นี้ต้องใช้ค่า fixed ดังนี้
+    - `aws profile`: `aws_prod`
+    - `ami id`: `ami-0ed30e8b2125a02ca`
+    - `sg id`: `sg-095da6c8cb4a23a70`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับลิงก์ในหน้า `src/app/operations/page.js`
+    - [x] เปลี่ยนเมนู `Create EC2 Instance` ฝั่ง PROD จาก `#` ไปยัง route หน้าใหม่ (`/operations/aws/prod/createec2`)
+- [x] สร้างหน้า input form ใหม่ `src/app/operations/aws/prod/createec2/page.js`
+    - [x] ใช้โครงสร้าง/พฤติกรรมฟอร์มให้สอดคล้องกับหน้า `src/app/operations/aws/nonprod/deploy-uat/page.js`
+    - [x] ส่งข้อมูลไป API ฝั่ง PROD (`/api/operations/aws/prod/createec2`)
+- [x] สร้าง API ใหม่ `src/app/api/operations/aws/prod/createec2/route.js`
+    - [x] รับข้อมูลจากฟอร์มและ validate field ที่จำเป็น
+    - [x] สร้างคำสั่ง AWS CLI โดยใช้ค่าคงที่ตาม requirement (`aws_prod`, `ami-0ed30e8b2125a02ca`, `sg-095da6c8cb4a23a70`)
+    - [x] ส่งผลลัพธ์กลับ frontend ในรูปแบบเดียวกับหน้า deploy เดิม
+- [ ] อัปเดตผลทดสอบตาม process ที่กำหนด
+    - [x] Developer smoke test ที่ local (รัน `npm run dev` และทดสอบ route/API validation ผ่าน)
+    - [x] Developer smoke test ที่ docker (รัน `docker compose up -d --build` และทดสอบ route/API validation ผ่าน)
+    - [x] บันทึกผลใน `full_test_result.md`
+    - [ ] รอ Senior QA full test และอัปเดตสถานะในเอกสารนี้
+
+### Checklist การทดสอบตามลำดับ environment
+- [x] Local test: รัน `npm run dev` และทดสอบหน้า `/operations/aws/prod/createec2` + API validation เบื้องต้น
+- [x] Docker test: รัน `docker compose up -d --build` แล้วทดสอบเคสเดียวกันซ้ำ (ได้ `200/405/400` ตามคาด)
+- [ ] UAT test: `git push` รอ pipeline deploy แล้วทดสอบที่ `itportal.jfin.network`
+
+### ไฟล์ที่แก้ไขรอบนี้
+- `src/app/operations/page.js`
+- `src/app/operations/aws/prod/createec2/page.js`
+- `src/app/api/operations/aws/prod/createec2/route.js`
+
+รายละเอียดคำขอ:
+- พบ error เมื่อกดปุ่ม Check Docker ที่ `10.240.1.114` ว่าไม่พบ SSH key
+- ต้องการถอดโค้ดทดสอบเฉพาะ IP `10.240.1.103` ออกจากระบบ
+
+### แผนดำเนินการรอบนี้
+- [x] ลบเงื่อนไขพิเศษ `ip === 10.240.1.103` ออกจาก API `check-docker`
+- [x] ทำให้ logic key path ใช้แนวทางเดียวกันทุก IP โดยรองรับ key จาก
+    - [x] `BACKUP_READINESS_SSH_KEY_PATH`
+    - [x] `~/.ssh/jventures-uat.pem`
+    - [x] `/app/jventures-uat.pem`
+    - [x] `<project-root>/jventures-uat.pem`
+- [x] คง SSH user หลักตาม requirement ปัจจุบัน (`ubuntu`) สำหรับการทำงานจริง
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทดสอบ API `check-docker` กับ `ip=10.240.1.114`
+- [x] บันทึกผลลง `full_test_result.md` และอัปเดตสถานะใน `implement_plan.md`
+
 ## Request ใหม่: ทดสอบเฉพาะ IP 10.240.1.103 ด้วย user/key เฉพาะกิจ (Approved)
 
 สถานะ: ✅ Completed

@@ -218,3 +218,242 @@ All core operational features have been implemented and tested. The primary focu
 - ผลทดสอบยืนยันว่าการเชื่อมต่อ SSH และการรัน `docker ps` สำเร็จในเงื่อนไขดังกล่าว
 
 **QA Verdict:** ผ่านสำหรับเคส targeted test ของ `10.240.1.103`
+
+---
+
+## 16. Senior QA Test: Backup Readiness SSH Fallback (10.240.1.114)
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BR-FB-001 | Primary SSH Strategy | ลอง `ubuntu + jventures-uat.pem` ก่อน | มีการลอง primary จริง และล้มเหลวด้วย `Permission denied (publickey,password)` | **Passed (Behavior)** |
+| BR-FB-002 | Fallback SSH Strategy | เมื่อ primary ไม่ผ่าน ต้อง fallback เป็น `jventures + id_ed25519` | มีการ fallback จริง และเชื่อมต่อด้วย `jventures` สำเร็จ | **Passed (Behavior)** |
+| BR-FB-003 | Check Docker Command | หลังเชื่อมต่อได้ต้องรัน `docker ps` สำเร็จ | ปลายทางตอบ `bash: docker: command not found` | **Failed (Env/Host)** |
+
+### Notes
+- โค้ด fallback ทำงานตามลำดับที่กำหนดครบถ้วน
+- ข้อขัดข้องปัจจุบันอยู่ที่เครื่องปลายทางของ user `jventures` ไม่มีคำสั่ง `docker` ใน PATH (หรือไม่ได้ติดตั้ง)
+
+**QA Verdict:** ฟังก์ชัน fallback ผ่านตาม requirement แต่ functional outcome ยังติด environment ฝั่ง host `10.240.1.114`
+
+---
+
+## 17. Developer Verification: BytePlus Map URL to Endpoint
+**Date:** 2026-02-26
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMAP-001 | BytePlus Tab Link | ใน BytePlus tab มีลิงก์ไปหน้า input form | แสดงลิงก์ `Open Map URL Form` และเปิดหน้าใหม่ได้ | **Passed** |
+| BPMAP-002 | Form Route Availability | หน้า `/operations/byteplus/map-url` เข้าได้ | `GET /operations/byteplus/map-url` ได้ `200` | **Passed** |
+| BPMAP-003 | API Validation | ส่งข้อมูลไม่ครบต้องได้ validation error | `POST {}` ได้ `{"success":false,"message":"Missing required fields: url and endpoint"}` | **Passed** |
+| BPMAP-004 | API Create Service/Route | ส่งข้อมูลครบต้องเรียก create service + create route ตาม endpoint ที่กำหนด | รอบนี้ได้ `HTTP 500` จาก local execution จึงยังไม่ยืนยันผลปลายทางจริง | **Blocked (Env/Connectivity)** |
+
+### Notes
+- ฟังก์ชันในโค้ดรองรับการสร้าง `service_name=svc_<url>` และ `route_name=route_<url>` แล้ว
+- หน้า form มีฟิลด์ `url`, `endpoint ip:port`, `path (default /)` และลิงก์ `Advance config` ตาม requirement
+
+**QA Verdict:** โค้ดและหน้า UI ตรงตาม requirement แล้ว เหลือ Senior QA full test ใน environment ที่เข้าถึง `10.224.100.4:8005` ได้จริง
+
+---
+
+## 18. Senior QA Test: BytePlus Map URL to Endpoint (Execution Round)
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMAP-QA-001 | Map URL Page Availability | หน้า `/operations/byteplus/map-url` ต้องเข้าได้ | HTTP `200` | **Passed** |
+| BPMAP-QA-002 | Real Create Service + Route | ส่งข้อมูลครบแล้วต้องสร้าง service และ route สำเร็จ | ได้ `500` โดย `Create route failed`, `routeStatus=404`, `routeResponse=Workspace '<service_name>' not found` | **Failed (Blocker)** |
+
+### Blocker Analysis
+- การสร้าง service ผ่านแล้ว
+- จุดล้มเหลวอยู่ที่ขั้น create route เพราะ endpoint ปัจจุบัน `POST /<service_name>/routes` ถูก Kong ตีความ `<service_name>` เป็น workspace
+
+**QA Verdict:** ยังไม่ผ่านในขั้น create route ต้องปรับ endpoint route creation แล้ว retest
+
+---
+
+## 19. Senior QA Retest: BytePlus Map URL to Endpoint (Route Endpoint Fix)
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMAP-QA-R1 | Service Before Route | ต้องสร้าง service สำเร็จก่อนสร้าง route เสมอ | `create_service` ได้ `201` ก่อนทุกครั้ง และมี step log ยืนยันลำดับ | **Passed** |
+| BPMAP-QA-R2 | Route Creation Compatibility | หาก endpoint แบบ requirement แรกไม่ผ่าน ต้องยังสร้าง route ได้ด้วย endpoint ที่ระบบรองรับ | ลอง `/<service_name>/routes` ได้ `404` แล้ว fallback ไป `/services/<service_name>/routes` ได้ `201` | **Passed** |
+| BPMAP-QA-R3 | End-to-End Create | ส่งข้อมูลครบแล้วต้องสร้าง service/route สำเร็จ | API ตอบ `HTTP 200`, `success=true`, ได้ `serviceName`, `routeName`, `routeEndpointUsed` และ payload จากปลายทางครบ | **Passed** |
+
+### Notes
+- Retest นี้ยืนยันว่า service ถูกสร้างก่อน route ตาม requirement
+- เพิ่ม `steps` และ `routeEndpointUsed` ใน response เพื่อให้ตรวจสอบลำดับและ endpoint ที่ใช้ได้ชัดเจน
+
+**QA Verdict:** ผ่านครบสำหรับฟีเจอร์ BytePlus Map URL to Endpoint
+
+---
+
+## 20. Senior QA Test: BytePlus Map URL Scheme Support
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+
+---
+
+## 21. Developer Verification: AWS PROD Create EC2 Instance Form + API
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-001 | Operations PROD Link | เมนู `Create EC2 Instance` ในแท็บ AWS PROD ต้องเปิดหน้า form ใหม่ได้ | ปรับลิงก์เป็น `/operations/aws/prod/createec2` แล้ว | **Passed (Code Review)** |
+| PROD-EC2-002 | Form Route Presence | ต้องมีหน้า form สำหรับกรอก `projectName`, `instanceName`, `instanceType` | สร้างหน้า `GET /operations/aws/prod/createec2` และเชื่อม API ปลายทาง PROD แล้ว | **Passed (Code Review)** |
+| PROD-EC2-003 | Backend Fixed Config | API ต้องใช้ค่า `aws_prod`, `ami-0ed30e8b2125a02ca`, `sg-095da6c8cb4a23a70` | ตรวจใน route พบใช้ค่าคงที่ตาม requirement ครบ | **Passed (Code Review)** |
+| PROD-EC2-004 | Syntax/Static Error Check | ไฟล์ที่แก้ต้องไม่เกิด error ใหม่ | ตรวจ `get_errors` แล้วไม่พบ error ในไฟล์ที่แก้ทั้งหมด | **Passed** |
+
+### Notes
+- รอบนี้เป็นการทดสอบระดับ Developer verification ใน local workspace
+- ยังไม่ได้ยิงสร้าง EC2 จริงในสภาพแวดล้อม Production
+- ต้องรอ Senior QA full test ตาม process ก่อนปิดงานรอบนี้
+
+---
+
+## 22. Developer Local Smoke Test: AWS PROD Create EC2 (Route/API)
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-LCL-001 | New Page Route | `GET /operations/aws/prod/createec2` ต้องเข้าได้ | ได้ `HTTP 200` | **Passed** |
+| PROD-EC2-LCL-002 | API Method Guard | `GET /api/operations/aws/prod/createec2` ต้องถูกปฏิเสธ | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-LCL-003 | API Validation | `POST` body ว่างต้องได้ validation error | ได้ `HTTP 400` และ `Missing required fields: instanceName or projectName` | **Passed** |
+| PROD-EC2-LCL-004 | PROD Menu Link | ลิงก์ `Create EC2 Instance` ฝั่ง PROD ต้องชี้ route ใหม่ | ตรวจจากหน้า `/operations` พบ href เป็น `/operations/aws/prod/createec2` | **Passed** |
+
+### Notes
+- รอบนี้เป็น local smoke test เท่านั้น และหลีกเลี่ยงการสร้าง EC2 จริงใน environment production
+- ขั้นต่อไปตาม process: Docker test -> UAT test -> Senior QA full test
+
+---
+
+## 23. Developer Docker Smoke Test: AWS PROD Create EC2 (Route/API)
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-DKR-001 | Docker App Route | `GET /operations/aws/prod/createec2` ต้องเข้าได้ผ่าน container | ได้ `HTTP 200` | **Passed** |
+| PROD-EC2-DKR-002 | Docker API Method Guard | `GET /api/operations/aws/prod/createec2` ต้องถูกปฏิเสธ | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-DKR-003 | Docker API Validation | `POST {}` ต้องได้ validation error | ได้ `HTTP 400` และ message `Missing required fields: instanceName or projectName` | **Passed** |
+
+### Notes
+- ใช้คำสั่ง `docker compose up -d --build` สำหรับ environment test
+- หลีกเลี่ยงการยิงเคสสร้าง EC2 จริงในรอบ smoke test
+- ขั้นต่อไป: UAT test หลัง `git push` และรอ pipeline deploy
+| :--- | :--- | :--- | :--- | :--- |
+| BPMAP-SCH-001 | Scheme Validation | รองรับเฉพาะ `http` และ `https` | ทดสอบ `scheme=ftp` ได้ `400 Bad Request` | **Passed** |
+| BPMAP-SCH-002 | Target URL Composition | ต้องประกอบ URL เป็น `<scheme>://<endpoint_ip>:<port><path>` | ทดสอบ `scheme=https`, `endpoint=10.240.1.114:3000`, `path=/path1` ได้ `targetUrl=https://10.240.1.114:3000/path1` | **Passed** |
+| BPMAP-SCH-003 | Service/Route Create with Scheme | ต้องสร้าง service และ route สำเร็จ โดย service ใช้ scheme ที่เลือก | API ตอบ `200`, `success=true`, `service.protocol=https`, และ route ถูกสร้างสำเร็จ | **Passed** |
+
+### Notes
+- ฟอร์มรองรับ dropdown `scheme` (`http`, `https`) แล้ว
+- API รับค่า `scheme` และนำไปสร้าง service URL จริงตาม requirement
+
+**QA Verdict:** ผ่านครบสำหรับการรองรับ scheme ในฟังก์ชัน BytePlus Map URL to Endpoint
+
+---
+
+## 21. Senior QA Test: BytePlus Map URL - Create Fail Message to Frontend
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMAP-ERR-001 | Service Create Fail Message | เมื่อ create service fail ต้องส่งข้อความอ่านง่ายกลับ frontend | ทดสอบเคสชื่อซ้ำ (`svc_example.com`) ได้ `HTTP 409` พร้อม message `Create service failed: UNIQUE violation detected on '{name="svc_example.com"}'` | **Passed** |
+| BPMAP-ERR-002 | Error Handling Structure | ยังต้องมีข้อมูล debug เพื่อวิเคราะห์ต่อ | response ยังมี `serviceStatus`, `serviceResponse`, `steps` ครบ | **Passed** |
+| BPMAP-ERR-003 | Frontend Error Display | หน้า form ต้องแสดงข้อความจาก API โดยตรง | frontend รองรับและแสดง `message` จาก API ได้ตรงข้อความ | **Passed** |
+
+**QA Verdict:** ผ่านครบสำหรับ requirement การส่งข้อความ create fail ไปหน้า frontend
+
+---
+
+## 22. Senior QA Test: BytePlus Edit URL to Endpoint
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPEDIT-001 | BytePlus Tab Link | มีลิงก์ไปหน้า `Edit URL to Endpoint` | พบลิงก์ `Open Edit URL Form` และเปิดหน้าได้ | **Passed** |
+| BPEDIT-002 | Fetch by FQDN | กรอก `fqdn` แล้วดึงค่าเดิมมาใส่ฟอร์ม | API `action=fetch` คืน `scheme`, `endpoint`, `path` สำเร็จ | **Passed** |
+| BPEDIT-003 | Edit Mapping | กด `Edit` แล้วต้องอัปเดตค่าปลายทางได้ | เปลี่ยนเป็น `scheme=https`, `endpoint=127.0.0.1:3004`, `path=/v2` สำเร็จ และ fetch ซ้ำเห็นค่าที่แก้แล้ว | **Passed** |
+| BPEDIT-004 | Delete Mapping | กด `Delete` แล้วต้องลบ route/service ได้ | ลบสำเร็จ และ fetch หลังลบได้ `404` พร้อมข้อความ `Fetch route failed: Not found` | **Passed** |
+
+### Notes
+- ทดสอบ flow แบบครบวงจรด้วยโดเมนทดสอบชั่วคราว (`qa-edit-...jfin.network`)
+- ยืนยันว่า API ใหม่รองรับ `fetch`, `edit`, `delete` ตาม requirement
+
+**QA Verdict:** ผ่านครบสำหรับฟีเจอร์ BytePlus Edit URL to Endpoint
+
+---
+
+## 23. Senior QA Retest: Edit `example.com` Not Found Message
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPEDIT-NF-001 | Fetch Not Found Message | `fetch example.com` ต้องได้ `404` พร้อมข้อความอ่านง่าย | ได้ `404` และ message `ไม่พบ FQDN นี้ในระบบ (example.com) กรุณาสร้าง mapping ก่อน` | **Passed** |
+| BPEDIT-NF-002 | Edit Not Found Message | `edit example.com` ต้องได้ `404` พร้อมข้อความเดียวกัน | ได้ `404` และ message เดียวกัน | **Passed** |
+| BPEDIT-NF-003 | Frontend Guidance | หน้า Edit ต้องมีคำแนะนำเมื่อไม่พบ FQDN | แสดง guidance พร้อมลิงก์ไปหน้า `Create URL to Endpoint` | **Passed** |
+
+**QA Verdict:** ผ่านครบสำหรับการแก้เคส `edit example.com` แล้ว fail โดยแสดงข้อความและคำแนะนำที่ชัดเจน
+
+---
+
+## 24. Senior QA Retest: Edit with Existing Service but Missing Route
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPEDIT-REPAIR-001 | Fetch Recovery | ถ้า route หายแต่ service ยังมี ต้องโหลดข้อมูลได้ | `fetch example.com` ได้ `200`, `routeMissing=true`, คืน `scheme/endpoint/path` จาก service | **Passed** |
+| BPEDIT-REPAIR-002 | Edit Auto Repair Route | เมื่อกด edit ในเคส route หาย ต้องสร้าง route ใหม่อัตโนมัติ | `edit example.com` ได้ `200` และสร้าง `route_example.com` สำเร็จ | **Passed** |
+| BPEDIT-REPAIR-003 | Post-Edit Verification | หลัง edit แล้วต้องกลับสู่สถานะปกติ | `fetch example.com` หลัง edit ได้ `routeMissing=false` และค่า endpoint/path ใหม่ถูกต้อง | **Passed** |
+
+### Notes
+- แก้ปัญหาคลาสสิก: `Create service failed: UNIQUE...` แต่ edit เดิมหา fqdn ไม่เจอ
+- ตอนนี้ API รองรับกรณี service มีอยู่แต่ route หายแล้ว และซ่อม route ได้ในขั้น edit
+
+**QA Verdict:** ผ่านครบสำหรับการแก้เคส service มีอยู่แต่ route หายในหน้า Edit
+
+---
+
+## 25. Senior QA Test: Service Name Suffix `_count` for Duplicate Domain
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMAP-SFX-001 | Duplicate Domain + Same Path | ถ้าโดเมนซ้ำและ path เดิม ต้องไม่สร้างซ้ำ | `example.com` + `/path1` ได้ `409`, message `mapping นี้มีอยู่แล้ว` | **Passed** |
+| BPMAP-SFX-002 | Duplicate Domain + Different Path | ถ้าโดเมนซ้ำแต่ path ใหม่ ต้องตั้งชื่อ service ต่อท้าย `_count` | `example.com` + `/path2` ได้ `200`, `serviceName=svc_example.com_1` | **Passed** |
+| BPMAP-SFX-003 | Route Naming Alignment | route name ควรสอดคล้องกับ service ที่ถูก suffix | ได้ `routeName=route_example.com_1` และสร้าง route สำเร็จ | **Passed** |
+
+### Notes
+- API ส่งค่า `serviceSuffix` ใน response เพื่อบอกลำดับ suffix ที่เลือกใช้จริง
+- route payload เพิ่ม `paths[]` เพื่อรองรับกรณี host เดิมแต่ path ต่างกันได้ชัดเจน
+
+**QA Verdict:** ผ่านครบสำหรับ requirement ตั้งชื่อ service ซ้ำแบบต่อท้าย `_count`
+
+---
+
+## 26. Senior QA Test: Remove Duplicate Breadcrumb on Edit URL Page
+**Date:** 2026-02-26
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPEDIT-BC-001 | Page Availability | หน้า `/operations/byteplus/edit-map-url` ต้องเข้าได้ปกติ | `GET /operations/byteplus/edit-map-url` ได้ `200` | **Passed** |
+| BPEDIT-BC-002 | Duplicate Breadcrumb Check | ต้องมี breadcrumb เพียง 1 ชุด | ตรวจ HTML พบ `aria-label="Breadcrumb"` จำนวน `1` | **Passed** |
+| BPEDIT-BC-003 | Syntax Validation | ไฟล์ที่แก้ต้องไม่มี syntax error | ตรวจไฟล์ `src/app/operations/byteplus/edit-map-url/page.js` ไม่พบ error | **Passed** |
+
+**QA Verdict:** ผ่านครบสำหรับการแก้ปัญหา breadcrumb ซ้ำในหน้า Edit URL to Endpoint

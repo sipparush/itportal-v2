@@ -100,7 +100,7 @@ export default function OperationsPage() {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                                            <a href="/operations/aws/prod/createec2" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                                 <span className="font-medium">Create EC2 Instance</span>
                                             </a>
@@ -176,6 +176,26 @@ export default function OperationsPage() {
                 {activeTab === 'byteplus' && (
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-gray-800">BytePlus Operations</h2>
+                        <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                            <h3 className="font-semibold text-gray-800 mb-2">Map URL to Endpoint</h3>
+                            <p className="text-sm text-gray-600 mb-3">ไปยังหน้าสำหรับ map URL เข้า endpoint IP:Port</p>
+                            <Link
+                                href="/operations/byteplus/map-url"
+                                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium !text-white hover:bg-blue-700"
+                            >
+                                Open Map URL Form
+                            </Link>
+                        </div>
+                        <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                            <h3 className="font-semibold text-gray-800 mb-2">Edit URL to Endpoint</h3>
+                            <p className="text-sm text-gray-600 mb-3">ค้นหาด้วย FQDN เพื่อแก้ไขหรือลบ route/service</p>
+                            <Link
+                                href="/operations/byteplus/edit-map-url"
+                                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium !text-white hover:bg-blue-700"
+                            >
+                                Open Edit URL Form
+                            </Link>
+                        </div>
                         <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
                             <h3 className="font-semibold text-gray-800 mb-2">Create VPN Account</h3>
                             <p className="text-sm text-gray-600 mb-3">ไปยังหน้าสำหรับกรอกข้อมูลและสร้างไฟล์ VPN (.ovpn)</p>
