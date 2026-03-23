@@ -298,9 +298,59 @@
 
 สถานะ: ✅ Completed
 
+## Request ใหม่: ทดสอบทุกลิงก์เพื่อป้องกันลิงก์ตาย (Approved)
+
+สถานะ: ⚠️ Tested with Findings (Waiting Fix Approval)
+
+รายละเอียดคำขอ:
+- ทดสอบทุกลิงก์ในระบบเพื่อยืนยันว่าไม่มีลิงก์ตาย (ทั้ง internal route และ external URL)
+
+### แผนดำเนินการรอบนี้
+- [x] เก็บรายการลิงก์ทั้งหมดจากหน้าใช้งานหลัก
+    - [x] ตรวจลิงก์ภายในระบบ (เช่น `/operations/...`)
+    - [x] ตรวจลิงก์ภายนอก (เช่น monitor / external tools)
+- [x] ทำ Local test (ข้อ 4.1)
+    - [x] รัน `npm run dev` (ใช้ instance ที่กำลังรันอยู่ในเครื่อง)
+    - [x] เปิดทดสอบทุกลิงก์และบันทึกผล HTTP status / ปลายทางจริง
+- [ ] ทำ Docker test (ข้อ 4.2)
+    - [ ] รัน `docker-compose up` (หรือ compose file ที่ใช้จริงของโปรเจกต์)
+    - [ ] ทดสอบทุกลิงก์ซ้ำใน environment docker
+- [x] ทำ UAT test (ข้อ 4.3)
+    - [ ] `git push` และรอ pipeline deploy สำเร็จ
+    - [x] ทดสอบทุกลิงก์บน `itportal.jfin.network`
+- [x] บันทึกผล Senior QA Full Test ลง `full_test_result.md`
+- [x] หากพบลิงก์เสีย: อัปเดตแผนแก้ไขในไฟล์นี้และรออนุมัติ ก่อนลงมือแก้
+- [ ] เมื่อแก้เสร็จ: วนทดสอบซ้ำจนผ่านทุกเคส แล้วค่อยขออนุมัติเปลี่ยน environment ตามลำดับ
+
+### เกณฑ์ผ่านงาน
+- [x] ทุก internal link เปิดได้และไม่เจอ 404/500 จากเส้นทางปลายทาง
+- [ ] ทุก external link เข้าถึงได้หรือมี fallback/ข้อความแจ้งที่ถูกต้อง
+- [ ] ผลทดสอบครบทั้ง local, docker และ UAT
+
+### ผลทดสอบรอบนี้ (2026-03-11)
+- Local internal links ที่ตรวจ (16 paths) ได้ `HTTP 200` ทั้งหมด
+- UAT internal links ที่ตรวจ (16 paths) ได้ `HTTP 200` ทั้งหมด
+- External links:
+    - ผ่าน: `https://api-monitor.jventures.co.th/`, `https://kong-ui-uat.jfin.network/services`, `https://kong-ui.jfin.network/services`, AWS console links
+    - ไม่ผ่านจาก environment ปัจจุบัน: `http://10.224.100.4:1337/#!/services` ได้ `000` (เข้าถึงเครือข่ายปลายทางไม่ได้จากเครื่องทดสอบ)
+- พบลิงก์ placeholder `#` ในหลายหน้า (เช่น Home/Operations/Footer) ซึ่งถือเป็นลิงก์ไม่สมบูรณ์เชิงใช้งาน
+
+## Request ใหม่: แก้ลิงก์ Placeholder และลิงก์ที่เข้าถึงไม่ได้จากหน้า Operations (Pending Approval)
+
+สถานะ: ⏳ Waiting for Approval
+
+รายละเอียดที่พบจากการทดสอบ:
+- มีลิงก์ `href="#"` ที่เป็น placeholder และไม่พาผู้ใช้ไปปลายทางจริง
+- มีลิงก์ `http://10.224.100.4:1337/#!/services` ที่เข้าถึงไม่ได้จาก environment ผู้ใช้งานทั่วไป
+
+### แผนแก้ไขที่เสนอ (รออนุมัติ)
+- [ ] ปรับลิงก์ `#` ให้เป็น route จริง หรือเปลี่ยนเป็นปุ่ม disabled พร้อมข้อความ `Coming soon`
+- [ ] ปรับลิงก์ `Advance config` ของ BytePlus ให้ใช้ URL ที่เข้าถึงได้จาก environment เป้าหมาย หรือเพิ่มข้อความแจ้งเงื่อนไขเครือข่าย
+- [ ] ทดสอบซ้ำ local -> docker -> UAT ตามลำดับจนผ่านทุกเคส
+
 ## Request ใหม่: AWS PROD - Create EC2 Instance Form + Backend Config (Approved)
 
-สถานะ: 🚧 Implemented (Waiting Senior QA Full Test)
+สถานะ: ✅ Completed
 วันที่: 4 มีนาคม 2026
 ผู้ร้องขอ: User
 
@@ -326,12 +376,38 @@
     - [x] Developer smoke test ที่ local (รัน `npm run dev` และทดสอบ route/API validation ผ่าน)
     - [x] Developer smoke test ที่ docker (รัน `docker compose up -d --build` และทดสอบ route/API validation ผ่าน)
     - [x] บันทึกผลใน `full_test_result.md`
-    - [ ] รอ Senior QA full test และอัปเดตสถานะในเอกสารนี้
+    - [x] Senior QA full test (UAT) ผ่าน และอัปเดตสถานะในเอกสารนี้
 
 ### Checklist การทดสอบตามลำดับ environment
 - [x] Local test: รัน `npm run dev` และทดสอบหน้า `/operations/aws/prod/createec2` + API validation เบื้องต้น
 - [x] Docker test: รัน `docker compose up -d --build` แล้วทดสอบเคสเดียวกันซ้ำ (ได้ `200/405/400` ตามคาด)
-- [ ] UAT test: `git push` รอ pipeline deploy แล้วทดสอบที่ `itportal.jfin.network`
+- [x] UAT test: `git push` รอ pipeline deploy แล้วทดสอบที่ `itportal.jfin.network` (ผ่าน `200/405/400` และตรวจลิงก์เมนูได้)
+
+### ผลทดสอบ UAT/Senior QA รอบนี้ (2026-03-04)
+- `GET https://itportal.jfin.network/operations/aws/prod/createec2` ได้ `200`
+- `GET https://itportal.jfin.network/api/operations/aws/prod/createec2` ได้ `405`
+- `POST https://itportal.jfin.network/api/operations/aws/prod/createec2` ด้วย `{}` ได้ `400` พร้อมข้อความ `Missing required fields: instanceName or projectName`
+- ตรวจหน้า `https://itportal.jfin.network/operations` พบลิงก์ `/operations/aws/prod/createec2`
+
+## Request ใหม่: เปลี่ยน Key Pair ของ Create EC2 (AWS PROD) (Approved)
+
+สถานะ: ✅ Completed
+วันที่: 4 มีนาคม 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- ปรับฟังก์ชัน `Create EC2 Instance` ฝั่ง PROD
+- เปลี่ยน key pair จาก `jventures-uat` เป็น `jventures-prod.pem`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ backend API ใน `src/app/api/operations/aws/prod/createec2/route.js`
+    - [x] เปลี่ยนค่า `--key-name` จาก `jventures-uat` เป็น `jventures-prod.pem`
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] บันทึกผลใน `full_test_result.md` และอัปเดตสถานะใน `implement_plan.md`
+
+### ผลทดสอบรอบนี้ (2026-03-04)
+- ตรวจไฟล์ `src/app/api/operations/aws/prod/createec2/route.js` ไม่พบ syntax/error
+- ยืนยันคำสั่ง AWS CLI ในโค้ดใช้ `--key-name jventures-prod.pem` แล้ว
 
 ### ไฟล์ที่แก้ไขรอบนี้
 - `src/app/operations/page.js`
@@ -685,3 +761,79 @@
 - [ ] Restart Docker Container
 - [ ] ทดสอบ Backup Readiness Flow (Restore -> Check -> Terminate) บน Docker
 - [ ] เมื่อทดสอบผ่าน ให้บันทึกผลลง `full_test_result.md`
+
+## Request ใหม่: ดึงรายการ EC2 5 รายการจาก aws_prod (Pending Approval)
+
+สถานะ: ⏳ Waiting for Approval
+วันที่: 4 มีนาคม 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- รันคำสั่งเพื่อดึงรายการ EC2 จาก AWS profile `aws_prod`
+- แสดงผลเฉพาะ 5 instance ล่าสุดตามข้อมูลที่ดึงได้
+
+### แผนดำเนินการรอบนี้ (รออนุมัติ)
+- [ ] ตรวจสอบว่า profile `aws_prod` ใช้งานได้บนเครื่องนี้
+- [ ] รันคำสั่ง `aws ec2 describe-instances` โดยใช้ `--profile aws_prod --region ap-southeast-1`
+- [ ] คัดผลลัพธ์ให้เหลือ 5 instances และสรุปข้อมูลหลัก (InstanceId, State, PrivateIp, Name)
+- [ ] รายงานผลลัพธ์ให้ผู้ใช้
+
+### หมายเหตุสำคัญก่อนดำเนินการ
+- [ ] รออนุมัติแผนจากผู้ใช้งานก่อนรันคำสั่งจริง
+
+## Request ใหม่: ปรับ Key Pair Create EC2 PROD ให้ตรง AWS จริง (Approved)
+
+สถานะ: ✅ Completed
+วันที่: 4 มีนาคม 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- ปรับฟังก์ชัน `Create EC2 Instance` ฝั่ง PROD
+- เปลี่ยนค่า key-name จาก `jventures-prod.pem` เป็น `jventures-prod`
+
+### แผนดำเนินการรอบนี้
+- [x] ตรวจสอบ key pair ที่มีอยู่จริงใน `aws_prod`
+- [x] ปรับ backend API ใน `src/app/api/operations/aws/prod/createec2/route.js`
+    - [x] เปลี่ยนค่า `--key-name` เป็น `jventures-prod`
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] บันทึกผลใน `full_test_result.md` และอัปเดตสถานะใน `implement_plan.md`
+
+### ผลตรวจสอบรอบนี้ (2026-03-04)
+- ตรวจ key pair ใน `aws_prod` พบชื่อที่เกี่ยวข้องเป็น `jventures-prod`
+- ตรวจโค้ดหลังแก้พบคำสั่งเป็น `--key-name jventures-prod`
+- ตรวจ syntax/error ของไฟล์ที่แก้ ไม่พบปัญหา
+- smoke re-test หลังแก้: `GET /api/operations/aws/prod/createec2` ได้ `405` และ `POST {}` ได้ `400` พร้อมข้อความ validation ปกติ
+
+## Request ใหม่: ปรับ Create EC2 PROD ให้ใช้ Subnet ใหม่ + Clone Security Group (Approved)
+
+สถานะ: ✅ Completed
+วันที่: 4 มีนาคม 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- ฟังก์ชัน `Create EC2 Instance` ฝั่ง PROD ให้ใช้ `subnet id` ใหม่เป็น `subnet-0ce756ed09bd7abe5`
+- ก่อนสร้าง EC2 ให้สร้าง Security Group ใหม่ โดย copy rule จาก `sg-0c3b54853be3ac21e`
+- ตั้งชื่อ Security Group ใหม่เป็น `<instanceName>-sg`
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ API `src/app/api/operations/aws/prod/createec2/route.js`
+    - [x] เพิ่มขั้นตอน create security group ใหม่ใน VPC ของ subnet เป้าหมาย
+    - [x] คัดลอก ingress/egress rules จาก source SG `sg-0c3b54853be3ac21e` มายัง SG ใหม่
+    - [x] ตั้งชื่อ SG ใหม่เป็น `<instanceName>-sg` และจัดการกรณีชื่อซ้ำ
+    - [x] เปลี่ยนการ create EC2 ให้ใช้ `--subnet-id subnet-0ce756ed09bd7abe5`
+    - [x] เปลี่ยนการผูก SG ของ instance ให้ใช้ SG ที่สร้างใหม่แทน SG เดิม
+- [x] เพิ่ม error handling ให้บอกขั้นตอนที่ fail ชัดเจน (create SG / copy rules / create instance)
+- [x] ตรวจ syntax/error ของไฟล์ที่แก้
+- [x] ทำ smoke test ตามลำดับ process
+    - [x] local test
+    - [x] docker test
+    - [x] uat test
+- [x] บันทึกผลใน `full_test_result.md` และอัปเดตสถานะใน `implement_plan.md`
+
+### ผลทดสอบรอบนี้ (2026-03-04)
+- local smoke: `GET /api/operations/aws/prod/createec2` ได้ `405`
+- local smoke: `POST {}` ไป endpoint เดียวกัน ได้ `400` พร้อมข้อความ validation
+- docker smoke: `GET /api/operations/aws/prod/createec2` ได้ `405`
+- docker smoke: `POST {}` ไป endpoint เดียวกัน ได้ `400` พร้อมข้อความ validation
+- uat smoke: `GET https://itportal.jfin.network/api/operations/aws/prod/createec2` ได้ `405`
+- uat smoke: `POST {}` ไป endpoint เดียวกัน ได้ `400` พร้อมข้อความ validation

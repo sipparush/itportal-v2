@@ -73,7 +73,7 @@ export default function CreateEC2ProdPage() {
             </button>
 
             <div className="my-5">
-                <Link href="https://ap-southeast-1.console.aws.amazon.com/ec2/home?region=ap-southeast-1#Instances:v=3;$case=tags:true%5C,client:false;$regex=tags:false%5C,client:false" target="_blank" rel="noopener noreferrer">
+                <Link href="https://ap-southeast-1.console.aws.amazon.com/ec2/home?region=ap-southeast-1#Instances:instanceState=running" target="_blank" rel="noopener noreferrer">
                     For Advance configuration
                 </Link>
             </div>

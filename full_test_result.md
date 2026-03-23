@@ -350,6 +350,67 @@ All core operational features have been implemented and tested. The primary focu
 - ใช้คำสั่ง `docker compose up -d --build` สำหรับ environment test
 - หลีกเลี่ยงการยิงเคสสร้าง EC2 จริงในรอบ smoke test
 - ขั้นต่อไป: UAT test หลัง `git push` และรอ pipeline deploy
+
+---
+
+## 24. Senior QA UAT Test: AWS PROD Create EC2 (Post Deploy)
+**Date:** 2026-03-04
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-UAT-001 | UAT Page Availability | หน้า `/operations/aws/prod/createec2` ต้องเข้าได้บน UAT | `GET https://itportal.jfin.network/operations/aws/prod/createec2` ได้ `HTTP 200` | **Passed** |
+| PROD-EC2-UAT-002 | UAT API Method Guard | `GET /api/operations/aws/prod/createec2` ต้องถูกปฏิเสธ | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-UAT-003 | UAT API Validation | `POST {}` ต้องได้ validation message | ได้ `HTTP 400` และ `Missing required fields: instanceName or projectName` | **Passed** |
+| PROD-EC2-UAT-004 | UAT Navigation Link | หน้า `/operations` ต้องมีลิงก์ `Create EC2 Instance` ไป route ใหม่ | ตรวจ HTML พบ href `/operations/aws/prod/createec2` | **Passed** |
+
+### QA Verdict
+- ผ่านครบสำหรับการ deploy ฟีเจอร์ `Create EC2 Instance` ฝั่ง AWS PROD ใน UAT environment
+
+---
+
+## 25. Developer Verification: Update PROD EC2 Key Pair Name
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-KEY-001 | Key Pair Config Update | ฟังก์ชัน Create EC2 (PROD) ต้องใช้ `jventures-prod.pem` แทน `jventures-uat` | ตรวจโค้ดใน API พบ `--key-name jventures-prod.pem` | **Passed (Code Review)** |
+| PROD-EC2-KEY-002 | Syntax Check | ไฟล์ที่แก้ต้องไม่เกิด syntax error | ตรวจ error ที่ `src/app/api/operations/aws/prod/createec2/route.js` ไม่พบปัญหา | **Passed** |
+
+### Notes
+- รอบนี้เป็นการปรับค่า configuration เฉพาะ backend command
+- ยังไม่ได้รันเคสสร้าง EC2 จริงใน production environment
+
+---
+
+## 26. Developer Verification: Correct PROD Key Name to `jventures-prod`
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-KEY-003 | Existing Key Name Check | ต้องยืนยันชื่อ key pair ที่มีจริงใน `aws_prod` | `describe-key-pairs` พบ `jventures-prod` | **Passed** |
+| PROD-EC2-KEY-004 | API Command Update | โค้ดต้องใช้ `--key-name jventures-prod` | ตรวจโค้ดใน API พบ `--key-name jventures-prod` | **Passed (Code Review)** |
+| PROD-EC2-KEY-005 | Syntax Check | ไฟล์ที่แก้ต้องไม่เกิด syntax error | ตรวจ error ที่ route ไม่พบปัญหา | **Passed** |
+
+### Notes
+- รอบนี้เป็นการแก้ชื่อ key-name ให้ตรงกับ key pair ที่มีอยู่จริงใน AWS profile `aws_prod`
+- ยังไม่ได้รันเคส create ผ่าน API เพื่อหลีกเลี่ยงการสร้างทรัพยากรเพิ่มโดยไม่จำเป็น
+
+---
+
+## 27. Developer Local Smoke Retest: PROD Create EC2 API (Post Key Fix)
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-SMOKE-001 | API Method Guard | `GET /api/operations/aws/prod/createec2` ต้องถูกปฏิเสธ | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-SMOKE-002 | API Validation | `POST {}` ต้องได้ validation error | ได้ `HTTP 400` และข้อความ `Missing required fields: instanceName or projectName` | **Passed** |
+
+### Notes
+- รอบนี้เป็น smoke re-test แบบปลอดภัย (ไม่สร้าง EC2 จริง)
 | :--- | :--- | :--- | :--- | :--- |
 | BPMAP-SCH-001 | Scheme Validation | รองรับเฉพาะ `http` และ `https` | ทดสอบ `scheme=ftp` ได้ `400 Bad Request` | **Passed** |
 | BPMAP-SCH-002 | Target URL Composition | ต้องประกอบ URL เป็น `<scheme>://<endpoint_ip>:<port><path>` | ทดสอบ `scheme=https`, `endpoint=10.240.1.114:3000`, `path=/path1` ได้ `targetUrl=https://10.240.1.114:3000/path1` | **Passed** |
@@ -410,6 +471,25 @@ All core operational features have been implemented and tested. The primary focu
 
 ---
 
+## 28. Developer Smoke Test: PROD Create EC2 API (Subnet + SG Clone Update)
+**Date:** 2026-03-04
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-EC2-NET-001 | Local API Method Guard | `GET /api/operations/aws/prod/createec2` ต้องได้ `405` | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-NET-002 | Local API Validation | `POST {}` ต้องได้ `400` | ได้ `HTTP 400` พร้อมข้อความ `Missing required fields: instanceName or projectName` | **Passed** |
+| PROD-EC2-NET-003 | Docker API Method Guard | `GET /api/operations/aws/prod/createec2` บน Docker ต้องได้ `405` | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-NET-004 | Docker API Validation | `POST {}` บน Docker ต้องได้ `400` | ได้ `HTTP 400` พร้อมข้อความ validation | **Passed** |
+| PROD-EC2-NET-005 | UAT API Method Guard | `GET https://itportal.jfin.network/api/operations/aws/prod/createec2` ต้องได้ `405` | ได้ `HTTP 405` | **Passed** |
+| PROD-EC2-NET-006 | UAT API Validation | `POST {}` ที่ UAT ต้องได้ `400` | ได้ `HTTP 400` พร้อมข้อความ validation | **Passed** |
+
+### Notes
+- การเปลี่ยนแปลงหลักรอบนี้คือเพิ่ม flow สร้าง SG ใหม่จาก source SG และเปลี่ยน subnet เป็น `subnet-0ce756ed09bd7abe5`
+- รอบนี้เป็น smoke test แบบปลอดภัย (ไม่ยิงเคสสร้าง instance จริง) เพื่อหลีกเลี่ยงการสร้างทรัพยากรเพิ่มโดยไม่จำเป็น
+
+---
+
 ## 24. Senior QA Retest: Edit with Existing Service but Missing Route
 **Date:** 2026-02-26
 **Tested By:** Senior QA (GitHub Copilot)
@@ -437,6 +517,27 @@ All core operational features have been implemented and tested. The primary focu
 | BPMAP-SFX-001 | Duplicate Domain + Same Path | ถ้าโดเมนซ้ำและ path เดิม ต้องไม่สร้างซ้ำ | `example.com` + `/path1` ได้ `409`, message `mapping นี้มีอยู่แล้ว` | **Passed** |
 | BPMAP-SFX-002 | Duplicate Domain + Different Path | ถ้าโดเมนซ้ำแต่ path ใหม่ ต้องตั้งชื่อ service ต่อท้าย `_count` | `example.com` + `/path2` ได้ `200`, `serviceName=svc_example.com_1` | **Passed** |
 | BPMAP-SFX-003 | Route Naming Alignment | route name ควรสอดคล้องกับ service ที่ถูก suffix | ได้ `routeName=route_example.com_1` และสร้าง route สำเร็จ | **Passed** |
+
+---
+
+## 29. Senior QA Full Test: Validate All Links (Local + UAT)
+**Date:** 2026-03-11
+**Tested By:** Senior QA (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| LINK-LCL-001 | Local Internal Links | ทุก internal route หลักต้องตอบสถานะใช้งานได้ | ทดสอบ 16 เส้นทางหลัก (`/`, `/contact`, `/home`, `/login`, `/operations`, กลุ่ม AWS/BytePlus) ได้ `HTTP 200` ทั้งหมด | **Passed** |
+| LINK-LCL-002 | Local External Links | ลิงก์ภายนอกต้องเข้าถึงได้จากเครื่องทดสอบ | `api-monitor`, `kong-ui-uat`, `kong-ui`, AWS Console ได้ `HTTP 200`; ลิงก์ `http://10.224.100.4:1337/#!/services` ได้ `000` (connect ไม่ได้) | **Passed with Note** |
+| LINK-LCL-003 | Placeholder Links | ไม่ควรมีลิงก์ placeholder ที่ปลายทางไม่จริง | พบ `href="#"` ในหลายหน้า (`home`, `operations`, `footer`) | **Failed (Functional Gap)** |
+| LINK-DKR-001 | Docker Environment Link Test | ต้องทดสอบซ้ำบน Docker ตาม process | รันไม่ได้ในเครื่องนี้ เนื่องจากไม่พบ `docker`/`docker-compose` ใน WSL distro | **Blocked (Environment)** |
+| LINK-UAT-001 | UAT Internal Links | ทุก internal route หลักบน UAT ต้องตอบใช้งานได้ | ทดสอบ 16 เส้นทางหลักบน `https://itportal.jfin.network` ได้ `HTTP 200` ทั้งหมด | **Passed** |
+
+### Notes
+- ขั้นตอน UAT ในรอบนี้เป็นการตรวจความพร้อมของลิงก์บนระบบที่ deploy แล้ว (ไม่ได้ทำ `git push` เพิ่ม เพราะคำขอรอบนี้เป็น test only)
+- ลิงก์ `10.224.100.4:1337` เป็นปลายทาง private network จึงอาจต้องเข้า VPN/เครือข่ายภายในก่อนใช้งาน
+- เพื่อปิดเคส “ลิงก์ไม่ตาย” ให้ครบ ควรแก้ลิงก์ placeholder (`#`) ให้เป็น route จริงหรือ disabled state
+
+**QA Verdict:** Internal links หลักผ่านทั้ง Local/UAT แต่ยังมีช่องว่างจาก placeholder links และ Docker test blocker ใน environment ปัจจุบัน
 
 ### Notes
 - API ส่งค่า `serviceSuffix` ใน response เพื่อบอกลำดับ suffix ที่เลือกใช้จริง

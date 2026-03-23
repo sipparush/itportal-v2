@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: itportalv2_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: it_user
+      POSTGRES_PASSWORD: it_password
+      POSTGRES_DB: itportal_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - itportalv2_postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+
+volumes:
+  itportalv2_postgres_data:
