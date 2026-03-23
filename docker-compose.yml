@@ -1,11 +1,25 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: it_user
+      POSTGRES_PASSWORD: it_password
+      POSTGRES_DB: itportal_db
+    ports:
+      - "5442:5432"
+    volumes:
+      - itportalv2_postgres_data:/var/lib/postgresql/data
+      - ./backend/init:/docker-entrypoint-initdb.d
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: itportal-v2
+    depends_on:
+      - postgres
     ports:
       - "3000:3000"
     volumes:
@@ -21,8 +35,12 @@ services:
       - NODE_ENV=production
       - AWS_PROFILE=aws_nonprod
       - AWS_REGION=ap-southeast-1
+      - DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db
     env_file:
       - .env
     # Check if we need to set user explicitly if UID mismatch causes permission issues
     # user: "${UID}:${GID}" 
     restart: unless-stopped
+
+volumes:
+  itportalv2_postgres_data:
