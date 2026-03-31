@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { exec, execFile } from 'child_process';
 import util from 'util';
 import fs from 'fs/promises';
+import fsSync from 'fs';
 import path from 'path';
 import { query } from '@/lib/postgres';
 import * as XLSX from 'xlsx';
@@ -11,15 +12,24 @@ const execPromise = util.promisify(exec);
 const AWS_PROFILE = 'aws_nonprod';
 const LOG_FILE = path.resolve(process.cwd(), 'scan_security_patch_nonprod.log');
 const IPV4_PATTERN = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+const SSH_KEY_CANDIDATES = [
+    process.env.NONPROD_SECURITY_PATCH_SSH_KEY_PATH,
+    '/home/node/.ssh/jventures-uat.pem',
+    path.join(process.env.HOME || '', '.ssh', 'jventures-uat.pem'),
+    '/app/jventures-uat.pem',
+    path.join(process.cwd(), 'jventures-uat.pem')
+].filter(Boolean);
 
 const REMOTE_SCAN_SCRIPT = `
 set -u
 os_name="unknown"
 os_id="unknown"
+os_version=""
 if [ -f /etc/os-release ]; then
   . /etc/os-release
   os_name="\${PRETTY_NAME:-unknown}"
   os_id="\${ID:-unknown}"
+  os_version="\${VERSION_ID:-}"
 fi
 kernel="$(uname -r 2>/dev/null || echo unknown)"
 security_patch_version="$kernel"
@@ -29,14 +39,41 @@ patch_reference_date=""
 case "$os_id" in
   ubuntu|debian)
     if command -v apt-get >/dev/null 2>&1; then
-      pending="$(apt-get -s upgrade 2>/dev/null | awk '/^Inst / && /Security/ {count++} END {print count+0}')"
-      if [ "$pending" -eq 0 ]; then
+      apt-get update -qq >/dev/null 2>&1 || true
+
+      if command -v ubuntu-security-status >/dev/null 2>&1; then
+        pending="$(ubuntu-security-status --format json 2>/dev/null | awk -F: '
+          /"num_standard_security_updates"/ {gsub(/[^0-9]/, "", $2); standard=$2}
+          /"num_esm_apps_updates"/ {gsub(/[^0-9]/, "", $2); esm_apps=$2}
+          /"num_esm_infra_updates"/ {gsub(/[^0-9]/, "", $2); esm_infra=$2}
+          END {print (standard+0) + (esm_apps+0) + (esm_infra+0)}
+        ')"
+      else
+        pending="$(apt list --upgradable 2>/dev/null | tail -n +2 | while IFS= read -r line; do
+          pkg="\${line%%/*}"
+          [ -n "$pkg" ] || continue
+          if apt-cache policy "$pkg" 2>/dev/null | grep -E 'security\\.ubuntu\\.com|esm\\.ubuntu\\.com|Debian-Security' >/dev/null 2>&1; then
+            echo "$pkg"
+          fi
+        done | wc -l | tr -d ' ')"
+      fi
+
+      case "$pending" in
+        ''|*[!0-9]*) pending="unknown" ;;
+      esac
+
+      if [ "$pending" = "unknown" ]; then
+        latest_status="unknown"
+      elif [ "$pending" -eq 0 ]; then
         latest_status="up-to-date"
       else
         latest_status="pending-security-updates:$pending"
       fi
     fi
     patch_reference_date="$(stat -c %y /var/lib/apt/periodic/update-success-stamp 2>/dev/null | cut -d'.' -f1 || true)"
+    if [ -z "$patch_reference_date" ]; then
+      patch_reference_date="$(find /var/lib/apt/lists -type f -printf '%TY-%Tm-%Td %TH:%TM:%TS\n' 2>/dev/null | sort | tail -n 1 | cut -d'.' -f1 || true)"
+    fi
     ;;
   amzn|rhel|centos|rocky|almalinux|fedora)
     if command -v dnf >/dev/null 2>&1; then
@@ -103,6 +140,10 @@ function parseRemoteOutput(stdout) {
     return parsed;
 }
 
+function getSshKeyPath() {
+    return SSH_KEY_CANDIDATES.find((candidate) => fsSync.existsSync(candidate)) || null;
+}
+
 async function ensureScanSecurityPatchTable() {
     await query(`
         CREATE TABLE IF NOT EXISTS scan_security_patch (
@@ -137,7 +178,9 @@ function mapDatabaseRow(row) {
     };
 }
 
-async function getScanHistory(limit = 20) {
+async function getScanHistory({ page = 1, limit = 20 }) {
+    const offset = (page - 1) * limit;
+    // Query for paginated data
     const { rows } = await query(`
         SELECT
             instance_id,
@@ -153,10 +196,17 @@ async function getScanHistory(limit = 20) {
             created_at
         FROM scan_security_patch
         ORDER BY updated_at DESC
-        LIMIT $1
-    `, [limit]);
+        LIMIT $1 OFFSET $2
+    `, [limit, offset]);
 
-    return rows.map(mapDatabaseRow);
+    // Query for total count
+    const { rows: countRows } = await query('SELECT COUNT(*) AS total FROM scan_security_patch');
+    const totalRecords = parseInt(countRows[0]?.total || '0', 10);
+
+    return {
+        history: rows.map(mapDatabaseRow),
+        totalRecords,
+    };
 }
 
 function buildWorkbookRows(history) {
@@ -315,9 +365,14 @@ async function runRemoteScan(target) {
 
     const checkDate = new Date().toISOString();
     const lastScanDate = await getLastScanDate(target.instanceId, target.ip);
+    const sshKeyPath = getSshKeyPath();
 
     try {
-        const sshCommand = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ConnectTimeout=10 jventures@${target.ip} 'bash -s' <<'EOF'\n${REMOTE_SCAN_SCRIPT}\nEOF`;
+        if (!sshKeyPath) {
+            throw new Error(`SSH key not found. Checked: ${SSH_KEY_CANDIDATES.join(', ')}`);
+        }
+
+        const sshCommand = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=10 -i ${sshKeyPath} jventures@${target.ip} 'bash -s' <<'EOF'\n${REMOTE_SCAN_SCRIPT}\nEOF`;
         const { stdout, stderr } = await execPromise(sshCommand, { maxBuffer: 1024 * 1024 });
 
         const parsed = parseRemoteOutput(stdout || '');
@@ -332,6 +387,7 @@ async function runRemoteScan(target) {
             patchReferenceDate: parsed.patchReferenceDate || null,
             securityPatchVersion: parsed.securityPatchVersion,
             latestStatus: parsed.latestStatus,
+            sshKeyPath,
             stderr: stderr?.trim() || ''
         };
 
@@ -351,6 +407,7 @@ async function runRemoteScan(target) {
             patchReferenceDate: null,
             securityPatchVersion: 'unknown',
             latestStatus: 'scan-failed',
+            sshKeyPath,
             error: error.stderr?.trim() || error.message
         };
 
@@ -435,8 +492,10 @@ export async function GET(request) {
 
         const { searchParams } = new URL(request.url);
         const limitParam = Number.parseInt(searchParams.get('limit') || '20', 10);
+        const pageParam = Number.parseInt(searchParams.get('page') || '1', 10);
         const limit = Number.isNaN(limitParam) ? 20 : Math.min(Math.max(limitParam, 1), 100);
-        const history = await getScanHistory(limit);
+        const page = Number.isNaN(pageParam) ? 1 : Math.max(pageParam, 1);
+        const { history, totalRecords } = await getScanHistory({ page, limit });
         const format = searchParams.get('format');
 
         if (format === 'xlsx') {
@@ -458,8 +517,8 @@ export async function GET(request) {
 
         return NextResponse.json({
             success: true,
-            count: history.length,
-            history
+            history,
+            totalRecords,
         });
     } catch (error) {
         return NextResponse.json({

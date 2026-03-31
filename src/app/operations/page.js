@@ -51,6 +51,24 @@ export default function OperationsPage() {
                 <p className="text-gray-600">สถานะและเครื่องมือจัดการ Cloud Infrastructure</p>
             </div>
 
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Application Management</h1>
+                <p className="text-gray-600">จัดการ applications
+                    <a href="http://localhost:3001/" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                        <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span className="font-medium">Goal to ticket management</span>
+                    </a>
+                    <a href="https://ndidlog.jventures.co.th/" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                        <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span className="font-medium">NDID log explorer</span>
+                    </a>
+                    <a href="https://front-services-otp.jfin.network/admin/sms-dashboard" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                        <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span className="font-medium">SMS Dashboard</span>
+                    </a>
+                </p>
+            </div>
+
             {/* Tabs Navigation */}
             <div className="border-b border-gray-200">
                 <nav className="-mb-px flex space-x-8" aria-label="Tabs">
@@ -87,10 +105,11 @@ export default function OperationsPage() {
                                 </div>
                                 <div className="bg-red-50 rounded-lg p-4 border border-red-100">
                                     <ul className="space-y-3">
+
                                         <li>
                                             <a href="/operations/aws/prod/mapurl" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                                                <span className="font-medium">Map URL to Endpoint</span>
+                                                <span className="font-medium">Map URL by Kong</span>
                                             </a>
                                         </li>
                                         <li>
@@ -106,9 +125,9 @@ export default function OperationsPage() {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="https://api-monitor.jventures.co.th/" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                                            <a href="https://api-monitor.jventures.co.th/dashboards?starred" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                                <span className="font-medium">Monitor API</span>
+                                                <span className="font-medium">Monitoring by Grafana</span>
                                             </a>
                                         </li>
 
@@ -218,11 +237,46 @@ export default function OperationsPage() {
                 {activeTab === 'huawei' && (
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-gray-800">Huawei Cloud Operations</h2>
-                        <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
-                            <h3 className="font-semibold text-gray-800">OBS Storage</h3>
-                            <p className="text-sm text-gray-600">Total stored: 2.1 TB</p>
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* Production Section */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                                    <h3 className="font-bold text-lg text-gray-900">Production (PROD)</h3>
+                                </div>
+                                <div className="bg-red-50 rounded-lg p-4 border border-red-100">
+                                    <ul className="space-y-3">
+                                        <li>
+                                            <a href="https://ekyc-backoffice-v2.jfin.network/admin/dashboard" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                                <span className="font-medium">eKyc backoffice</span>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {/* Non-Production Section */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                                    <h3 className="font-bold text-lg text-gray-900">Non-Production (UAT/DEV)</h3>
+                                </div>
+                                <div className="bg-green-50 rounded-lg p-4 border border-green-100">
+                                    <ul className="space-y-3">
+                                        <li>
+                                            <Link href="https://ekyc-backoffice-uat-v2.jfin.network/admin/dashboard" target="_blank" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                                <span className="font-medium">eKyc backoffice (UAT)</span>
+                                            </Link>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        {/* Add Huawei Cloud specific content here */}
                     </div>
                 )}
 

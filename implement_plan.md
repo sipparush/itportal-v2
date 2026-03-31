@@ -1,3 +1,27 @@
+# แผนการเพิ่ม Pagination ใน Database History (Check Security Patch)
+
+## รายละเอียด
+เพิ่มฟีเจอร์ pagination ในส่วน Database History ของหน้า Check Security Patch (Non-Prod) เพื่อให้สามารถดูข้อมูลย้อนหลังได้สะดวกขึ้น
+
+## Checklist
+- [ ] 1. เพิ่ม state page, pageSize, totalRecords ในไฟล์ page.js
+- [ ] 2. ปรับฟังก์ชัน loadHistory ให้รับ page, pageSize และดึงข้อมูลตาม pagination
+- [ ] 3. ปรับ UI ให้มีปุ่มเปลี่ยนหน้า (Next/Prev) และแสดงหน้าปัจจุบัน
+- [ ] 4. ปรับ fetch API ฝั่ง backend (ถ้ายังไม่รองรับ) ให้รับ page, pageSize และคืน totalRecords มาด้วย
+- [ ] 5. ทดสอบการเปลี่ยนหน้าและ edge case (เช่น ไม่มีข้อมูล, อยู่หน้าสุดท้าย)
+- [ ] 6. รอ Senior QA ทำ full test และบันทึกใน full_test_result.md
+- [ ] 7. Develop อ่านผลทดสอบและอัพเดต implement_plan.md ตามผลการทดสอบ
+- [ ] 8. แก้ไขตามผลทดสอบ (ถ้ามี)
+- [ ] 9. ทดสอบซ้ำจนผ่านทุกเคส
+- [ ] 10. ขออนุมัติเปลี่ยน environment ตามขั้นตอน
+
+---
+
+**สถานะ:** รออนุมัติ (ได้รับการอนุมัติแล้ว)
+
+---
+
+> หมายเหตุ: หาก backend ยังไม่รองรับ pagination จะเพิ่ม task สำหรับ backend เพิ่มเติม
 # แผนการดำเนินการ Implement Features (Implementation Plan)
 
 เอกสารนี้แสดงรายละเอียดแผนงานสำหรับการพัฒนาระบบ IT Portal v2 ตามคำขอ โดยเน้นเรื่องความปลอดภัยและการตรวจสอบสถานะของงาน

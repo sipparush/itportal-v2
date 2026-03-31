@@ -3,6 +3,61 @@
 import { useEffect, useState } from 'react';
 
 export default function CheckSecurityPatchPage() {
+    // เรียก backend เพื่อ update security patch
+    const handleUpdatePatch = async (item) => {
+        setError('');
+        setIsUpdating(true);
+        setUpdatingId(item.instanceId);
+
+        console.log(item)
+
+        try {
+            // TODO: เปลี่ยน endpoint ให้ตรงกับ backend จริง
+            const response = await fetch('/api/operations/aws/nonprod/check-security-patch/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ instanceId: item.instanceId, ip: item.ip })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Update security patch failed');
+            }
+            await loadHistory();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsUpdating(false);
+            setUpdatingId(null);
+        }
+    };
+
+    const handleDeletePatch = async (item) => {
+        setError('');
+
+        // console.log(item)
+
+        try {
+            // TODO: เปลี่ยน endpoint ให้ตรงกับ backend จริง
+            const response = await fetch('/api/operations/aws/nonprod/check-security-patch/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ instanceId: item.instanceId, ip: item.ip })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Delete security patch failed');
+            }
+            await loadHistory();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsUpdating(false);
+            setUpdatingId(null);
+        }
+    };
+
+
+
     const [ipInput, setIpInput] = useState('');
     const [isScanningFarm, setIsScanningFarm] = useState(false);
     const [isScanningIp, setIsScanningIp] = useState(false);
@@ -11,13 +66,21 @@ export default function CheckSecurityPatchPage() {
     const [history, setHistory] = useState([]);
     const [isLoadingHistory, setIsLoadingHistory] = useState(true);
     const [isExportingHistory, setIsExportingHistory] = useState(false);
+    // --- Pagination state ---
+    const [page, setPage] = useState(1); // หน้าปัจจุบัน
+    const [pageSize, setPageSize] = useState(20); // จำนวนรายการต่อหน้า (default 20)
+    const [totalRecords, setTotalRecords] = useState(0); // จำนวน record ทั้งหมด
 
-    const loadHistory = async () => {
+    // --- Update patch state ---
+    const [isUpdating, setIsUpdating] = useState(false); // กำลังอัปเดต patch อยู่หรือไม่
+    const [updatingId, setUpdatingId] = useState(null); // instanceId ที่กำลังอัปเดต
+
+    const loadHistory = async (customPage = page, customPageSize = pageSize) => {
         try {
             setIsLoadingHistory(true);
-            const response = await fetch('/api/operations/aws/nonprod/check-security-patch?limit=20', {
-                cache: 'no-store'
-            });
+            const response = await fetch(`/api/operations/aws/nonprod/check-security-patch?page=${customPage}&limit=${customPageSize}`,
+                { cache: 'no-store' }
+            );
             const data = await response.json();
 
             if (!response.ok || !data.success) {
@@ -25,6 +88,7 @@ export default function CheckSecurityPatchPage() {
             }
 
             setHistory(data.history || []);
+            setTotalRecords(typeof data.totalRecords === 'number' ? data.totalRecords : 0);
         } catch (historyError) {
             setError(historyError.message);
         } finally {
@@ -34,15 +98,21 @@ export default function CheckSecurityPatchPage() {
 
     useEffect(() => {
         loadHistory();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, pageSize]);
 
-    const runScan = async (mode) => {
+    // ปรับให้รับ mode, ipArg แบบปกติ
+    const runScan = async (mode, ipArg = null) => {
         setError('');
         setResult(null);
 
-        if (mode === 'ip' && !ipInput.trim()) {
-            setError('Please provide an IP address before scanning by IP.');
-            return;
+        let ipToUse = ipArg;
+        if (mode === 'ip') {
+            if (!ipToUse) ipToUse = ipInput.trim();
+            if (!ipToUse) {
+                setError('Please provide an IP address before scanning by IP.');
+                return;
+            }
         }
 
         if (mode === 'farm') {
@@ -59,7 +129,7 @@ export default function CheckSecurityPatchPage() {
                 },
                 body: JSON.stringify({
                     mode,
-                    ip: ipInput.trim()
+                    ip: mode === 'ip' ? ipToUse : undefined
                 })
             });
 
@@ -174,7 +244,7 @@ export default function CheckSecurityPatchPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    {/* <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
                         <h2 className="text-lg font-semibold text-gray-900 mb-3">Log Output</h2>
                         <p className="text-sm text-gray-600 mb-3">
                             ทุกครั้งที่สแกนสำเร็จหรือไม่สำเร็จ ระบบจะ append ลงไฟล์ <span className="font-mono">scan_security_patch_nonprod.log</span>
@@ -186,7 +256,7 @@ export default function CheckSecurityPatchPage() {
                                 &lt;instance_id&gt; &lt;name&gt; &lt;ip&gt; &lt;check_date&gt; &lt;security_patch_version&gt; &lt;latest_status&gt;
                             </span>
                         </p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -303,15 +373,76 @@ export default function CheckSecurityPatchPage() {
                                     <td className="px-4 py-3 text-gray-700">{item.osName || '-'}</td>
                                     <td className="px-4 py-3 font-mono text-gray-700">{item.checkDate}</td>
                                     <td className="px-4 py-3 font-mono text-gray-700">{item.securityPatchVersion}</td>
+
+
                                     <td className="px-4 py-3">
                                         <span className="inline-flex rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
                                             {item.latestStatus}
                                         </span>
+                                        {item.latestStatus !== 'up-to-date' && (
+                                            <button
+                                                type="button"
+                                                className="ml-2 px-2 py-1 bg-orange-500 text-white rounded text-xs"
+                                                onClick={() => handleUpdatePatch(item)}
+                                                disabled={isUpdating && updatingId === item.instanceId}
+                                            >
+                                                {isUpdating && updatingId === item.instanceId ? 'Updating...' : 'Update'}
+                                            </button>
+                                        )}
                                     </td>
+
+                                    <td className="px-4 py-3">
+                                        <button
+                                            type="button"
+                                            className="ml-2 px-2 py-1 bg-blue-300 text-white rounded text-xs"
+                                            onClick={() => runScan('ip', item.ip)}
+                                            disabled={isScanningIp}
+                                        >
+                                            {isScanningIp ? 'Re-checking...' : 'Re-check'}
+                                        </button>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <button
+                                            type="button"
+                                            className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
+                                            onClick={() => handleDeletePatch(item)}
+
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                </div>
+                {/* Pagination Controls */}
+                <div className="flex items-center justify-between mt-4">
+                    <div className="text-sm text-gray-600">
+                        แสดงหน้า <span className="font-bold">{page}</span> จากทั้งหมด <span className="font-bold">{Math.max(1, Math.ceil(totalRecords / pageSize))}</span> หน้า
+                        {totalRecords > 0 && (
+                            <span> ({totalRecords} รายการ)</span>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                            disabled={page === 1 || isLoadingHistory}
+                            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                            ก่อนหน้า
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPage((prev) => prev + 1)}
+                            disabled={page >= Math.ceil(totalRecords / pageSize) || isLoadingHistory}
+                            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                            ถัดไป
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
