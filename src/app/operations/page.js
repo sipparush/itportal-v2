@@ -58,7 +58,7 @@ export default function OperationsPage() {
                         <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         <span className="font-medium">Goal to ticket management</span>
                     </a>
-                    <a href="https://ndidlog.jventures.co.th/" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                    <a href="https://itportal-ndidlog.jventures.co.th/" target="_blank" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                         <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         <span className="font-medium">NDID log explorer</span>
                     </a>
