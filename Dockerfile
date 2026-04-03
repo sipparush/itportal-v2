@@ -34,19 +34,16 @@ RUN apk add --no-cache \
     git \
     && aws --version
 
-
-# สร้าง user node ที่มี UID 1001
-RUN adduser -u 1001 -D node
-
+# Use existing node user (UID 1000) instead of creating new one
+# RUN addgroup --system --gid 1001 nodejs
+# RUN adduser --system --uid 1001 nextjs
 
 # Set home directory explicitly
 ENV HOME=/home/node
 
-
 # Configure AWS Credentials
 RUN mkdir -p /home/node/.aws && \
     chown -R node:node /home/node/.aws
-
 
 # Create script first
 COPY docker-entrypoint.sh /usr/local/bin/
@@ -56,15 +53,12 @@ COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
-
 # Copy full .next folder and node_modules with correct ownership
 COPY --from=builder --chown=node:node /app/.next ./.next
 COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
-
 # Ensure permissions for node user (non-recursive to save time, COPY handles contents)
-RUN chown -R node:node /app
-
+RUN chown node:node /app
 
 # Copy existing state file and set permissions
 COPY backupec2_state.json /app/backupec2_state.json
@@ -72,8 +66,7 @@ RUN chmod 666 /app/backupec2_state.json
 
 
 
-
-# Switch to user node (UID 1001)
+# Switch to user node
 USER node
 
 EXPOSE 3000
