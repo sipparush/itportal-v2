@@ -162,3 +162,6 @@ i-05c8a88968d1e229e jvc-dv-jkn-pub-uat03 10.240.5.17 2026-03-25T07:22:36.292Z 6.
 i-0e1983b981edc6114 klaidev_public 10.240.5.105 2026-03-25T07:23:50.731Z 6.8.0-1050-aws up-to-date
 i-08430429abbcbcdbc jvc-dv-aps-pcl-uat02 10.240.1.182 2026-03-25T07:24:03.629Z unknown scan-failed
 i-08430429abbcbcdbc jvc-dv-aps-pcl-uat02 10.240.1.182 2026-03-25T07:28:59.129Z 6.8.0-1050-aws up-to-date
+i-087d3eb505d726e21 jvc-dv-aps-jmp-uat01 10.240.1.10 2026-04-03T11:00:32.793Z 6.8.0-1021-aws up-to-date
+i-05658a85e00fb5fd0 jvc-dv-aps-pot-uat02 10.240.1.203 2026-04-03T11:00:38.106Z 5.15.0-1028-aws up-to-date
+i-08a69f4194d338eb2 jvc-dv-aps-jfc-dev03 10.240.3.148 2026-04-03T11:00:41.014Z 5.4.0-65-generic up-to-date
