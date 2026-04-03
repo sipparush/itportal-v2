@@ -200,7 +200,7 @@ export default function OperationsPage() {
 
                 {activeTab === 'byteplus' && (
                     <div className="space-y-4">
-                        <h2 className="text-xl font-semibold text-gray-800">BytePlus Operations</h2>
+                        <h2 className="text-xl font-semibold text-gray-800">BytePlus Operations (work in local+bp vpn only)</h2>
                         <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
                             <h3 className="font-semibold text-gray-800 mb-2">Map URL to Endpoint</h3>
                             <p className="text-sm text-gray-600 mb-3">ไปยังหน้าสำหรับ map URL เข้า endpoint IP:Port</p>

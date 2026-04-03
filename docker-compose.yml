@@ -23,18 +23,15 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # Mount state file for persistence
       - ./backupec2_state.json:/app/backupec2_state.json
-      # Mount raw data directory
       - ./raw-data:/app/raw-data
       - ../../secrets:/home/node/.ssh
-      # - /home/jventures/.ssh:/home/node/.ssh
 
     environment:
       - NODE_ENV=production
       - AWS_PROFILE=aws_nonprod
       - AWS_REGION=ap-southeast-1
-      - DATABASE_URL=postgresql://it_user:it_password@postgres:5442/itportal_db
+      - DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db
     env_file:
       - .env
     # Check if we need to set user explicitly if UID mismatch causes permission issues
