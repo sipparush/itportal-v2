@@ -34,6 +34,50 @@ export default function ByteplusMapUrlPage() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [result, setResult] = useState(null);
+    const [formData, setFormData] = useState({ fqdn: '' });
+    const [isAddingToCf, setIsAddingToCf] = useState(false);
+    const [cfResult, setCfResult] = useState(null);
+
+    const handleAddUrlToCf = async () => {
+        if (!formData.fqdn.trim()) {
+            setCfResult({
+                success: false,
+                message: 'กรุณากรอก FQDN ก่อนเพิ่มข้อมูลเข้า Cloudflare'
+            });
+            return;
+        }
+
+        setIsAddingToCf(true);
+        setCfResult(null);
+
+        try {
+            const response = await fetch('/api/operations/byteplus/managecf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fqdn: formData.fqdn,
+                    proxied: true,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setCfResult({ success: true, data });
+            } else {
+                setCfResult({
+                    success: false,
+                    message: data.message || 'Cloudflare request failed',
+                });
+            }
+        } catch (error) {
+            setCfResult({ success: false, message: error.message });
+        } finally {
+            setIsAddingToCf(false);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -187,7 +231,51 @@ export default function ByteplusMapUrlPage() {
                         >
                             Advance config
                         </a>
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-md border border-emerald-100 bg-emerald-50 p-3">
+                            <div>
+                                <p className="text-sm font-medium text-emerald-800">Cloudflare DNS</p>
+                                <p className="text-xs text-emerald-700">
+                                    ปุ่มนี้จะสร้าง/อัปเดต A record ไปที่ 52.220.167.209 และเปิด proxy ให้อัตโนมัติ
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={handleAddUrlToCf}
+                                disabled={isAddingToCf || !formData.fqdn.trim()}
+                                className="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md !text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
+                            >
+                                {isAddingToCf ? 'Adding to Cloudflare...' : 'addURLToCF'}
+                            </button>
+                        </div>
+
+                        {cfResult && (
+                            <div className={`rounded-md border p-4 text-sm ${cfResult.success ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-red-200 bg-red-50 text-red-700'}`}>
+                                <p className="font-semibold">
+                                    {cfResult.success ? 'Cloudflare DNS updated successfully' : 'Cloudflare DNS update failed'}
+                                </p>
+                                <p className="mt-1">
+                                    {cfResult.success ? cfResult.data.message : cfResult.message}
+                                </p>
+                                {cfResult.success && cfResult.data?.details && (
+                                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                                        <div>
+                                            <span className="font-medium">Zone:</span> {cfResult.data.details.zoneName}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Status:</span> {cfResult.data.details.status}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Hostname:</span> {cfResult.data.details.hostname}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Target IP:</span> {cfResult.data.details.content}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
+
 
                     {error && <div className="text-sm text-red-600">{error}</div>}
                     {success && <div className="text-sm text-green-600">{success}</div>}

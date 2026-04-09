@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const CLOUDFLARE_API_BASE = 'https://api.cloudflare.com/client/v4';
-const DEFAULT_TARGET_IP = '18.142.134.175';
+const DEFAULT_TARGET_IP = process.env.AWS_PROD_TARGET_IP || '18.142.134.175';
 
 function normalizeHostname(input) {
     if (!input || typeof input !== 'string') {

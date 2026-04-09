@@ -5,14 +5,16 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: it_user
-      POSTGRES_PASSWORD: it_password
-      POSTGRES_DB: itportal_db
+      # POSTGRES_USER: it_user
+      # POSTGRES_PASSWORD: it_password
+      # POSTGRES_DB: itportal_db  
     ports:
       - "5442:5432"
     volumes:
       - itportalv2_postgres_data:/var/lib/postgresql/data
       - ./backend/init:/docker-entrypoint-initdb.d
+    env_file:
+      - .env
 
   app:
     build:
@@ -29,15 +31,17 @@ services:
 
     environment:
       - NODE_ENV=production
-      - AWS_PROFILE=aws_nonprod
-      - AWS_REGION=ap-southeast-1
-      - DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db
-      - CF_API_TOKEN=${CF_API_TOKEN}
+      # - AWS_PROFILE=aws_nonprod
+      # - AWS_REGION=ap-southeast-1
+      # - DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db
+      # - CF_API_TOKEN=${CF_API_TOKEN}
       # - CF_DNS_TARGET_IP=${CF_DNS_TARGET_IP:-52.220.167.209}
 
       # Check if we need to set user explicitly if UID mismatch causes permission issues
       # user: "${UID}:${GID}" 
     restart: unless-stopped
+    env_file:
+      - .env
 
 volumes:
   itportalv2_postgres_data:
