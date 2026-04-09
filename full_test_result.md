@@ -558,3 +558,25 @@ All core operational features have been implemented and tested. The primary focu
 | BPEDIT-BC-003 | Syntax Validation | ไฟล์ที่แก้ต้องไม่มี syntax error | ตรวจไฟล์ `src/app/operations/byteplus/edit-map-url/page.js` ไม่พบ error | **Passed** |
 
 **QA Verdict:** ผ่านครบสำหรับการแก้ปัญหา breadcrumb ซ้ำในหน้า Edit URL to Endpoint
+
+---
+
+## 30. Developer Smoke Test: AWS Non-Prod Cloudflare DNS (`addURLToCF`)
+**Date:** 2026-04-08
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| CFDNS-001 | Page Route Availability | หน้า `/operations/aws/nonprod/mapurl` ต้องเปิดได้ | `GET http://localhost:3000/operations/aws/nonprod/mapurl` ได้ `200` | **Passed** |
+| CFDNS-002 | Button Visibility | ต้องมีปุ่ม `addURLToCF` ใต้ `For Advanced configuration` | ตรวจ HTML หน้าเว็บพบข้อความ `addURLToCF` | **Passed** |
+| CFDNS-003 | API Validation | ส่ง `fqdn` ไม่ถูกต้องต้องถูก reject | `POST /api/operations/aws/nonprod/managecf` ด้วย `{"fqdn":"bad fqdn"}` ตอบ `{"success":false,"message":"Invalid FQDN. Please provide a valid hostname."}` | **Passed** |
+| CFDNS-004 | Safe Zone Lookup | ส่ง hostname ที่ไม่มี zone ต้องตอบชัดเจนโดยไม่แก้ DNS จริง | `POST /api/operations/aws/nonprod/managecf` ด้วย `{"fqdn":"example.invalid"}` ตอบ `{"success":false,"message":"No Cloudflare zone found for hostname: example.invalid"}` | **Passed** |
+| CFDNS-005 | Edited File Lint | ไฟล์ที่แก้ต้องผ่าน lint | รัน `npx eslint src/app/api/operations/aws/nonprod/managecf/route.js src/app/operations/aws/nonprod/mapurl/page.js && echo ESLINT_OK` ได้ `ESLINT_OK` | **Passed** |
+| CFDNS-006 | Docker Smoke Test | ต้องสามารถรัน `docker-compose up -d --build` ตาม process | เครื่องทดสอบตอบ `docker-compose could not be found in this WSL 2 distro` | **Blocked (Environment)** |
+
+### Notes
+- รอบนี้เปลี่ยน `managecf` จาก shell `curl/exec` มาเป็น Cloudflare REST API โดยตรง เพื่อลดความเสี่ยง command injection และให้หา zone จาก hostname อัตโนมัติ
+- ตั้งค่า `CF_API_TOKEN` และ `CF_DNS_TARGET_IP` ในไฟล์ `.env` ที่ถูก ignore จาก git และส่ง env เข้า container ผ่าน `docker-compose.yml`
+- ยังไม่ได้ยิงเคส create/update กับโดเมนจริงในรอบทดสอบนี้ เพื่อหลีกเลี่ยงการเปลี่ยน DNS จริงโดยไม่มี `fqdn` ที่ผู้ใช้ยืนยันให้แก้ไข
+
+**Developer Verdict:** ฟีเจอร์พร้อมใช้งานใน local environment แล้ว และรอทดสอบ Docker/UAT เพิ่มเมื่อ environment พร้อม

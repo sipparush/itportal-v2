@@ -6,12 +6,11 @@ export default function Home() {
       {/* Hero Section */}
       <section className="text-center space-y-6 py-12 md:py-20">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
-          ศูนย์บริการไอทีครบวงจร
+          IT infrastructure web services
           <span className="block text-blue-600 mt-2">เพื่อ JVC</span>
         </h1>
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-600 leading-relaxed">
-          แจ้งปัญหา ขออุปกรณ์ หรือค้นหาข้อมูลช่วยเหลือเบื้องต้นได้ที่นี่
-          เราพร้อมดูแลระบบไอทีเพื่อให้การทำงานของคุณราบรื่นที่สุด
+          เปิด CR/INC/REQ เพื่อขอ IT services
         </p>
         <div className="flex justify-center gap-4 pt-4">
 
@@ -35,7 +34,7 @@ export default function Home() {
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-3">แจ้งปัญหาระบบ (Incident request)</h3>
           <p className="text-gray-600 leading-relaxed">
-            คอมพิวเตอร์ช้า, ปริ้นไม่ออก, หรือโปรแกรมมีปัญหา แจ้งเราได้ทันที
+            ระบบที่รันอยู่แล้ว เกิดใช้งานไม่ได้
           </p>
         </div>
 
@@ -48,7 +47,7 @@ export default function Home() {
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-3">แจ้งขอเปลี่ยนแปลง (Change request)</h3>
           <p className="text-gray-600 leading-relaxed">
-            เบิกเม้าส์, คีย์บอร์ด, จอภาพ หรืออุปกรณ์ต่อพ่วงอื่นๆ สำหรับการทำงาน
+            ต้องการเปลี่ยนการทำงานของระบบที่รันอยู่
           </p>
         </div>
 
@@ -61,7 +60,7 @@ export default function Home() {
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-3">คลังความรู้ (KB)</h3>
           <p className="text-gray-600 leading-relaxed">
-            คู่มือการใช้งาน, วิธีแก้ไขปัญหาเบื้องต้นด้วยตนเอง, และทริคไอที
+            คู่มือการใช้งาน, วิธีแก้ไขปัญหาเบื้องต้นด้วยตนเอง, และเอกสารสำหรับ IT
           </p>
         </div>
       </section>

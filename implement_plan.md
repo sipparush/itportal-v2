@@ -861,3 +861,46 @@
 - docker smoke: `POST {}` ไป endpoint เดียวกัน ได้ `400` พร้อมข้อความ validation
 - uat smoke: `GET https://itportal.jfin.network/api/operations/aws/prod/createec2` ได้ `405`
 - uat smoke: `POST {}` ไป endpoint เดียวกัน ได้ `400` พร้อมข้อความ validation
+
+## Request ใหม่: เพิ่มปุ่ม `addURLToCF` เพื่อสร้าง/อัปเดต Cloudflare DNS (Approved)
+
+สถานะ: ⚠️ Implemented (Local Passed / Docker Blocked by Environment)
+วันที่: 8 เมษายน 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- เพิ่มปุ่ม `addURLToCF` ใต้ข้อความ `For Advanced configuration` ในหน้า `Map URL to Endpoint (Non-Prod)`
+- เมื่อกดปุ่ม ให้เรียก Cloudflare API เพื่อสร้าง/อัปเดต DNS จาก `fqdn`
+- ให้ระบบหา zone จาก hostname ของ URL อัตโนมัติ
+- ใช้ปลายทาง DNS เป็น `A record -> 52.220.167.209` และ `proxied=true`
+- ตั้งค่า `CF_API_TOKEN` ใน local env สำหรับใช้งานฝั่ง server
+
+### แผนดำเนินการรอบนี้
+- [x] อัปเดตแผนงานและ checklist ใน `implement_plan.md`
+- [x] ปรับ API `src/app/api/operations/aws/nonprod/managecf/route.js`
+    - [x] ยกเลิกการใช้ shell `curl/exec` แบบเดิม
+    - [x] เรียก Cloudflare REST API โดยตรงผ่าน `fetch`
+    - [x] parse `fqdn` ให้เหลือ hostname และหา zone ที่ match อัตโนมัติ
+    - [x] ถ้ามี record เดิมให้ update, ถ้าไม่มีก็ create
+- [x] ปรับหน้า `src/app/operations/aws/nonprod/mapurl/page.js`
+    - [x] เพิ่มปุ่ม `addURLToCF`
+    - [x] เพิ่ม loading state และแสดงผลลัพธ์ของการเพิ่ม DNS
+    - [x] คงปุ่ม `Submit` เดิมสำหรับ Kong mapping ไว้เหมือนเดิม
+- [x] ตั้งค่า env สำหรับ `CF_API_TOKEN` แบบ local-only (`.env` ที่ถูก ignore จาก git)
+- [ ] ตรวจ syntax/error และทดสอบตามลำดับ environment
+    - [x] local test
+    - [ ] docker test (blocked: ไม่พบ `docker-compose` ใน WSL ปัจจุบัน)
+    - [ ] uat test / QA retest
+
+### ผลตรวจสอบรอบนี้ (2026-04-08)
+- `GET http://localhost:3000/operations/aws/nonprod/mapurl` ได้ `200`
+- ตรวจ HTML พบปุ่ม `addURLToCF` แสดงบนหน้าเรียบร้อย
+- `POST /api/operations/aws/nonprod/managecf` ด้วย `{"fqdn":"bad fqdn"}` ได้ validation error ตามคาด
+- `POST /api/operations/aws/nonprod/managecf` ด้วย `{"fqdn":"example.invalid"}` ได้ `No Cloudflare zone found...` ซึ่งยืนยันว่า route เรียก Cloudflare API จริงโดยไม่ไปแก้ DNS จริง
+- `npx eslint src/app/api/operations/aws/nonprod/managecf/route.js src/app/operations/aws/nonprod/mapurl/page.js && echo ESLINT_OK` ได้ผล `ESLINT_OK`
+- Docker smoke test ยังทำต่อไม่ได้ในเครื่องนี้ เพราะคำสั่ง `docker-compose` ไม่พร้อมใช้งาน
+
+### หมายเหตุ
+- งานรอบนี้จะ **ไม่ใช้ `destinationPort` กับ Cloudflare DNS** เพราะ DNS รองรับการ map ได้เฉพาะ hostname ไปยัง IP เท่านั้น
+- เก็บ secret ไว้ในไฟล์ env ที่ถูก ignore จาก git เพื่อความปลอดภัย
+- หากต้องการยืนยันเคส create/update จริง จำเป็นต้องระบุ `fqdn` ที่อนุญาตให้แก้ไขบน Cloudflare อย่างชัดเจน

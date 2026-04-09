@@ -11,7 +11,9 @@ export default function MapUrlPage() {
     });
 
     const [result, setResult] = useState(null);
+    const [cfResult, setCfResult] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isAddingToCf, setIsAddingToCf] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,6 +40,47 @@ export default function MapUrlPage() {
             alert('Error: ' + error.message);
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleAddUrlToCf = async () => {
+        if (!formData.fqdn.trim()) {
+            setCfResult({
+                success: false,
+                message: 'กรุณากรอก FQDN ก่อนเพิ่มข้อมูลเข้า Cloudflare'
+            });
+            return;
+        }
+
+        setIsAddingToCf(true);
+        setCfResult(null);
+
+        try {
+            const response = await fetch('/api/operations/aws/prod/managecf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fqdn: formData.fqdn,
+                    proxied: true,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setCfResult({ success: true, data });
+            } else {
+                setCfResult({
+                    success: false,
+                    message: data.message || 'Cloudflare request failed',
+                });
+            }
+        } catch (error) {
+            setCfResult({ success: false, message: error.message });
+        } finally {
+            setIsAddingToCf(false);
         }
     };
 
@@ -68,26 +111,12 @@ export default function MapUrlPage() {
                                 <span className="font-medium text-yellow-600">{result.details.status}</span>
                             </div>
                         </div>
-
-                        {/* <div className="border-t border-gray-200 pt-4 mt-2">
-                            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Generated Command</h4>
-                            <div className="bg-slate-800 text-green-400 p-3 rounded font-mono text-xs break-all relative group">
-                                {result.details.generatedCommand}
-                                <button
-                                    onClick={() => navigator.clipboard.writeText(result.details.generatedCommand)}
-                                    className="absolute top-2 right-2 p-1 bg-slate-700 hover:bg-slate-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                                    title="Copy to clipboard"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                </button>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-2 italic">* โปรดนำคำสั่งนี้ไปรันที่ Bastion Host เพื่อดำเนินการ</p>
-                        </div> */}
                     </div>
 
                     <button
                         onClick={() => {
                             setResult(null);
+                            setCfResult(null);
                             setFormData({ fqdn: '', destinationIp: '', destinationPort: '', notes: '' });
                         }}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
@@ -174,8 +203,55 @@ export default function MapUrlPage() {
                             />
                         </div>
 
-                        <Link target="_blank" href="https://kong-ui.jfin.network/services" className="text-blue-600 hover:underline">For Advanced configuration.</Link>
+                        <div className="col-span-2 space-y-3">
+                            <Link target="_blank" href="https://kong-ui.jfin.network/services" className="text-blue-600 hover:underline">
+                                For Advanced configuration.
+                            </Link>
 
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-md border border-emerald-100 bg-emerald-50 p-3">
+                                <div>
+                                    <p className="text-sm font-medium text-emerald-800">Cloudflare DNS</p>
+                                    <p className="text-xs text-emerald-700">
+                                        ปุ่มนี้จะสร้าง/อัปเดต A record ไปที่ 18.142.134.175 และเปิด proxy ให้อัตโนมัติ
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleAddUrlToCf}
+                                    disabled={isAddingToCf || !formData.fqdn.trim()}
+                                    className="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md !text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
+                                >
+                                    {isAddingToCf ? 'Adding to Cloudflare...' : 'addURLToCF'}
+                                </button>
+                            </div>
+
+                            {cfResult && (
+                                <div className={`rounded-md border p-4 text-sm ${cfResult.success ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-red-200 bg-red-50 text-red-700'}`}>
+                                    <p className="font-semibold">
+                                        {cfResult.success ? 'Cloudflare DNS updated successfully' : 'Cloudflare DNS update failed'}
+                                    </p>
+                                    <p className="mt-1">
+                                        {cfResult.success ? cfResult.data.message : cfResult.message}
+                                    </p>
+                                    {cfResult.success && cfResult.data?.details && (
+                                        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                                            <div>
+                                                <span className="font-medium">Zone:</span> {cfResult.data.details.zoneName}
+                                            </div>
+                                            <div>
+                                                <span className="font-medium">Status:</span> {cfResult.data.details.status}
+                                            </div>
+                                            <div>
+                                                <span className="font-medium">Hostname:</span> {cfResult.data.details.hostname}
+                                            </div>
+                                            <div>
+                                                <span className="font-medium">Target IP:</span> {cfResult.data.details.content}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="pt-4 flex items-center justify-end gap-3 border-t border-gray-100 mt-6">
