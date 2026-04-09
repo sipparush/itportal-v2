@@ -95,7 +95,7 @@ export default function DashboardPage() {
                 </div> */}
 
                 {/* Knowledge Base */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">คู่มือแนะนำ</h3>
                     </div>
@@ -119,7 +119,7 @@ export default function DashboardPage() {
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> */}
             </div>
         </div>
     );
