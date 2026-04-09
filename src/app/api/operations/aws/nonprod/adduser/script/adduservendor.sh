@@ -1,13 +1,14 @@
 #!/bin/bash
+set -euo pipefail
 
 # Update at 20 Jun 2024 21:26 by Sipparush Laekan
 
-if [ "$1" = '-h' ]; then
+if [ "${1:-}" = '-h' ]; then
    echo "$> ./adduservendor.sh <system> <user>"
    exit
 fi
 
-[ -z "$2" ] && exit 0 # Exit successfully if no users provided, or handle error properly.
+[ -z "${2:-}" ] && exit 0 # Exit successfully if no users provided, or handle error properly.
 
 # Read file content safely, handling potential line endings if needed.
 # However, standard `cat` works for LF.
@@ -55,37 +56,51 @@ sudo apt-get install -y sshpass || echo "Failed to install sshpass"
 
 
 # Switch to the new user and run commands as the new user
-sudo su - ${user} << EOSU
+sudo su - ${user} << 'EOSU'
+set -euo pipefail
+
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
 
 # Generate SSH key for the new user if it doesn't already exist
 if [ -f ~/.ssh/id_ed25519 ]; then
-   # If key exists, maybe we rotate it or skip
    echo "SSH Key exists. Regenerating..."
    rm -f ~/.ssh/id_ed25519 ~/.ssh/id_ed25519.pub
 fi
 
-ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
+ssh-keygen -q -t ed25519 -N "" -f ~/.ssh/id_ed25519
 
 # Move the public key to authorized keys
 if [ -f ~/.ssh/id_ed25519.pub ]; then
-    cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+    cp ~/.ssh/id_ed25519.pub ~/.ssh/authorized_keys
     chmod 600 ~/.ssh/authorized_keys
     rm ~/.ssh/id_ed25519.pub
 fi
 
 # Create a destination filename based on user ID and hostname
-dstfname=\$(whoami)_\$(hostname).pem
+dstfname="\$(whoami)_\$(hostname).pem"
+pem_path="\$HOME/.ssh/\$dstfname"
+
 if [ -f ~/.ssh/id_ed25519 ]; then
-    mv ~/.ssh/id_ed25519 ~/.ssh/\$dstfname
+    cp ~/.ssh/id_ed25519 "\$pem_path"
+    chmod 600 "\$pem_path"
+else
+    echo "Private key not found: ~/.ssh/id_ed25519" >&2
+    exit 1
 fi
 
 # Secure copy the .pem file to another server using sshpass
-# First try standard scp if key exists, otherwise try sshpass
-# Actually, the requirement seems to be specifically using sshpass with password
-if command -v sshpass &> /dev/null; then
-    sshpass -p 'Jvc@dm1n' scp -o StrictHostKeyChecking=no ~/.ssh/\$dstfname jventures@10.240.1.220: || echo "SCP failed but continuing"
+if command -v sshpass >/dev/null 2>&1; then
+    [ -s "\$pem_path" ] || { echo "PEM file missing or empty: \$pem_path" >&2; exit 1; }
+    sshpass -p 'Jvc@dm1n' scp \
+        -o StrictHostKeyChecking=no \
+        -o PreferredAuthentications=password \
+        -o PubkeyAuthentication=no \
+        "\$pem_path" "jventures@10.240.1.220:/home/jventures/"
+    echo "Copied private key to 10.240.1.220:/home/jventures/\$dstfname"
 else
-    echo "sshpass is not installed. Cannot SCP key."
+    echo "sshpass is not installed. Cannot SCP key." >&2
+    exit 1
 fi
 
 EOSU

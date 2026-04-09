@@ -173,7 +173,7 @@ export default function OperationsPage() {
                                                 <span className="font-medium">Deploy to UAT (t3.small with staging)</span>
                                             </a>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <a href="#" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                                 <span className="font-medium">Create Test S3 Bucket</span>
@@ -184,7 +184,7 @@ export default function OperationsPage() {
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                                 <span className="font-medium">List EC2 Instances</span>
                                             </a>
-                                        </li>
+                                        </li> */}
                                         <li>
                                             <a href="/operations/aws/nonprod/billing" className="flex items-center text-gray-700 hover:text-green-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>

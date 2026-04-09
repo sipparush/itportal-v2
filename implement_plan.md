@@ -904,3 +904,68 @@
 - งานรอบนี้จะ **ไม่ใช้ `destinationPort` กับ Cloudflare DNS** เพราะ DNS รองรับการ map ได้เฉพาะ hostname ไปยัง IP เท่านั้น
 - เก็บ secret ไว้ในไฟล์ env ที่ถูก ignore จาก git เพื่อความปลอดภัย
 - หากต้องการยืนยันเคส create/update จริง จำเป็นต้องระบุ `fqdn` ที่อนุญาตให้แก้ไขบน Cloudflare อย่างชัดเจน
+
+---
+
+## Request ใหม่: ตรวจ Add User Access - `authorized_keys` ไม่ถูกสร้างบน `10.240.1.173`
+
+สถานะ: 🔎 Investigated / รออนุมัติแก้ไขเพิ่มเติม
+วันที่: 9 เมษายน 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- ทดสอบเพิ่ม `user1` ไปยังเครื่อง `10.240.1.173` ผ่าน UI/API ที่รันบน local
+- debug หาสาเหตุว่าทำไมผู้ใช้ตรวจแล้วไม่พบไฟล์ `authorized_keys`
+
+### แผนดำเนินการรอบนี้
+- [x] อัปเดตแผนงานและ checklist ใน `implement_plan.md`
+- [x] รันทดสอบ `POST /api/operations/aws/nonprod/adduser` ด้วย payload จริงของเคส `user1` + `10.240.1.173`
+- [x] ตรวจ `executionLog` จาก API เพื่อยืนยัน flow การสร้าง key และ `authorized_keys`
+- [x] SSH เข้าเครื่องปลายทางเพื่อตรวจ `/home/user1/.ssh/authorized_keys` โดยตรง
+- [x] สรุปผล debug และหาจุดเสี่ยงที่อาจทำให้เกิด false positive
+- [ ] รออนุมัติปรับ hardening ใน `src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh`
+- [ ] retest ตามลำดับ `local -> docker -> UAT` หลังแก้ไข
+
+### ผลตรวจสอบรอบนี้ (2026-04-09)
+- ทดสอบด้วย `curl` ไปที่ local API ได้ `HTTP 200`
+- `executionLog` แสดงว่า script รันถึงขั้นสร้าง ed25519 key และ `Successfully processed user1 on 10.240.1.173`
+- ตรวจที่เครื่องปลายทางพบไฟล์ `/home/user1/.ssh/authorized_keys` จริง permission `0600`
+- รอบนี้ **ยังไม่สามารถ reproduce อาการไฟล์หายได้**
+- จุดที่ควร harden เพิ่ม: ให้ script fail fast (`set -euo pipefail`), สร้าง `~/.ssh` แบบ explicit, และให้ API report failure เมื่อ inner step fail จริง
+
+---
+
+## Request ใหม่: ตรวจและแก้ปัญหา copy private key ไป `10.240.1.220` ไม่ได้
+
+สถานะ: ✅ Implemented (Local Retest Passed / Docker-UAT Pending)
+วันที่: 9 เมษายน 2026
+ผู้ร้องขอ: User
+
+รายละเอียดคำขอ:
+- ตรวจสอบต่อจาก flow `Add User Access (Non-Prod)` ว่าทำไมขั้นตอน copy private key ไปยัง `10.240.1.220` ล้มเหลว
+- ต้องหา root cause ให้ชัด และเตรียมแนวทางแก้ก่อนดำเนินการจริง
+
+### แผนดำเนินการรอบนี้
+- [x] อัปเดตแผนงานและ checklist ใน `implement_plan.md`
+- [x] ทดสอบ password-based SSH ไป `10.240.1.220` ด้วย `sshpass`
+- [x] ทดสอบ `scp` จาก `10.240.1.173` ไป `10.240.1.220` ด้วยไฟล์ตัวอย่าง
+- [x] ตรวจ state ของ `/home/user1/.ssh` เพื่อยืนยันว่ามี/ไม่มีไฟล์ `.pem` ที่ script พยายามส่ง
+- [x] สรุป root cause และแนวทางแก้
+- [x] ได้รับอนุมัติและแก้ `src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh`
+- [x] local retest หลังแก้ไข
+- [ ] docker retest
+- [ ] UAT retest
+
+### ผลตรวจสอบรอบนี้ (2026-04-09)
+- `sshpass -v -p '***' ssh ... jventures@10.240.1.220 'echo PASSWORD_AUTH_OK'` ผ่าน ยืนยันว่าเครื่องปลายทางรับ password auth ได้
+- ทดสอบ `scp` จาก `10.240.1.173` ไป `10.240.1.220:/tmp/` ด้วยไฟล์ตัวอย่างผ่าน (`Exit status 0`)
+- ตรวจ `/home/user1/.ssh` หลังรัน flow พบ `authorized_keys`, `id_ed25519`, `known_hosts` แต่เดิม **ไม่พบไฟล์ `.pem`**
+- แก้ script ให้สร้างไฟล์ `.pem` แบบ explicit, ตรวจไฟล์ก่อนส่ง, และไม่กลบ error ของ `scp`
+- retest ด้วย `bash -x src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh ...` พบข้อความ `Copied private key to 10.240.1.220:/home/jventures/user1_u24-jid-sql-dv-u01.pem`
+- retest ผ่าน local API อีกครั้งได้ `"success":true` และตรวจพบไฟล์ทั้งบน source (`/home/user1/.ssh/user1_u24-jid-sql-dv-u01.pem`) และ target (`/home/jventures/user1_u24-jid-sql-dv-u01.pem`)
+
+### แนวทางแก้ที่ดำเนินการแล้ว
+- เปลี่ยน flow ให้สร้างไฟล์ `.pem` แบบ explicit ด้วย `cp` แทน `mv`
+- เพิ่มการตรวจว่าไฟล์ `.pem` มีอยู่จริงก่อนเรียก `scp`
+- ปรับ `scp` ให้บังคับใช้ password auth ชัดเจน (`PreferredAuthentications=password`, `PubkeyAuthentication=no`)
+- เพิ่ม `mkdir -p ~/.ssh` และ `set -euo pipefail` เพื่อให้ fail เร็วและ debug ง่ายขึ้น

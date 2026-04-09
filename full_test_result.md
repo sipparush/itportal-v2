@@ -580,3 +580,54 @@ All core operational features have been implemented and tested. The primary focu
 - ยังไม่ได้ยิงเคส create/update กับโดเมนจริงในรอบทดสอบนี้ เพื่อหลีกเลี่ยงการเปลี่ยน DNS จริงโดยไม่มี `fqdn` ที่ผู้ใช้ยืนยันให้แก้ไข
 
 **Developer Verdict:** ฟีเจอร์พร้อมใช้งานใน local environment แล้ว และรอทดสอบ Docker/UAT เพิ่มเมื่อ environment พร้อม
+
+---
+
+## 31. Developer Targeted Debug: AWS Non-Prod Add User (`user1` on `10.240.1.173`)
+**Date:** 2026-04-09
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| USERDBG-001 | Add User API Execution | `POST /api/operations/aws/nonprod/adduser` ต้องรันสคริปต์ได้และคืน execution log | ทดสอบด้วย `curl` ที่ local API ได้ `HTTP 200` และ log แสดงขั้นตอน `ssh-keygen`, `cp ... authorized_keys` และ `Successfully processed user1 on 10.240.1.173` | **Passed** |
+| USERDBG-002 | Remote `authorized_keys` Verification | บนเครื่อง `10.240.1.173` ต้องมีไฟล์ `/home/user1/.ssh/authorized_keys` | ตรวจด้วย `ssh ... 'sudo ls -la /home/user1/.ssh; sudo stat /home/user1/.ssh/authorized_keys'` พบไฟล์จริง ขนาด `106` bytes permission `0600` | **Passed** |
+| USERDBG-003 | Failure Analysis | ต้องระบุได้ว่าทำไมก่อนหน้านี้ผู้ใช้อาจเห็นว่าไฟล์ไม่ถูกสร้าง | ปัจจุบัน issue **retest ไม่พบแล้ว** แต่พบจุดเสี่ยงว่า API ยังตอบ `success=true` ได้แม้มีบาง step fail ภายใน shell (ตัวอย่างรอบนี้มี `SCP failed but continuing`) และ script ยังควร harden เพิ่ม | **Investigated** |
+
+### Notes
+- รอบทดสอบนี้ยืนยันว่า `authorized_keys` ถูกสร้างบนเครื่องปลายทางเรียบร้อยแล้ว
+- ข้อความ `SCP failed but continuing` เป็นคนละส่วนกับการสร้าง `authorized_keys` โดยกระทบเฉพาะการ copy private key ไปยัง `10.240.1.220`
+- หากต้องการป้องกัน false positive ในอนาคต ควรเพิ่ม `set -euo pipefail`, `mkdir -p ~/.ssh`, และให้ API fail เมื่อ inner command fail จริง
+
+---
+
+## 32. Developer Investigation: Private Key Copy to `10.240.1.220`
+**Date:** 2026-04-09
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| USERSCP-001 | Password SSH to `10.240.1.220` | ปลายทางต้องรับ password auth สำหรับ `jventures` | ทดสอบด้วย `sshpass` ได้ `PASSWORD_AUTH_OK` | **Passed** |
+| USERSCP-002 | SCP Transport from `10.240.1.173` | `user1` ต้อง copy ไฟล์ตัวอย่างไป `10.240.1.220:/tmp/` ได้ | ทดสอบจากเครื่อง `10.240.1.173` ด้วย `sshpass scp` ได้ `Exit status 0` | **Passed** |
+| USERSCP-003 | Source File Availability | ต้องพบไฟล์ `.pem` ที่ script จะใช้ส่งออก | ตรวจ `/home/user1/.ssh` พบ `authorized_keys`, `id_ed25519`, `known_hosts` แต่ **ไม่พบ `.pem` file** | **Failed (Root Cause Found)** |
+
+### Notes
+- ยืนยันแล้วว่า network path และ password auth ไป `10.240.1.220` ใช้งานได้
+- สาเหตุปัจจุบันจึงไม่ได้อยู่ที่เครื่องปลายทาง แต่เกิดจาก logic ใน `adduservendor.sh` ที่ยังไม่ทำให้ไฟล์ private key ปลายชื่อ `.pem` พร้อมสำหรับ `scp` อย่างน่าเชื่อถือ
+- แนะนำให้แก้ script ให้สร้างไฟล์ `.pem` แบบ explicit และ fail ทันทีเมื่อ `scp` ไม่สำเร็จ
+
+---
+
+## 33. Developer Retest: Private Key Copy to `10.240.1.220` (Post Fix)
+**Date:** 2026-04-09
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| USERSCP-R1 | Direct Script Trace | รัน script แบบ `bash -x` แล้วต้องจบครบ flow | ทดสอบ `bash -x ...adduservendor.sh /tmp/ips_adduser_test.txt /tmp/users_adduser_test.txt` และพบข้อความ `Copied private key to 10.240.1.220:/home/jventures/user1_u24-jid-sql-dv-u01.pem` + `Successfully processed user1 on 10.240.1.173` | **Passed** |
+| USERSCP-R2 | Local API Flow | `POST /api/operations/aws/nonprod/adduser` ต้องคืน `success=true` | ทดสอบด้วย `curl` ที่ local API ได้ `"success":true` และ execution log มีข้อความ `Copied private key to 10.240.1.220...` | **Passed** |
+| USERSCP-R3 | Source + Target File Verification | ต้องพบไฟล์ `.pem` ทั้งฝั่ง source และ target | ตรวจ `10.240.1.173:/home/user1/.ssh/user1_u24-jid-sql-dv-u01.pem` และ `10.240.1.220:/home/jventures/user1_u24-jid-sql-dv-u01.pem` พบไฟล์จริง ขนาด `419` bytes | **Passed** |
+
+### Notes
+- แก้ `src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh` ให้สร้าง `.pem` ด้วย `cp` แบบ explicit แทน `mv`
+- เพิ่ม `set -euo pipefail`, `mkdir -p ~/.ssh`, และการตรวจไฟล์ก่อน `scp`
+- เปลี่ยน `scp` ให้ใช้ password auth แบบชัดเจนและไม่กลบ error อีกต่อไป

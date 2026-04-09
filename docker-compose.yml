@@ -9,7 +9,7 @@ services:
     # POSTGRES_PASSWORD: it_password
     # POSTGRES_DB: itportal_db  
     ports:
-      - "5442:5432"
+      - "5432:5432"
     volumes:
       - itportalv2_postgres_data:/var/lib/postgresql/data
       - ./backend/init:/docker-entrypoint-initdb.d
@@ -27,7 +27,7 @@ services:
     volumes:
       - ./backupec2_state.json:/app/backupec2_state.json
       - ./raw-data:/app/raw-data
-      - ../../secrets:/home/node/.ssh
+      - ./secrets:/home/node/.ssh
 
     environment:
       - NODE_ENV=production

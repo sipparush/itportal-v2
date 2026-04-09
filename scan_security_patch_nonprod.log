@@ -165,3 +165,6 @@ i-08430429abbcbcdbc jvc-dv-aps-pcl-uat02 10.240.1.182 2026-03-25T07:28:59.129Z 6
 i-087d3eb505d726e21 jvc-dv-aps-jmp-uat01 10.240.1.10 2026-04-03T11:00:32.793Z 6.8.0-1021-aws up-to-date
 i-05658a85e00fb5fd0 jvc-dv-aps-pot-uat02 10.240.1.203 2026-04-03T11:00:38.106Z 5.15.0-1028-aws up-to-date
 i-08a69f4194d338eb2 jvc-dv-aps-jfc-dev03 10.240.3.148 2026-04-03T11:00:41.014Z 5.4.0-65-generic up-to-date
+i-0a516d1b1abc14cb8 u24-jvc-dv-sql-jon-uat01 10.240.1.173 2026-04-09T03:24:19.733Z 6.8.0-1016-aws up-to-date
+i-04518579204dd53ab jvc-dv-web-pah-uat20 10.240.1.247 2026-04-09T04:44:59.382Z 4.15.0-167-generic pending-security-updates:253
+i-007df65ebee867e2d u24-git-dv-as-uat01 10.240.1.68 2026-04-09T04:47:36.363Z 6.17.0-1009-aws up-to-date

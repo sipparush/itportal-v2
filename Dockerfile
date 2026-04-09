@@ -36,7 +36,7 @@ RUN apk add --no-cache \
 
 # Use existing node user (UID 1000) instead of creating new one
 # RUN addgroup --system --gid 1001 nodejs
-# RUN adduser --system --uid 1001 nextjs
+# RUN adduser --system --uid 1001 node
 
 # Set home directory explicitly
 ENV HOME=/home/node
