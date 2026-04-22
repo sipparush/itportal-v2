@@ -17,7 +17,7 @@ export async function POST(request) {
         }
 
         // Configuration
-        const AMI_ID = 'ami-0d2042c6feb606ae9';
+        const AMI_ID = 'ami-0565b1f55647e113f';
         const SG_ID = 'sg-027f3b82ae7853b3d';
         const SUBNET_ID = 'subnet-0abb00758262160db';
         const PROFILE = 'aws_nonprod';
@@ -31,7 +31,7 @@ export async function POST(request) {
             --security-group-ids ${SG_ID} \\
             --subnet-id ${SUBNET_ID} \\
             --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${instanceName}},{Key=Project,Value=${projectName}}]' \\
-            --region ap-southeast-1 \\
+            --region ${REGION} \\
             --profile ${PROFILE} \\
             --output json`;
 

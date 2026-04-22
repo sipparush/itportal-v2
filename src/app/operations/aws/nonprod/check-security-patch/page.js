@@ -74,6 +74,28 @@ export default function CheckSecurityPatchPage() {
     // --- Update patch state ---
     const [isUpdating, setIsUpdating] = useState(false); // กำลังอัปเดต patch อยู่หรือไม่
     const [updatingId, setUpdatingId] = useState(null); // instanceId ที่กำลังอัปเดต
+    const [recheckingId, setRecheckingId] = useState(null); // instanceId ที่กำลัง re-check
+
+    const handleRecheck = async (item) => {
+        setError('');
+        setRecheckingId(item.instanceId);
+        try {
+            const response = await fetch('/api/operations/aws/nonprod/check-security-patch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: 'ip', ip: item.ip })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Re-check failed');
+            }
+            await loadHistory();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setRecheckingId(null);
+        }
+    };
 
     const loadHistory = async (customPage = page, customPageSize = pageSize) => {
         try {
@@ -395,10 +417,10 @@ export default function CheckSecurityPatchPage() {
                                         <button
                                             type="button"
                                             className="ml-2 px-2 py-1 bg-blue-300 text-white rounded text-xs"
-                                            onClick={() => runScan('ip', item.ip)}
-                                            disabled={isScanningIp}
+                                            onClick={() => handleRecheck(item)}
+                                            disabled={recheckingId === item.instanceId}
                                         >
-                                            {isScanningIp ? 'Re-checking...' : 'Re-check'}
+                                            {recheckingId === item.instanceId ? 'Re-checking...' : 'Re-check'}
                                         </button>
                                     </td>
                                     <td className="px-4 py-3">
