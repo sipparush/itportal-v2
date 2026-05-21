@@ -3,8 +3,17 @@ set -euo pipefail
 
 # Update at 20 Jun 2024 21:26 by Sipparush Laekan
 
+SSH_IDENTITY_FILE="${AWS_NONPROD_ADDUSER_SSH_KEY_PATH:-/home/node/.ssh/jventures-uat.pem}"
+SSH_BASE_OPTIONS=(
+    -o StrictHostKeyChecking=no
+    -o UserKnownHostsFile=/dev/null
+    -o ConnectTimeout=10
+    -o IdentitiesOnly=yes
+    -i "$SSH_IDENTITY_FILE"
+)
+
 if [ "${1:-}" = '-h' ]; then
-   echo "$> ./adduservendor.sh <system> <user>"
+#    echo "$> ./adduservendor.sh <system> <user>"
    exit
 fi
 
@@ -28,12 +37,12 @@ else
 fi
 
 for ip in $system; do
-	echo "=== Process in $ip ==="
+	# echo "=== Process in $ip ==="
 
 	  for user in $users; do 
-	    echo "Creating account: $user"
+	    # echo "Creating account: $user"
 
-ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 jventures@$ip << EOF
+ssh "${SSH_BASE_OPTIONS[@]}" jventures@$ip << EOF
 
 # Add a new user with a specified shell, groups, and password
 # Check if user exists first to avoid error spam (though useradd fails safely)

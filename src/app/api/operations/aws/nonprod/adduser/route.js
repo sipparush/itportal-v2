@@ -1,11 +1,39 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import util from 'util';
+import { constants } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
 const execPromise = util.promisify(exec);
+const SCRIPT_CANDIDATE_PATHS = [
+    process.env.AWS_NONPROD_ADDUSER_SCRIPT_PATH,
+    '/app/scripts/aws/nonprod/adduser/adduservendor.sh',
+    path.resolve('./src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh')
+].filter(Boolean);
+
+async function resolveScriptPath() {
+    for (const candidate of SCRIPT_CANDIDATE_PATHS) {
+        try {
+            await fs.access(candidate);
+            return candidate;
+        } catch {
+            continue;
+        }
+    }
+
+    throw new Error(`Add user script not found. Checked paths: ${SCRIPT_CANDIDATE_PATHS.join(', ')}`);
+}
+
+async function ensureScriptExecutable(scriptPath) {
+    try {
+        await fs.access(scriptPath, constants.X_OK);
+        return;
+    } catch {
+        await execPromise(`chmod +x "${scriptPath}"`);
+    }
+}
 
 export async function POST(request) {
     try {
@@ -36,9 +64,7 @@ export async function POST(request) {
         const jobId = 'JOB-' + Date.now();
         const ipFilePath = path.join(tmpDir, `ips_${jobId}.txt`);
         const userFilePath = path.join(tmpDir, `users_${jobId}.txt`);
-        // Assuming the script is in the 'script' folder relative to this route file's directory structure in the project
-        // Note: In Next.js build, files might not be where you expect. Using absolute path for dev environment.
-        const scriptPath = path.resolve('./src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh');
+        const scriptPath = await resolveScriptPath();
 
         let scriptOutput = '';
         let emailLog = '';
@@ -49,8 +75,8 @@ export async function POST(request) {
             await fs.writeFile(ipFilePath, ipList.join('\n'));
             await fs.writeFile(userFilePath, users.map(u => u.username).join('\n'));
 
-            // Make script executable
-            await execPromise(`chmod +x "${scriptPath}"`);
+            // Make script executable only when the current runtime cannot execute it yet.
+            await ensureScriptExecutable(scriptPath);
 
             // Execute script
             console.log(`Executing: ${scriptPath} ${ipFilePath} ${userFilePath}`);

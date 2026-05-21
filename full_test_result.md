@@ -221,6 +221,178 @@ All core operational features have been implemented and tested. The primary focu
 
 ---
 
+## 16. Developer Smoke Test: BytePlus Manage User Route Separation
+**Date:** 2026-04-27
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMU-001 | Route Separation | หน้า BytePlus ต้องไม่เรียก AWS route เดิม | ปรับ frontend ให้เรียก `POST /api/operations/byteplus/manageUser` และไม่พบ reference AWS ค้างในหน้า | **Passed** |
+| BPMU-002 | API Validation: Invalid Account | account ที่มีช่องว่างต้องถูก reject | `POST /api/operations/byteplus/manageUser` ด้วย `account="bad space"` ได้ `400 Bad Request` พร้อม message `account ต้องเป็นตัวอักษร ตัวเลข _ หรือ - และห้ามมีช่องว่าง` | **Passed** |
+| BPMU-003 | Static Verification | ไฟล์ที่แก้ต้องไม่มี syntax error | ตรวจ [src/app/api/operations/byteplus/manageUser/route.js](/home/sipparush/MyTraining/itportal-v2/src/app/api/operations/byteplus/manageUser/route.js) และ [src/app/operations/byteplus/manageUser/page.js](/home/sipparush/MyTraining/itportal-v2/src/app/operations/byteplus/manageUser/page.js) ไม่พบ error | **Passed** |
+
+### Notes
+- เพิ่ม route ใหม่สำหรับ BytePlus โดยเรียกสคริปต์ `/home/sipparush/adduservendorbp.sh` ตรงตามข้อความบนหน้า UI
+- เพิ่ม endpoint `GET /api/operations/byteplus/manageUser?file=<name>` สำหรับดาวน์โหลดไฟล์ `.pem` ที่สคริปต์สร้าง
+- ยังไม่ได้รัน functional test แบบ success path กับ remote IP จริงในรอบนี้ เพราะขึ้นกับการเชื่อมต่อ SSH ไปยังปลายทางและสภาพแวดล้อมเครือข่าย BytePlus
+
+**Developer Verdict:** แยก route ของ BytePlus ออกจาก AWS แล้ว และผ่าน local smoke test ในขอบเขตที่พิสูจน์ได้จาก environment ปัจจุบัน
+
+---
+
+## 17. Developer Simulation Test: BytePlus Manage User with Explicit SSH Key
+**Date:** 2026-04-27
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BPMU-SIM-001 | Explicit Key SSH Flow | `POST /api/operations/byteplus/manageUser` ด้วย `user01` และ `10.224.100.21` ต้องไม่ timeout และต้องสร้าง user/key ได้ | ได้ `HTTP 200`, message `เพิ่มสิทธิ์ผู้ใช้ user01 สำหรับ BytePlus สำเร็จ` | **Passed** |
+| BPMU-SIM-002 | Execution Summary | response ต้องไม่มี timeout/auth failure เดิม | execution summary แสดง `Processing server: 10.224.100.21`, `User user01 ensured`, และ `SSH key generated and prepared for download` | **Passed** |
+| BPMU-SIM-003 | Key Download Route | ต้องดาวน์โหลดไฟล์ key ผ่าน API route ได้ | `GET /api/operations/byteplus/manageUser?file=user01_10.224.100.21.pem` ได้ `HTTP 200` และไฟล์ขึ้นต้นด้วย `-----BEGIN OPENSSH PRIVATE KEY-----` | **Passed** |
+
+### Notes
+- ปรับ route BytePlus ให้ resolve SSH key ตาม IP และส่งค่าเข้า script ผ่าน environment
+- ปรับ script เพิ่ม `ssh/scp` options แบบ explicit key, `BatchMode`, `IdentitiesOnly`, และ `ConnectTimeout`
+- ปัญหาเดิม `ssh: connect to host ... Connection timed out` ไม่เกิดซ้ำในเคสจำลองนี้
+
+**Developer Verdict:** เคสจำลองที่ผู้ใช้ระบุผ่านแล้วใน local environment และรองรับการดาวน์โหลด key จาก route BytePlus ได้ครบ
+
+---
+
+## 18. Developer Smoke Test: AWS Non-Prod Add User Docker Runtime Script Path
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-RT-001 | Docker Runtime Script Packaging | runtime container ต้องมี script ที่ route ใช้งานได้ | rebuild image แล้วพบไฟล์ `/app/scripts/aws/nonprod/adduser/adduservendor.sh` ใน container พร้อม execute bit | **Passed** |
+| AWNU-RT-002 | Docker API Flow after Fix | `POST /api/operations/aws/nonprod/adduser` ต้องไม่ fail ด้วย `No such file or directory` หรือ `chmod` บน path ที่ไม่มีไฟล์ | ยิง `POST` ไปที่ `http://localhost:3000/api/operations/aws/nonprod/adduser` ด้วย payload ทดสอบแล้ว route ไปถึงชั้นรัน script/SSH และจบที่ `ssh: connect to host 127.0.0.1 port 22: Connection refused` แทน | **Passed** |
+| AWNU-RT-003 | Local Dev Fallback Path | local dev mode ต้องยัง resolve script จาก source tree ได้ | รัน `PORT=3001 npm run dev` แล้วทดสอบ `POST /api/operations/aws/nonprod/adduser` สำเร็จถึงชั้นรัน script ที่ path `src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh` | **Passed** |
+
+### Notes
+- รอบนี้เป็น targeted smoke test เพื่อยืนยันว่าปัญหาเดิมเรื่อง script path ใน Docker runtime ถูกแก้แล้ว
+- ยังไม่ได้ยืนยัน success path กับ remote host จริง เพราะใช้ payload จำลอง `127.0.0.1` เพื่อทดสอบเฉพาะ execution path หลังแก้
+- ระหว่างใช้ `docker compose` มี warning เรื่อง `version` field obsolete แต่ไม่กระทบผลของ fix รอบนี้
+
+**Developer Verdict:** root cause ของเคส add user fail จาก runtime หา script ไม่เจอ ถูกแก้แล้ว และผ่านทั้ง local/dev fallback กับ docker runtime smoke test
+
+---
+
+## 19. Developer Docker Test: AWS Non-Prod Add User SSH Layer Verification
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-DKR-001 | Docker Endpoint Availability | service `app` ใน `docker compose` ต้องขึ้นและรับ request ได้ | `docker compose ps` แสดง `app` สถานะ `Up` และเปิดพอร์ต `3000` | **Passed** |
+| AWNU-DKR-002 | Docker Add User Request | `POST /api/operations/aws/nonprod/adduser` ผ่าน Docker ต้องไม่ย้อนกลับไปเจอ error เรื่อง script path | request ด้วย payload `127.0.0.1` ได้ `500` แต่ route เรียก script `/app/scripts/aws/nonprod/adduser/adduservendor.sh` สำเร็จและไป fail ที่ SSH layer | **Passed** |
+| AWNU-DKR-003 | SSH Failure Classification | ต้องแยกให้ได้ว่าความล้มเหลวปัจจุบันเป็น network/auth ไม่ใช่ runtime packaging | container log แสดง `ssh: connect to host 127.0.0.1 port 22: Connection refused` สำหรับ payload ทดสอบ และมี log แยกอีกเคสเป็น `Permission denied (publickey,password)` กับ `10.240.1.220` | **Passed** |
+
+### Notes
+- รอบนี้เป็น Docker verification หลังอนุมัติให้ทดสอบใน Docker โดยยังใช้ payload แบบปลอดภัยเพื่อไม่ไปสร้าง user บนเครื่องจริงโดยไม่ได้ระบุ target เพิ่มเติม
+- ผลทดสอบยืนยันว่า bug เดิมเรื่อง runtime หา script ไม่เจอ ถูกปิดแล้ว
+- หากต้องการพิสูจน์ success path เต็มรูปแบบ จำเป็นต้องระบุ target IP จริงและตรวจ credential ที่ Docker container ใช้เชื่อมต่อ
+
+**Developer Verdict:** Docker environment ผ่านในระดับ execution path และตอนนี้ blocker ที่เหลืออยู่เป็นเรื่อง SSH connectivity/credential ของปลายทาง ไม่ใช่ปัญหา packaging ของแอป
+
+---
+
+## 20. Developer Retest: AWS Non-Prod Add User After Latest Docker Deploy
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-RD-001 | Container Health After Redeploy | container `app` หลัง `docker compose up -d --build app` ต้องขึ้นปกติ | `docker compose ps` แสดง `itportal-v2-app-1` สถานะ `Up` และเปิดพอร์ต `3000` | **Passed** |
+| AWNU-RD-002 | Add User API After Redeploy | `POST /api/operations/aws/nonprod/adduser` ต้องไม่ถอยกลับไปเป็น bug เดิมเรื่อง runtime script path | request ผ่าน Docker endpoint เรียก script `/app/scripts/aws/nonprod/adduser/adduservendor.sh` ได้ และไม่พบ `No such file or directory` | **Passed** |
+| AWNU-RD-003 | Regression Check | หลัง deploy ใหม่ต้องไม่เกิด regression ใหม่จาก packaging/permission | ผลยังคง fail ที่ SSH layer ด้วย `ssh: connect to host 127.0.0.1 port 22: Connection refused` ซึ่งสอดคล้องกับ behavior ก่อนหน้า | **Passed** |
+
+### Notes
+- รอบนี้เป็น retest หลังผู้ใช้ deploy Docker ใหม่ล่าสุด
+- ใช้ payload ปลอดภัยกับ `127.0.0.1` เพื่อยืนยัน execution path หลัง deploy โดยไม่ไปสร้าง user บนเครื่องจริง
+- จาก log ของ container ยังเห็นเคสก่อนหน้าที่ target `10.240.1.220` ตอบ `Permission denied (publickey,password)` จึงยังต้องแก้ credential/authorized key หากต้องการ success path จริง
+
+**Developer Verdict:** หลัง deploy Docker ล่าสุด ไม่พบ regression ใหม่ ระบบยังคงผ่านในระดับ packaging/runtime และ blocker ที่เหลือยังเป็นเรื่อง SSH credential/network ของปลายทาง
+
+---
+
+## 21. Developer Functional Test: AWS Non-Prod Add User `usera` on `10.240.1.220`
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-FUNC-001 | Docker Request to Real Target | `POST /api/operations/aws/nonprod/adduser` ด้วย `usera` และ `10.240.1.220` ต้องไปถึง target host จริง | API รัน script `/app/scripts/aws/nonprod/adduser/adduservendor.sh` และพยายามเชื่อมต่อ `10.240.1.220` จริง | **Passed** |
+| AWNU-FUNC-002 | Authentication Result Classification | ต้องแยกได้ว่าปัญหาอยู่ที่ network หรือ authentication | ผลตอบกลับและ container log แสดง `jventures@10.240.1.220: Permission denied (publickey,password)` ชัดเจน | **Passed** |
+| AWNU-FUNC-003 | Regression Check | ต้องไม่ย้อนกลับไป fail ที่ runtime path เดิม | ไม่พบ `No such file or directory` หรือ `chmod` issue เดิมในรอบนี้ | **Passed** |
+
+### Notes
+- payload ที่ใช้: `{"serverIps":"10.240.1.220","users":[{"username":"usera","email":"usera@example.com"}]}`
+- request ส่งผ่าน Docker endpoint `http://localhost:3000`
+- ผลรอบนี้ยืนยันว่า blocker ของเคส target จริงอยู่ที่ SSH authentication ไม่ใช่ packaging/runtime
+
+**Developer Verdict:** Docker functional test กับ `10.240.1.220` ยืนยันแล้วว่าระบบไปถึง host ปลายทาง แต่ยังไม่สามารถ authenticate เป็น `jventures` ได้ใน environment ปัจจุบัน
+
+---
+
+## 22. Developer Retest: AWS Non-Prod Add User with Explicit SSH Identity
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-SSHFIX-001 | Explicit Identity in Script | script ต้องใช้ SSH identity file เดียวกับที่พิสูจน์แล้วว่าใช้ได้ใน container | ปรับ script ให้ใช้ `-i /home/node/.ssh/jventures-uat.pem` ผ่านตัวแปร `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` fallback | **Passed** |
+| AWNU-SSHFIX-002 | Docker Functional Retest | `POST /api/operations/aws/nonprod/adduser` ด้วย `usera` และ `10.240.1.220` ต้องผ่านใน Docker | API ตอบ `success: true` และ execution log แสดง `Successfully processed usera on 10.240.1.220` | **Passed** |
+| AWNU-SSHFIX-003 | Key Delivery Step | private key ที่สร้างให้ user ต้องถูก copy ไปปลายทางตาม flow เดิม | execution log แสดง `Copied private key to 10.240.1.220:/home/jventures/usera_itportal-as-dv-u01.pem` | **Passed** |
+
+### Notes
+- ใช้ Docker endpoint `http://localhost:3000`
+- ใช้ payload `{"serverIps":"10.240.1.220","users":[{"username":"usera","email":"usera@example.com"}]}`
+- หลังปรับ explicit identity file แล้ว ไม่พบ `Permission denied (publickey,password)` อีกในรอบนี้
+
+**Developer Verdict:** การระบุ SSH identity file แบบ explicit แก้ root cause ของ Docker auth failure ได้ และเคส `usera` บน `10.240.1.220` ผ่านแล้ว
+
+---
+
+## 23. Developer Smoke Test: AWS Prod Add User with Explicit SSH Identity
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWSP-001 | Docker Runtime Script Path | route `prod` ต้องหา script ใน Docker runtime ได้ | rebuild image แล้ว route เรียก `/app/scripts/aws/prod/adduser/adduservendor.sh` ได้จริง | **Passed** |
+| AWSP-002 | Explicit Prod Key Usage | SSH hop แรกต้องใช้ `/home/node/.ssh/jventures-prod.pem` แบบ explicit | script ถูกปรับให้ใช้ `AWS_PROD_ADDUSER_SSH_KEY_PATH` fallback ไปที่ `/home/node/.ssh/jventures-prod.pem` พร้อม `IdentitiesOnly=yes` | **Passed** |
+| AWSP-003 | Prod Flow via Jump Host | smoke test ผ่าน jump host ต้องทำงานได้หลังปรับ | `POST /api/operations/aws/prod/adduser` ด้วย payload `127.0.0.1` ได้ `success: true` และ execution log แสดงการสร้าง `prodsmoke2` ผ่าน jump host สำเร็จ | **Passed** |
+| AWSP-004 | Heredoc Error Regression | ต้องไม่เกิด stderr defect เดิมเรื่อง `date/chage` ใน script | หลังซ่อม heredoc ไม่พบ `date: invalid date '+90 days'` หรือ `chage: invalid date` ใน log รอบสุดท้าย | **Passed** |
+
+### Notes
+- รอบนี้เป็น smoke test สำหรับฝั่ง `prod` โดยใช้ payload ปลอดภัย `{"serverIps":"127.0.0.1","users":[{"username":"prodsmoke2","email":"prodsmoke2@example.com"}]}`
+- ระหว่าง retest หลัง restart container มี `curl: (56) Recv failure: Connection reset by peer` หลายครั้งในช่วง app ยังไม่พร้อม แต่ request สำเร็จหลัง service ขึ้นครบ และไม่ใช่ regression ของ logic add-user
+- ยังไม่ได้ยืนยัน functional success กับ target `prod` จริง เพราะยังไม่มี target IP ที่อนุมัติสำหรับรอบนั้น
+
+**Developer Verdict:** ฝั่ง `prod` ถูกปรับให้ใช้ runtime-safe script path และ explicit key `jventures-prod.pem` เรียบร้อยแล้ว และผ่าน Docker smoke test ผ่าน jump host โดยไม่พบ defect เดิมของ script
+
+---
+
+## 24. Developer Functional Test: AWS Prod Add User `userb` on `10.241.15.15`
+**Date:** 2026-05-05
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWSP-FUNC-001 | Prod Request to Real Target | `POST /api/operations/aws/prod/adduser` ด้วย `userb` และ `10.241.15.15` ต้องผ่าน jump host ไปถึง target จริง | API ตอบ `success: true` และ execution log แสดง `=== Process in 10.241.15.15 ===` | **Passed** |
+| AWSP-FUNC-002 | User Provisioning Result | user บน target ต้องถูกสร้าง/ensure สำเร็จ | execution log แสดงข้อมูล `chage` ของ `userb` และไม่มี auth/network error | **Passed** |
+| AWSP-FUNC-003 | Key Generation Result | private key ของ user ต้องถูกสร้างใน flow เดิม | execution log แสดงการสร้าง `userb_aws-bastion-prod.pem` สำเร็จใน home ของ `userb` | **Passed** |
+
+### Notes
+- ใช้ payload `{"serverIps":"10.241.15.15","users":[{"username":"userb","email":"userb@example.com"}]}`
+- request ยิงผ่าน Docker endpoint `http://localhost:3000`
+- รอบนี้ยืนยัน functional success path ของฝั่ง `prod` กับ target จริงที่ผู้ใช้ระบุได้แล้ว
+
+**Developer Verdict:** ฝั่ง `prod` ผ่าน functional test จริงกับ `10.241.15.15` หลังปรับ explicit key `jventures-prod.pem` และ runtime path ใน Docker
+
+---
+
 ## 16. Senior QA Test: Backup Readiness SSH Fallback (10.240.1.114)
 **Date:** 2026-02-26
 **Tested By:** Senior QA (GitHub Copilot)

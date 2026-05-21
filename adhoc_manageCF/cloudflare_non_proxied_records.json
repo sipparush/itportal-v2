@@ -1,0 +1,2699 @@
+{
+  "generatedAt": "2026-04-23T02:33:01.443Z",
+  "zones": [
+    {
+      "zone": "jventures.co.th",
+      "zoneId": "5ef7f83cc95afc18dae367936edeaeb5",
+      "totalRecords": 476,
+      "nonProxiedRecords": [
+        {
+          "zone": "jventures.co.th",
+          "name": "_2e20d5685548cee46148b99f16425ce8.jventures.co.th",
+          "type": "CNAME",
+          "content": "6a143b0c051a2fecd59e6324aa4411fe.b3ae92cf0abe1719905338423c32fdd0.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c005d470574368e5f10983429aee1785"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_372f3df554d2d61d8f7453e3fe8965bc.jventures.co.th",
+          "type": "CNAME",
+          "content": "37d627bc715318e2e014deeb8158265f.22efcca5fcd55c73986521e181632a3b.3cec359c088ca087ae.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "4671cb92d7341b41ea1b15a22bede39a"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_7063f20f7e2925f7bb607dcd28e299ec.jventures.co.th",
+          "type": "CNAME",
+          "content": "130afcaa709dab2763ecc444b0e71b0a.ed152d193bb4ed34bf3ae40984246bb5.t0200017001672027699.sectigo.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7cb8977f1d41b9bef088c78765f97950"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_857b69b8c9a92eddc35a848e9dbf3a23.jventures.co.th",
+          "type": "CNAME",
+          "content": "00dbb0c2e1be95f70d8398f7318194b2.a09355c8573379bc95e0e56ccd8bad44.686dce4a4ee3d82b45.sectigo.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c5e84ffe1c29bd5106da051c2c6607e5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_ba77539df3dbd2348d36ec2664495275.jventures.co.th",
+          "type": "CNAME",
+          "content": "ede41a54c867ef33a2e18b49c1d97209.238205a73fde4a6bb56177040a566bc8.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "758f69aa67578e2acdbeaf4575ad6c65"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_d8813079429c677bbf4c553f88739ff6.jventures.co.th",
+          "type": "CNAME",
+          "content": "06905394adf525d6989e3046eaa1fa1f.b6a7edc04fe62fc6eaac92ffa795340e.sectigo.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a89433ed44d6ff03a894d7a02b34bfb6"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_dmarc.jventures.co.th",
+          "type": "TXT",
+          "content": "\"v=DMARC1; p=none; rua=mailto:dmarc-reports@jventures.co.th; ruf=mailto:dmarc-reports@jventures.co.th; fo=1; adkim=s; aspf=s\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c7f91249c184df2ed8a6c900b516f599"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_figma_sites_verify_pah-adv-support.jventures.co.th",
+          "type": "TXT",
+          "content": "\"v=c9929b39-df32-466e-bf76-7dee34079488\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "703f43727b7db3739f3f1afc06f69084"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_sip._tls.jventures.co.th",
+          "type": "SRV",
+          "content": "1 443 sipdir.online.lync.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "95cadb14ae38679013dc8818a0d55f2d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "_sipfederationtls._tcp.jventures.co.th",
+          "type": "SRV",
+          "content": "1 5061 sipfed.online.lync.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "9839f6fdaf3e74352be6fa1ea865aaa2"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "api.jfin.network.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bf5b760a26c6f2e5db15b1ea9f3e7d5c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "autodiscover.jventures.co.th",
+          "type": "CNAME",
+          "content": "autodiscover.outlook.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "cad287f51630a18bd8cc236775b422fb"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "bmn-event.jventures.co.th",
+          "type": "CNAME",
+          "content": "joraemon.pages.dev",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "891b5b0be6974c4f95018d1ab3146130"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "casa-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "f50a7ca62f3b1abbdb40a61bdc390040"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "casa-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bf7b3e8a2ac5e80a863d220654341f90"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "casa-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d0cbc90d730bab6a712173066910dfb7"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "casa-lapin.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "4c2142138ce19bfdc626f17695a87d18"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "casa-service.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8256052e8c3e1d3b1cd1e50494bdeb09"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "consent-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "18cd05f6b0a0327b2b345c3ec2599b1e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "consent.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "0baca858e0822826d311d6fe512c34ab"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "corda.jventures.co.th",
+          "type": "NS",
+          "content": "ns-748.awsdns-29.net",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "10e588e8097a0de2dc609eb1ab773f75"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "corda.jventures.co.th",
+          "type": "NS",
+          "content": "ns-426.awsdns-53.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a39f562723e8df101013a7bebb940bf3"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "corda.jventures.co.th",
+          "type": "NS",
+          "content": "ns-1968.awsdns-54.co.uk",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "de8aa2f1ee4300506affe036b4342a31"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "corda.jventures.co.th",
+          "type": "NS",
+          "content": "ns-1347.awsdns-40.org",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ef8f21ff9d442ec800adfe89797b9474"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "ctscrop-olympus-backoffice-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8401b38ece898cbe31d40288dfe63226"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "e-kyc-uat.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "e-kyc-uat",
+          "id": "ab8141af27ec9d244952595e988012d2"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "e-sign-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "040b9c3744d0d3b6403eb765fa523b75"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "e-sign-rws.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "397f30adea445ebdb95c867d91c20eb5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "e-sign.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6390d26687e41d6f1dcef264b911bf4f"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "ekyc-notification-partner.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ca846ce45288d0dea94db006d175253a"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "enjoy-card-dev.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.164",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "338031a6f7cc7d6a26589b11b9a765e4"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "enjoy-card-qas.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.164",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "170bb44907ea450289d91ca1098b8943"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "enjoy-card.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.164",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ca99e35f5b6667cda38fae47b218a06a"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "enterpriseenrollment.jventures.co.th",
+          "type": "CNAME",
+          "content": "enterpriseenrollment.manage.microsoft.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "af826d3f98798e1fd294fb3e437bdba6"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "enterpriseregistration.jventures.co.th",
+          "type": "CNAME",
+          "content": "enterpriseregistration.windows.net",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "79fa41086dabb3664ed58d9aa871af54"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "homepaint-olympus-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e1e1600611788624eb96f187f2351c98"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "horoworld-dev.jventures.co.th",
+          "type": "A",
+          "content": "188.166.217.206",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "855de21a62eae7bcd62a8b8c83862091"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "horoworld.jventures.co.th",
+          "type": "A",
+          "content": "18.142.38.181",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c4b2abbe2d387c5afdd07a74649cae13"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "imap.jventures.co.th",
+          "type": "CNAME",
+          "content": "tulip3.beenets.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3c143267f69062b10285be9626b3f67e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "index-dev.jventures.co.th",
+          "type": "A",
+          "content": "188.166.217.206",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7ab030886aa6a44a86c116d14a2081e6"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "index.jventures.co.th",
+          "type": "A",
+          "content": "18.140.84.6",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "f04f981bd4ef386c51c82998295499bb"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "io-loan-admin-uat.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "047f47826dc52d125bce043e3f87ce9b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "io-loan-admin.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.235",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "24fcf41cc4e386c9fa9a6318cd18d198"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "issuer-tma-id.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "5004f08b72ad1adab740104520e437ab"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jaii-dee-test.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.170",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "5bb51195ef42413f5717483f305d8c3f"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jaii-dee.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.162",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bbc3e614b8013ef9b4e52618fbb0fedf"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jenkins-jmoney-uat.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "122f5fb9c6275063dcfc0d718075d2d4"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jenkins-jmoney.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.235",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3478f31a0c17a53c288a08f0367ad06c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jfinconnect-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "87b50b40cbbca5cb4c64fa30c10800bb"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jfinconnect.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a992a3515e4cf6c6729dbc9c240493ba"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jft-loan-admin-sit.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ee74fa6087d488fdb034c7b7745a6090"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jft-loan-admin-uat.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8f5590d94439cbe3672dea19361f28a0"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jft-loan-admin.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.235",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "55c6b112832f445c77e16e3a42af09d8"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jft-loan-api-sit.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "9c64a07711a6f08b9983041e2ec03e20"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jft-loan-api-uat.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3afccb335619ad75cf1ac25b34171bcb"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jft-loan-api.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.235",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "5708a8b5c8b2687abd4687a738122535"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jgs-synergy-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "71951be29d80dad729c396bda22ba41f"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jgs-synergy-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c5c6af4eeab4b716d7d8f969df6ed652"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jgs-synergy-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "21bb050c279807d1b15d3fa6f425e9f7"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jgs-synergy.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "02f2d364850ac5d38094b5c84fbdf0cf"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "223c32f2917838b503242fde183b99a1"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d5fa6b428d7c7bf2d312d8ebab90e911"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "83df1aac1a7f4e38139bace20bba6a3c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-master-dev.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.173",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7e43105809cf43dda20e88e9c0a56d6d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-master-qas.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.173",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "69bcf694ad545a9b5bf784c066cd5a48"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-master.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.173",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "60e88f6aaf01929b6d88fd194a2c929d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb-service.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "57be8a2a177eafff61c762ced4b9acf8"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jmb.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7acd4323dd2ba45f8a6457015751cacd"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-appinfo.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "aec5bff82d57816ba046a7ec256f714e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-backoffice-api-int.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e71fed3a1f94fb19ba1017fd06330391"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "83bddf21b8d3eca7a7861d5cc83fd85d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d8aafa47b43298ed634d4f301eb95d9c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-dusit-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "24f5f824f9d49a2bd702f5a8961cf184"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-dusit.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c49265b315af6a3de313da564c9e81c3"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-jmart-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8c5e7352d064ecc66bc31d3d14336d60"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-jmart.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8b4c2b069ec40f7d521cc448d8aae1d9"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-partner.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6eafdaae19b32cf0bb1ec2b0c052c05b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "join-redis-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ea9c6cc4519aa17de29fe8160e39b103"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinconnect-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "dedd1aafc700bf5d5f1f9ae5225f6286"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinconnect-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6bac4b5b5826c3ae8975e7c2c52ce068"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinconnect-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "28e0fe448d76f8e1e16066cddf96b8ae"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinconnect.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "4a19e96c901efb71c8a24c9a1c00a389"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinrewards-admin.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6ba23eb870da06b663140765490967f9"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinrewards-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "0df078dc8bea9aafe1a27108c39c7ba0"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "joinrewards.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b17dfe5e1164c55cba748d7ca43ab554"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jrewards-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c504b23d80352983cb401617dbaa2aee"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jrewards.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c75bce942890c7fcec961b6bef3a5c75"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jvc-olympus-backoffice-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "46cdcda3743e97f5aed70f64a10c34e5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jvc-web-db.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8fe5d395448463feb7b867b7f453767f"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jvc-web-deployer.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ab83a990f5b451774d012cf8fb9b61ec"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jvc-web.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "24e04b8dae81235a79451ee3c9e64f85"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jvc-webadmin.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "cc36fe0b8460cbca5e951daa4a7eb2ea"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "A",
+          "content": "23.236.62.147",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6cf2c837b92db4d321025403a75e212d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "MX",
+          "content": "jventures-co-th.mail.protection.outlook.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a14cd04e51385035029c3f235ca3a908"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"google-site-verification=Fc-1Xp_yDch5trpyPAAmlDwY-DP36AOGDeAvqbteW0w\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "47d3d0591b2952ef32a04907f68217a1"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"google-gws-recovery-domain-verification=68255481\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2961cc335fff868fbb3fa47a596fc4ba"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"google-gws-recovery-domain-verification=68087709\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ec9f115734ccf38eec02cd7c24d56625"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"v=spf1 include:spf.protection.outlook.com -all\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "cab4e81f3cc6f7141e20d0d12e58d5dc"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"google-site-verification=ejs-GYk6kKLZsc_F2f_iOj1Ebs795Wg24IiAuaQ8GW8\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "72e7b1c2df4437f429b7339b8e02dc56"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"google-site-verification=0lHm6DCi0NjTN39J7_i8O_9eJ9QLlXsul6ptBtll_tY\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6a676cffe2e68c01f8cc878261c3257c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.co.th",
+          "type": "TXT",
+          "content": "\"MS=ms20441725\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "096612c787feb99192007a85aafac7ef"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "jventures.jventures.co.th",
+          "type": "TXT",
+          "content": "\"google-site-verification=0lHm6DCi0NjTN39J7_i8O_9eJ9QLlXsul6ptBtll_tY\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "da91f8804895772b642a1863b3573fd9"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "k1._domainkey.jventures.co.th",
+          "type": "CNAME",
+          "content": "dkim.mcsv.net",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "04c04bcaef97d076b813f63de4d79df4"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "kawari-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3d6baec2835366037e646c9a82c318ce"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "kawari.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3adf5d4c44e6b1ca20332132ceb70853"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "kline-olympus-backoffice-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a0ef8c56ed55d57aee9eb424af8359bc"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "klockok-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "1a8c70ac89449e518c35e206961ee002"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "klockok-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bfa5a6137e63e63107708b34c0546cd1"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "klockok-backoffice-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "42087e5e8c31581096cfa294dd711c76"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "klockok-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a89e2848ffb713323a0c65201ba26d64"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "klockok-backoffice-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7b9fd4d2ec6790de449736c3a3bb5012"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "klockok-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "20fa7ec7ff78a80369b857ad043ef4ad"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "loan-suggestion.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "cd9497da157e86e4e2b9def6f9ec8817"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "lss-olympus-backoffice-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "5b4fe859a747c1e3df7be9ad21ef4229"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "lss-olympus-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "afb08e87f2d58be24a4684750e90d873"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "lyncdiscover.jventures.co.th",
+          "type": "CNAME",
+          "content": "webdir.online.lync.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "68fd4f0f71640ea7e351080e11242853"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "mail.jventures.co.th",
+          "type": "CNAME",
+          "content": "tulip3.beenets.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2b7cd903363fab3c8316608983704d47"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "mandrill._domainkey.jventures.co.th",
+          "type": "TXT",
+          "content": "\"v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrLHiExVd55zd/IQ/J/mRwSRMAocV/hMB3jXwaHH36d9NaVynQFYV8NaWi69c1veUtRzGt7yAioXqLj7Z4TeEUoOLgrKsn8YnckGs9i3B3tVFB+Ch/4mPhXWiNfNdynHWBcPcbJ8kjEQ2U8y78dHZj1YeRXXVvWob2OaKynO8/lQIDAQAB;\"",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a1eb3226bdbc8655c6ceac72f23a5c10"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "mass-pay.jfin.network.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a1b2955f57958ec75e61e113ccd77e32"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "melearn.jventures.co.th",
+          "type": "A",
+          "content": "13.251.177.38",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "24eb496926c2b123697641473c1d0abe"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "myhr-olympus-backoffice-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "f4e921025f893b0fe7393acdfc6761ac"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "myhr-olympus-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "797850ac27da92db1a1ec7acdb2b2e79"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "18a911a13c5b0d4e2c19e82715f136d1"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-api-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a562632a0c0a55ca7f29e0f129c5f9c8"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-backoffice-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e382e2dad6e2a7c7bc9029bfb49db7cb"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-backoffice-api-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "25b862463abedf388d7f45265e589417"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6fbe072d4eb221c4d4990e6b898c532b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-backoffice-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ab13f6b4ec44030503ff210685a80469"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-center-backoffice-api-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a5e6105c1dea8d9866080df0183ffc55"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-center-backoffice-web-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8364e34a3c5f5e91c9b796e74b945aab"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "986ae6a36678a42611e742a3f09fcb93"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-monitoring.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "01e9699dfcf512cd266dcc928234bbce"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-processing-service-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c36698090c17c1f6aa203808a2d3fd75"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-storage-io.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6fd78167ea7bac8c1551225eb6359d01"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-storage-service-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6c7c8ece2d4acf56adb41e8a92d205c2"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-uat.jventures.co.th",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8cbadcc4249247ba46f42a6e9887131f"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympus-webview.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "51ac4cbb788dee59ec4a2460f895b181"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e086f6b0bfa7cef4cbdea0ae82fd292e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "696a823df1055b4f0ebfccd876c03f94"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-backoffice-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "341dff05655258083037d97793f9e51c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "211bf6f6616667510d1db22d5d199244"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-backoffice-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "4b2c3fdf2365a4eca2973c4ec03039e8"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ed4387ffe7b44a35f753e75ff423524e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "1205195556fb05dcbdc6d3dabf004cda"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "olympusx.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b5ff05b6d467e512bda4db682e277a9c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "one-notification.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7f375a4f82659fff22c54fadf822dc79"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "37fa475bd2e0a931b3f69ae68c8a6f10"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "16e3432e02a860dd97e07881c80e8f5d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "00ecfadc0347e3dba163b22cea0ccf54"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-ekyc-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "832218c3bf4ae4da11719d5dde46a279"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-ekyc.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "dd8bc6d3fea0193fefd7bb30cdbe58a1"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-jaeger-collector.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b05c440251949bd2b3eed4dfba8438e5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid-jaeger-dashboard.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "658e18db39af4c3ce1de025595eb537e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "oneid.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "473f0079e389aeb90f118cd3c25dbb94"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "otp-prd.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "752df73dd171074812870040a706e039"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-admin-02.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.201",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8b94ccc7be918247963f93dd76e7b5ca"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-admin.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "442b9c0325bf16ed8a0f5c131f56f2e3"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-adv-api-sit.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6818eaf37bce900c65af43377380df15"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-adv-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "adde8a7f65d17356aebe3eb20b9906f6"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-adv-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ba8965c0bdf8b8a7bb4dd996ceb66a45"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-adv-support.jventures.co.th",
+          "type": "CNAME",
+          "content": "sites.figma.net",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a8bf8b322763f6c57ff103da01b38502"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ccb41857fa948b29121c9cd30138cc81"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "74ac58b160436c1fbc2ce2a7202534ae"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-cashlink-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7d21d660560bc8052f36d12de495a64b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-cashlink.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3956564e2e351167ef22dbd06ff526f5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-cl-sign-sgc.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "fffbbaf9ec9fc3be41d66aadd677f096"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-credit-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "9ed80f0769b8faa49a91710bcfabe0fb"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-credit.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b38b51ed6f567ddd7220426d4d54291c"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah-scoring.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ddaca4f1d24a545139367d0593e9cab6"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pah.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "f469bf7d511a8cdee5643ba5a44887d6"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pahportal-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "0c9de16b481010c2667eb1b0edf23463"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pahportal-pgadmin.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "aaebfed1e7d3b1d1f086a0d6b2b3f376"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pahportal.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "22aafe50751f7377ab6631dc62ff181d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse-dashboard-sit.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8ae5e2fb730ef2275f5ffd426ab666bc"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse-dashboard-uat.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "73b7d4f420b2cd5b0d5cd5352f84541b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse-dashboard.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.235",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "9821baea0443bc05c8f6c5565ffe8d5e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse-server-sit.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "9b5efb4c541f2e25876d56c22b651045"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse-server-uat.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.234",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c5bf66368781086f8a2cc2a99f8eff98"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse-server.jventures.co.th",
+          "type": "A",
+          "content": "27.254.90.235",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "16d039fa79451f60a5d4c5c2a07306a0"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "parse.jfin.network.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a690ca0b03dbdd43282cd87b8001bf92"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "pop3.jventures.co.th",
+          "type": "CNAME",
+          "content": "tulip3.beenets.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "a94dbf1057e97093a04e1aa97dd6cce3"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sales-assist-dev.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.165",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d4559ccf2c67a2ef5aabc795abde3661"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sales-assist-qas.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.165",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6222a3754c32f0d0792f897ee52be3d9"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sales-assist.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.165",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "01b403573e01551ab2ea9357dc6d68c4"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "selector1._domainkey.jventures.co.th",
+          "type": "CNAME",
+          "content": "selector1-jventures-co-th._domainkey.jventures.onmicrosoft.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "090aad1c2a4ec9fbdf03a81f83360930"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "selector2._domainkey.jventures.co.th",
+          "type": "CNAME",
+          "content": "selector2-jventures-co-th._domainkey.jventures.onmicrosoft.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "269f30ed9d3311f5572d594d98fc7a12"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b38802d33cd124483353a93f39ed2e1b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-backoffice-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "1185af0abad1248f6a3c3bf2aee8c9dd"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "19d30cbf1aaf9c9ec092d289dc22042d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-backoffice-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6d7b93faf75694d454b0dcba20eca51a"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b4d734f3d4a31084a4ca6707b94131b3"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-pgadmin.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "fbdb885a0d72668594c708a7f0e0c61e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sgtracking-portainer.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d2b79fdb589fdc7684dec899c7b1776e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "sip.jventures.co.th",
+          "type": "CNAME",
+          "content": "sipdir.online.lync.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "203b56fbfea8951788ac5de115d445b5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "smtp.jventures.co.th",
+          "type": "CNAME",
+          "content": "tulip3.beenets.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "016ab40c42a6c2d532b583afa66c1b59"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "support.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e2ae31cd9149bc6b84e7b9248beff67d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "taiga.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.168",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6d5cc3c82fa574b5964d5cae1d00938e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "75fc87b7114554e8cd1dddbd49f20fe9"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-appinfo.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "f5890267a739cd77ae3bb36108ca3471"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-applink.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2071433f7845f4d514115e0cabd1dc4b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-backoffice-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "85e7ee35f247698e02aad4ff1498b254"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-backoffice-api-int.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "df7563e5a0fdb3bbfa2f8ab1ce978c74"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "81def5bd94bf4d81ca0027fc6fae72c0"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "f9bb17ca5b55964ad29c3a12b9f441e3"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-connect-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8edb2abb55a0d95c8e423a2103436bee"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-connect-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e443fa8dd28ceba7a52154698638fd7b"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-partner.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "42a22d114420798084a66e8a34ae7b7e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tdem-redis-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d1eed67acd0fc3c1da5ad166c55c369d"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "teenoi-otp.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2769712e0e6fa9426d5a8e809830de65"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "teenoii-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b9cf6027052bca41ef97223d86679aaa"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "teenoii-backoffice-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bf023ea327bcbcaa6e8a9156515e732a"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "teenoii-backoffice.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "33307e5b548c1b52429efd071af9a023"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "teenoii-service.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bfb338b311a919517f1137a80df1718a"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "teenoii.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2ede5311a20fbf7450be75557c5b4512"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "test-gitlab.jventures.co.th",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e6945f5fa37d5704f588678af12c4cb7"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tracking-api-dev.jventures.co.th",
+          "type": "A",
+          "content": "18.136.138.37",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c69a243a2f0f9f3328bb96f23edf70bd"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "tracking-api.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e0e748453106b5f20e89754a50c8306e"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "verifier-tma-id.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "1fa67df17a83f54fd7403c42eaedbdef"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "wallet-tma-id.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "978d76bba73044a347645d88683847b5"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "webmail.jventures.co.th",
+          "type": "CNAME",
+          "content": "tulip3.beenets.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ba0e475bcd42e98be945406a6dff0ddc"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "webmailo365.jventures.co.th",
+          "type": "CNAME",
+          "content": "outlook.office.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2d10dccf6891ab3a6eeb0fe6c12151ac"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "www.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e751d6ff59eaf9c40431062eec230f45"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "xn--s3c0cxd.com.jventures.co.th",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "c2447c5f9952f0ce2c0fda7fcc42b076"
+        },
+        {
+          "zone": "jventures.co.th",
+          "name": "zabbix.jventures.co.th",
+          "type": "A",
+          "content": "210.1.62.168",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "58d2769ea0479d9cf8369fe8ca97bf60"
+        }
+      ]
+    },
+    {
+      "zone": "jfin.network",
+      "zoneId": "dfdd4ef43622f9dbb8a8d6b5e189c2bf",
+      "totalRecords": 323,
+      "nonProxiedRecords": [
+        {
+          "zone": "jfin.network",
+          "name": "_16348379867335834e40aefb39af3b8e.jfin.network",
+          "type": "CNAME",
+          "content": "67878be0d1d4c2998100b02165b464e3.9cfddadc94221bc8eb58404a15648b0a.t0364165001672027605.sectigo.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "cabceef3dc2abb61ac64386bbe11b8f0"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_2e62c15644de5bc18705d978ec66732d.jfin.network",
+          "type": "CNAME",
+          "content": "5cdb3b84547a162413e36747811e3908.1355268f0b207d668ea6bef9e5c71d02.sectigo.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "for authen ssl cert 2026",
+          "id": "eb8b36c05a18b032c5270284e8a83120"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_5bb6eae7bd234b183920e050cf9ea482.jfin.network",
+          "type": "CNAME",
+          "content": "_96ba392c9989b2eec46b7122f4fe6530.xlfgrmvvlj.acm-validations.aws",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e99047464eb69fe98dfd543c0e5e6eab"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_7e0c42a4452980055b95b4df9140a07a.jfin.network",
+          "type": "CNAME",
+          "content": "b8e1d5972ca1a4e46c0a9b2b568226ed.0bb34d60d57b911e88e5c690c779752a.4619ca231bd231e185.sectigo.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "860b085d1832a274ee436d0bb196a37b"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_a22b7aebdc3a51dc391a99d014986842.jfin.network",
+          "type": "CNAME",
+          "content": "356d913968e46179c21b73676f2a77c5.4fe68bf4aa60d14a47b9eed49e186b93.bde7818f0a938e357e.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "22fe5ac83f72ec01322890fd7d0338f2"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_a9f5c9cdd1dd59c06d633b0bfb901eb7.jfin.network",
+          "type": "CNAME",
+          "content": "0641e8bf7341318f776418adb7b20dd9.52cf925820dcc052b8c8bf0e8066f846.w0944491001544779331.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "583ea5516227dde95d603f284a94a4d9"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_b639cf972a22b4ea15508f912a6391f1.jfin.network",
+          "type": "CNAME",
+          "content": "4d4281cccba7e6d55d2fd663134685f8.6b73c762755b69d29fe94f93b91d4ba7.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "447e9c4be71d2a68fb6b070695750699"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "_e7e5f2732ee3a452b1473c22e4a5d23a.jfin.network",
+          "type": "CNAME",
+          "content": "ea362f8f8595a6c3714279a829a9381c.2d68a9ef3956a015a20aff7f421fd413.comodoca.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "cd771dd3d40b101fd4ab3c322b9b24b5"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "apidev.jfin.network",
+          "type": "A",
+          "content": "210.1.62.195",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7c0e31a3e65fe6438803685e6e400b60"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "checkndid-uat.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d3c231b6de93bdb127093e472d0a04ae"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "crm-log-web.jfin.network",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "bc8c613dadd03072a97424c089b78e49"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "e-kyc-uat.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "16228ed2509dae8efd064be24d72526b"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "e-sign-api.jfin.network",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "185803bbd064fd2f74f664f3c0c159e3"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "e-sign-rws-poc-api.jfin.network",
+          "type": "CNAME",
+          "content": "alb-gsv-1621922281.ap-southeast-1.elb.amazonaws.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "gsv-poc",
+          "id": "64a8d554c443ba7960954f5dbe4a723f"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "e-sign.jfin.network",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "1368462fd246feae7821327723537216"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "eztax-storage-uat.jfin.network",
+          "type": "CNAME",
+          "content": "alb-otp-uat-th-623218675.ap-southeast-7.elb.amazonaws.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b4ba6e8c9ef642e655a5023fca05efbe"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "info.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "30aea2611dc47c4924feafc36e34b742"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "jai-agent-api.jfin.network",
+          "type": "A",
+          "content": "207.166.170.163",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "0fcbc6ee61bc8d769d7535d39e8cf9a8"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "kkong.jfin.network",
+          "type": "A",
+          "content": "101.47.167.246",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "Kong test",
+          "id": "d7d348411d8e3024179152828e795961"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-appinfo-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d7d8dd8f8ea281872d529538defad7c8"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-cache-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "63f9796205a017ac3b850d7414b93b6b"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-fs-filer-int-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6326a43c23eff426ad4d8ca58c3416af"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-fs-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "28823d797a566847a1da4c2c4576405e"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-grafana-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e18ce22262aa3512175315e84bfecdf1"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-kuma-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6bc28f612f243a591204e7bc3002bc3e"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-merchant-api-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "3054e6922bc9f83b911794ff790ee104"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-merchant-backoffice-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "600f8dc2c5e09a071bd67d41e8397021"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-notification-api-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "6d9c50b91a304e738dac8ed380e6298f"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-wallet-api-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "17543900c90e9194b9bac1e23b499984"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-wallet-backoffice-api-int-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "170a5ed528c8c7a1a780962f05a944cc"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-wallet-backoffice-api-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8a7ca9a4de7bc9e666c9eeb153bf18c8"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-wallet-backoffice-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "d8da8f4f1386b9793fbdc795cb5f58b0"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "mu-wallet-poc.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "24da171ee8055eb2928c9fa1bc9085af"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "ndid-api-uat.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "ea030f11a394cd159dde967a7be9ac42"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "nft.jfin.network",
+          "type": "A",
+          "content": "210.1.62.211",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "b714136ac8df42ace19af5b60fc3fa21"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "parse.jfin.network",
+          "type": "A",
+          "content": "18.142.134.175",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "2d70d99212b893f112ae5755f71e55e4"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "poc-e-kyc-uat.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e8ad06ffc1d7ece7521594e0d96d696a"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "registry.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "924ffd1542bc578abc154c3ce4ece7ab"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "services-otp.jfin.network",
+          "type": "CNAME",
+          "content": "otp-backend-albprod-th-1778533599.ap-southeast-7.elb.amazonaws.com",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "backend sms gateway",
+          "id": "2f11f8e2d6ea0144a8e4c6f243db373f"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "stakingrewards.jfin.network",
+          "type": "A",
+          "content": "210.1.62.195",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "06724cde24aa66486997d10793530038"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "test-ndid-api-uat.jfin.network",
+          "type": "A",
+          "content": "47.131.93.214",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "999d69b6119ed6a031216b91c8f0d40b"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "uat-mobilecare-certificate.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "e60ccbbd40e3ec1eb5d11809841b553d"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "uat-mobilecare-front.jfin.network",
+          "type": "A",
+          "content": "52.220.167.209",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "8a77743f3951deee354ecf38b8d4a816"
+        },
+        {
+          "zone": "jfin.network",
+          "name": "waf.jfin.network",
+          "type": "A",
+          "content": "45.78.224.142",
+          "proxied": false,
+          "ttl": 1,
+          "comment": "",
+          "id": "7cac24d29886386ee6642a264b9a3693"
+        }
+      ]
+    }
+  ]
+}

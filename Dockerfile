@@ -52,6 +52,8 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh /app/scripts/aws/nonprod/adduser/adduservendor.sh
+COPY --from=builder /app/src/app/api/operations/aws/prod/adduser/script/adduservendor.sh /app/scripts/aws/prod/adduser/adduservendor.sh
 
 # Copy full .next folder and node_modules with correct ownership
 COPY --from=builder --chown=node:node /app/.next ./.next
@@ -59,6 +61,8 @@ COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
 # Ensure permissions for node user (non-recursive to save time, COPY handles contents)
 RUN chown node:node /app
+RUN chmod 755 /app/scripts/aws/nonprod/adduser/adduservendor.sh
+RUN chmod 755 /app/scripts/aws/prod/adduser/adduservendor.sh
 
 # Copy existing state file and set permissions
 COPY backupec2_state.json /app/backupec2_state.json
