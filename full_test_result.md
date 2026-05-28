@@ -29,6 +29,48 @@
 
 ---
 
+## 19. Developer Smoke Test: AWS Prod Check Security Patch Uses Dedicated Table
+**Date:** 2026-05-28
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-PATCH-DB-001 | Prod Route Query Target | route ฝั่ง `prod` ต้องไม่ query ตารางรวม `scan_security_patch` อีก | search ใต้ `src/app/api/operations/aws/prod/check-security-patch/**` พบเฉพาะ `scan_security_patch_prod` ใน query และ constant ที่เกี่ยวข้อง | **Passed** |
+| PROD-PATCH-DB-002 | Dedicated Init Script | Docker/Postgres bootstrap ต้องมี SQL สำหรับสร้าง table ของ `prod` | เพิ่มไฟล์ `backend/init/003_scan_security_patch_prod.sql` ที่ใช้ `CREATE TABLE IF NOT EXISTS` และ `CREATE INDEX IF NOT EXISTS` สำหรับ `scan_security_patch_prod` | **Passed** |
+| PROD-PATCH-DB-003 | UI Consistency | หน้า `prod` ต้องแสดงชื่อตาราง/ไฟล์ export ให้ตรงกับตารางใหม่ | `page.js` ใช้ fallback filename `scan_security_patch_prod.xlsx` และแสดงชื่อ table เป็น `scan_security_patch_prod` | **Passed** |
+| PROD-PATCH-DB-004 | File-level Validation | ไฟล์ที่แก้ต้องไม่มี lint/editor error | editor diagnostics ไม่พบ error และ `npx eslint src/app/api/operations/aws/prod/check-security-patch/route.js src/app/api/operations/aws/prod/check-security-patch/delete/route.js src/app/operations/aws/prod/check-security-patch/page.js` ผ่าน | **Passed** |
+
+### Notes
+- ปรับ [src/app/api/operations/aws/prod/check-security-patch/route.js](/home/sipparush/MyTraining/itportal-v2/src/app/api/operations/aws/prod/check-security-patch/route.js) ให้ใช้ตาราง `scan_security_patch_prod` ทั้งใน flow create/select/count/upsert และ export xlsx
+- ปรับ [src/app/api/operations/aws/prod/check-security-patch/delete/route.js](/home/sipparush/MyTraining/itportal-v2/src/app/api/operations/aws/prod/check-security-patch/delete/route.js) ให้ลบจาก `scan_security_patch_prod`
+- เพิ่ม [backend/init/003_scan_security_patch_prod.sql](/home/sipparush/MyTraining/itportal-v2/backend/init/003_scan_security_patch_prod.sql) เพื่อ bootstrap table และ index ของ `prod`
+- ปรับ [src/app/operations/aws/prod/check-security-patch/page.js](/home/sipparush/MyTraining/itportal-v2/src/app/operations/aws/prod/check-security-patch/page.js) ให้ข้อความบนหน้าตรงกับตารางเฉพาะของ `prod`
+- รอบนี้ยังไม่ได้รัน integration test กับ PostgreSQL volume ใหม่หรือ volume เดิมที่มีอยู่แล้ว จึงยังไม่ได้ยืนยัน behavior ระดับ environment เต็มรูปแบบ
+
+**Developer Verdict:** ฝั่ง `prod/check-security-patch` ถูกแยกไปใช้ตารางของตัวเองในระดับโค้ดและ bootstrap script แล้ว และผ่านการ validation เฉพาะจุดของไฟล์ที่แก้
+
+---
+
+## 20. Developer DB Apply Test: Existing PostgreSQL Volume for `scan_security_patch_prod`
+**Date:** 2026-05-28
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD-PATCH-APPLY-001 | Postgres Service Availability | service `postgres` ต้องพร้อมก่อน apply SQL | `docker compose ps postgres` แสดง container `itportal-v2-postgres-1` สถานะ `Up` | **Passed** |
+| PROD-PATCH-APPLY-002 | Apply SQL to Existing Volume | คำสั่ง apply ต้องสร้างตารางและ index ของ `scan_security_patch_prod` ใน volume เดิมได้ | `docker compose exec -T postgres ... -f /docker-entrypoint-initdb.d/003_scan_security_patch_prod.sql` ตอบ `CREATE TABLE`, `CREATE INDEX`, `CREATE INDEX`, `CREATE INDEX` | **Passed** |
+| PROD-PATCH-APPLY-003 | Verify Table Exists | หลัง apply ต้องพบ table `scan_security_patch_prod` ใน database | query `pg_tables` คืนแถว `scan_security_patch_prod` 1 แถว | **Passed** |
+| PROD-PATCH-APPLY-004 | Verify Indexes Exist | หลัง apply ต้องพบ index หลักและ index ที่ต้องใช้ครบ | query `pg_indexes` คืน `scan_security_patch_prod_pkey`, `idx_scan_security_patch_prod_ip`, `idx_scan_security_patch_prod_check_date`, `idx_scan_security_patch_prod_latest_status` | **Passed** |
+
+### Notes
+- รัน apply กับ PostgreSQL volume เดิมผ่าน service `postgres` ใน [docker-compose.yml](/home/sipparush/MyTraining/itportal-v2/docker-compose.yml)
+- ใช้ SQL file [backend/init/003_scan_security_patch_prod.sql](/home/sipparush/MyTraining/itportal-v2/backend/init/003_scan_security_patch_prod.sql) ที่เตรียมไว้ก่อนหน้า
+- ระหว่างรัน `docker compose` มี warning ว่า field `version` obsolete แต่ไม่กระทบผลการ apply หรือ verify ในรอบนี้
+
+**Developer Verdict:** ตาราง `scan_security_patch_prod` ถูก apply เข้า PostgreSQL volume เดิมเรียบร้อยและ verify แล้วว่ามี table กับ index ครบ
+
+---
+
 ## Executive Summary
 All core operational features have been implemented and tested. The primary focus of this cycle was on AWS Operations, specifically the "Backup Readiness" workflow. The system successfully integrates with AWS CLI for listing backups, restoring instances, verifying Docker status via SSH, and terminating test resources. Several edge cases (invalid AMIs, state persistence) were handled during the latest iteration.
 

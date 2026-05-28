@@ -197,7 +197,7 @@ export default function CheckSecurityPatchPage() {
             const url = window.URL.createObjectURL(blob);
             const disposition = response.headers.get('Content-Disposition') || '';
             const fileNameMatch = disposition.match(/filename="([^"]+)"/);
-            const fileName = fileNameMatch?.[1] || 'scan_security_patch.xlsx';
+            const fileName = fileNameMatch?.[1] || 'scan_security_patch_prod.xlsx';
             const link = document.createElement('a');
 
             link.href = url;
@@ -344,7 +344,7 @@ export default function CheckSecurityPatchPage() {
                 <div className="flex items-center justify-between gap-3">
                     <div>
                         <h2 className="text-xl font-semibold text-gray-900">Database History</h2>
-                        <p className="text-sm text-gray-600">ข้อมูลล่าสุดจากตาราง <span className="font-mono">scan_security_patch</span></p>
+                        <p className="text-sm text-gray-600">ข้อมูลล่าสุดจากตาราง <span className="font-mono">scan_security_patch_prod</span></p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button

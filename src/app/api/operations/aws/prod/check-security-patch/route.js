@@ -11,6 +11,9 @@ const execFilePromise = util.promisify(execFile);
 const execPromise = util.promisify(exec);
 const AWS_PROFILE = 'aws_prod';
 const LOG_FILE = path.resolve(process.cwd(), 'scan_security_patch_prod.log');
+const TABLE_NAME = 'scan_security_patch_prod';
+const XLSX_SHEET_NAME = 'scan_security_patch_prod';
+const XLSX_FILE_PREFIX = 'scan_security_patch_prod';
 const IPV4_PATTERN = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
 const SSH_KEY_CANDIDATES = [
     process.env.PROD_SECURITY_PATCH_SSH_KEY_PATH,
@@ -146,7 +149,7 @@ function getSshKeyPath() {
 
 async function ensureScanSecurityPatchTable() {
     await query(`
-        CREATE TABLE IF NOT EXISTS scan_security_patch (
+        CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
             instance_id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             ip INET NOT NULL,
@@ -159,6 +162,21 @@ async function ensureScanSecurityPatchTable() {
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
+    `);
+
+    await query(`
+        CREATE INDEX IF NOT EXISTS idx_${TABLE_NAME}_ip
+        ON ${TABLE_NAME}(ip)
+    `);
+
+    await query(`
+        CREATE INDEX IF NOT EXISTS idx_${TABLE_NAME}_check_date
+        ON ${TABLE_NAME}(check_date DESC)
+    `);
+
+    await query(`
+        CREATE INDEX IF NOT EXISTS idx_${TABLE_NAME}_latest_status
+        ON ${TABLE_NAME}(latest_status)
     `);
 }
 
@@ -194,13 +212,13 @@ async function getScanHistory({ page = 1, limit = 20 }) {
             last_scan_date,
             updated_at,
             created_at
-        FROM scan_security_patch
+        FROM ${TABLE_NAME}
         ORDER BY updated_at DESC
         LIMIT $1 OFFSET $2
     `, [limit, offset]);
 
     // Query for total count
-    const { rows: countRows } = await query('SELECT COUNT(*) AS total FROM scan_security_patch');
+    const { rows: countRows } = await query(`SELECT COUNT(*) AS total FROM ${TABLE_NAME}`);
     const totalRecords = parseInt(countRows[0]?.total || '0', 10);
 
     return {
@@ -227,7 +245,7 @@ function buildWorkbookRows(history) {
 
 async function upsertScanResult(scanResult) {
     await query(`
-        INSERT INTO scan_security_patch (
+        INSERT INTO ${TABLE_NAME} (
             instance_id,
             name,
             ip,
@@ -501,7 +519,7 @@ export async function GET(request) {
         if (format === 'xlsx') {
             const workbook = XLSX.utils.book_new();
             const worksheet = XLSX.utils.json_to_sheet(buildWorkbookRows(history));
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'scan_security_patch');
+            XLSX.utils.book_append_sheet(workbook, worksheet, XLSX_SHEET_NAME);
             const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
@@ -509,7 +527,7 @@ export async function GET(request) {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'Content-Disposition': `attachment; filename="scan_security_patch_${timestamp}.xlsx"`,
+                    'Content-Disposition': `attachment; filename="${XLSX_FILE_PREFIX}_${timestamp}.xlsx"`,
                     'Cache-Control': 'no-store'
                 }
             });
