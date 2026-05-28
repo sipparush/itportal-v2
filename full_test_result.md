@@ -5,6 +5,30 @@
 
 ---
 
+## 18. Developer Smoke Test: AWS Prod Map URL Edit/Delete by Service and Route Name
+**Date:** 2026-05-28
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| MAP-PROD-EDIT-001 | Page Availability | หน้า `/operations/aws/prod/mapurl` ต้องเข้าได้และ render ส่วนค้นหาแบบใหม่ | `GET /operations/aws/prod/mapurl` ได้ `200` และพบข้อความ `Search Existing Mapping` กับ `Service Name หรือ Route Name อย่างใดอย่างหนึ่ง` ใน response | **Passed** |
+| MAP-PROD-EDIT-002 | Fetch Validation: Missing Names | เรียก `action=fetch` โดยไม่ส่งชื่อ ต้องถูก reject | `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch"}` ได้ `400`, message `Missing required fields: provide serviceName, routeName, or both` | **Passed** |
+| MAP-PROD-EDIT-003 | Fetch Validation: Invalid Name Format | ชื่อที่มีช่องว่างต้องถูก reject | `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","serviceName":"bad name"}` ได้ `400`, message `Invalid serviceName or routeName format` | **Passed** |
+| MAP-PROD-EDIT-004 | Service-only Fetch Path | ค้นหาด้วย `serviceName` อย่างเดียวต้องเข้าทาง lookup ใหม่ได้ | `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","serviceName":"svc_not_exists_for_smoke_test_20260528"}` ได้ `404`, message `Fetch service failed: Not found` | **Passed** |
+| MAP-PROD-EDIT-005 | Route-only Fetch Path | ค้นหาด้วย `routeName` อย่างเดียวต้องเข้าทาง lookup ใหม่ได้ | `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","routeName":"route_not_exists_for_smoke_test_20260528"}` ได้ `404`, message `Fetch route failed: Not found` | **Passed** |
+| MAP-PROD-EDIT-006 | Create Validation Regression Check | create flow เดิมต้องยัง reject payload ไม่ครบแบบเดิม | `POST /api/operations/aws/prod/mapurl` ด้วย payload create ไม่ครบ ได้ `400`, message `Missing required fields` | **Passed** |
+| MAP-PROD-EDIT-007 | File-level Validation | ไฟล์ที่แก้ต้องไม่มี lint/build error | `npx eslint src/app/api/operations/aws/prod/mapurl/route.js src/app/operations/aws/prod/mapurl/page.js` ผ่าน และ `npm run build` ผ่าน | **Passed** |
+
+### Notes
+- ปรับ [src/app/api/operations/aws/prod/mapurl/route.js](/home/sipparush/MyTraining/itportal-v2/src/app/api/operations/aws/prod/mapurl/route.js) ให้รองรับ `fetch`, `edit`, `delete` โดย resolve จาก `serviceName` หรือ `routeName` อย่างใดอย่างหนึ่งได้ และยังคง create flow เดิมเมื่อไม่มี `action`
+- ปรับ [src/app/operations/aws/prod/mapurl/page.js](/home/sipparush/MyTraining/itportal-v2/src/app/operations/aws/prod/mapurl/page.js) ให้มีส่วน `Search Existing Mapping` พร้อมปุ่ม `Edit Mapping` และ `Delete Mapping` โดยกรอก `serviceName` หรือ `routeName` อย่างใดอย่างหนึ่งได้
+- ยังไม่ได้รัน `fetch/edit/delete` กับ resource จริงบน Kong prod เพราะจะกระทบ mapping จริงและยังไม่มีชื่อ resource ที่ผู้ใช้อนุมัติให้ใช้ทดสอบ
+- ยังไม่ได้รัน Docker test ในรอบนี้ เพราะ environment ปัจจุบันไม่มีคำสั่ง `docker` ใน WSL distro ที่รันอยู่
+
+**Developer Verdict:** งาน implement สำหรับ local flow และ validation ปลอดภัยเสร็จแล้ว รวมทั้งรองรับ `service-only` และ `route-only` lookup แล้ว เหลือ Docker test และ targeted test กับ resource จริงที่ได้รับอนุมัติ
+
+---
+
 ## Executive Summary
 All core operational features have been implemented and tested. The primary focus of this cycle was on AWS Operations, specifically the "Backup Readiness" workflow. The system successfully integrates with AWS CLI for listing backups, restoring instances, verifying Docker status via SSH, and terminating test resources. Several edge cases (invalid AMIs, state persistence) were handled during the latest iteration.
 

@@ -121,6 +121,12 @@ export default function OperationsPage() {
                                             </a>
                                         </li>
                                         <li>
+                                            <a href="/operations/aws/prod/check-security-patch" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
+                                                <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                                <span className="font-medium">Check security patch</span>
+                                            </a>
+                                        </li>
+                                        <li>
                                             <a href="/operations/aws/prod/adduser" className="flex items-center text-gray-700 hover:text-red-600 transition-colors group">
                                                 <svg className="w-5 h-5 mr-3 text-gray-400 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                                                 <span className="font-medium">Add User Access(OS or VPN)</span>

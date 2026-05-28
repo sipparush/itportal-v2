@@ -1,3 +1,57 @@
+# Request ใหม่: AWS Prod Map URL รองรับค้นหา Service/Route ด้วยชื่อเพื่อ Edit/Delete (Approved)
+
+สถานะ: implement เสร็จและทดสอบ local แล้ว (อัปเดตเงื่อนไขค้นหาแล้ว)
+
+รายละเอียดคำขอ:
+- ศึกษาโครงสร้างเดิมของ `http://localhost:3000/operations/aws/prod/mapurl`
+- ปรับเพิ่มให้สามารถดึง `services` และ `routes` ด้วยชื่อโดยตรง
+- นำข้อมูลที่ดึงได้มาใช้สำหรับ `edit` และ `delete`
+
+### ข้อค้นพบเบื้องต้น
+- หน้า `src/app/operations/aws/prod/mapurl/page.js` ปัจจุบันรองรับเฉพาะ create flow
+- route `src/app/api/operations/aws/prod/mapurl/route.js` ปัจจุบันสร้าง service/route ใหม่ผ่าน Kong admin ด้วย `curl` command เท่านั้น
+- pattern ที่ใกล้เคียงที่สุดคือ `src/app/operations/byteplus/edit-map-url/page.js` และ `src/app/api/operations/byteplus/edit-map-url/route.js` ซึ่งรองรับ `fetch`, `edit`, `delete`
+- รอบแรกผู้ใช้ยืนยันให้ค้นหาด้วย `service name` และ `route name` โดยตรง ไม่ใช้ FQDN เป็นตัวค้นหาหลัก
+- request ล่าสุดปรับเงื่อนไขค้นหาให้ใช้ `service name` หรือ `route name` อย่างใดอย่างหนึ่งได้ ไม่ต้องกรอกทั้งคู่
+
+### แผนดำเนินการรอบนี้
+- [x] อัปเดต API `src/app/api/operations/aws/prod/mapurl/route.js` ให้รองรับ `fetch`, `edit`, `delete` โดยคง `create` เดิมไว้
+- [x] เพิ่ม helper สำหรับ normalize/validate `serviceName`, `routeName`, `endpoint`, `path` และ parse response จาก Kong admin
+- [x] ปรับ UI `src/app/operations/aws/prod/mapurl/page.js` ให้มีส่วน Load by Name สำหรับ `service name` และ `route name`
+- [x] เพิ่ม form/state สำหรับ edit endpoint/path หลังโหลดข้อมูลสำเร็จ
+- [x] เพิ่มปุ่ม delete mapping และ feedback state แยกจาก create flow เดิม
+- [x] ทดสอบ validation เฉพาะจุดสำหรับไฟล์ที่แก้
+- [x] ทดสอบ local flow ในส่วน page render, create validation และ fetch validation
+- [x] อัปเดต `full_test_result.md` หลังได้ผลทดสอบจริง
+- [x] อัปเดต `implement_plan.md` ด้วยผลการดำเนินการรอบนี้
+- [ ] ทดสอบ Docker flow ของงานนี้
+- [ ] ทดสอบ fetch/edit/delete กับ resource จริงบน Kong prod ตามชื่อที่อนุมัติ
+
+### หมายเหตุ
+- รอบนี้เริ่ม implement แล้วตามการอนุมัติล่าสุดจากผู้ใช้
+- จะทดสอบตามลำดับ local ก่อน แล้วค่อยพิจารณา Docker ตาม workflow ของ repo
+
+### ผลการดำเนินการ (2026-05-28)
+- ปรับ `src/app/api/operations/aws/prod/mapurl/route.js` ให้รองรับ action `fetch`, `edit`, `delete` โดย resolve จาก `serviceName` หรือ `routeName` อย่างใดอย่างหนึ่งได้
+- คง create flow เดิมไว้ เมื่อ request ไม่มี `action`
+- เพิ่ม validation สำหรับ `serviceName`, `routeName`, `destinationIp`, `destinationPort`, `scheme` และ `path`
+- ปรับ `src/app/operations/aws/prod/mapurl/page.js` ให้มีส่วน `Search Existing Mapping` และ form สำหรับ `Edit Mapping` กับ `Delete Mapping` พร้อมรองรับการกรอก `serviceName` หรือ `routeName` อย่างใดอย่างหนึ่ง
+- local page `GET http://localhost:3000/operations/aws/prod/mapurl` ตอบ `200` และ render ข้อความ `Search Existing Mapping`
+- local API smoke test ผ่านตามคาด:
+    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch"}` ตอบ `400 Missing required fields: provide serviceName, routeName, or both`
+    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","serviceName":"bad name"}` ตอบ `400 Invalid serviceName or routeName format`
+    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","serviceName":"svc_not_exists_for_smoke_test_20260528"}` ตอบ `404 Fetch service failed: Not found`
+    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","routeName":"route_not_exists_for_smoke_test_20260528"}` ตอบ `404 Fetch route failed: Not found`
+    - `POST /api/operations/aws/prod/mapurl` ด้วย payload create ที่ไม่ครบ ตอบ `400 Missing required fields`
+- `npx eslint src/app/api/operations/aws/prod/mapurl/route.js src/app/operations/aws/prod/mapurl/page.js` ผ่าน
+- `npm run build` ผ่าน
+
+### ข้อจำกัดของรอบนี้
+- ยังไม่ได้ทดสอบ Docker เพราะ environment ปัจจุบันไม่มีคำสั่ง `docker` ใน WSL distro นี้
+- ยังไม่ได้ยิง `fetch/edit/delete` กับ resource จริงบน Kong prod เพราะต้องใช้ชื่อ resource ที่มีอยู่จริงและการทดสอบ `edit/delete` จะมีผลกับ production mapping
+
+---
+
 # Request ใหม่: AWS Prod Functional Test with userb on 10.241.15.15 (Waiting for Approval)
 
 สถานะ: ทดสอบแล้ว
