@@ -1,3 +1,39 @@
+# Request ใหม่: Jenkins Deploy Fix with Credentials Store (Approved)
+
+สถานะ: อนุมัติแล้ว กำลังดำเนินการ
+
+รายละเอียดคำขอ:
+- ผู้ใช้สร้าง Jenkins credentials แล้วชื่อ `jventures-uat-ssh-key` และ `jventures-prod-ssh-key`
+- ต้องการปรับ Jenkins deploy flow ให้ไม่ใช้ `secrets/` ใต้ workspace อีก
+- ต้องแก้ root cause ของ Jenkins checkout failure ที่ลบ workspace เก่าไม่สำเร็จเพราะไฟล์ `.pem` ใน `secrets`
+
+### สมมติฐานเฉพาะจุด
+- `docker-compose.yml` รองรับการ mount key ผ่าน `${SECRETS_PATH}:/home/node/.ssh` อยู่แล้ว จึงควรแก้ที่ Jenkinsfile เป็นหลัก
+- วิธีที่ปลอดภัยที่สุดคือ bind credentials จาก Jenkins store ไปเป็น temp files นอก workspace แล้ว copy ไปยัง temp directory ที่ Jenkins ลบ/สร้างเองได้
+- post action ใน Jenkinsfile ควรเลี่ยง `sh` นอก node/workspace context เพื่อไม่ให้เกิด `MissingContextVariableException` ซ้ำเมื่อ checkout ล้มตั้งแต่ต้น
+
+### แผนดำเนินการรอบนี้
+- [x] บันทึก approval และแผนการแก้ Jenkins deploy รอบนี้
+- [x] ปรับ `Jenkinsfile` ให้ bind `jventures-uat-ssh-key` และ `jventures-prod-ssh-key`
+- [x] สร้าง temp SSH directory นอก workspace และ export `SECRETS_PATH` ก่อน `docker-compose up`
+- [x] เปลี่ยน post action ที่ไม่จำเป็นต้องใช้ `sh` ให้ใช้ `echo`
+- [x] ตรวจ syntax/logic ของ Jenkinsfile หลังแก้
+- [x] อัปเดตผลใน `full_test_result.md` ตามสิ่งที่ตรวจได้จากฝั่ง developer
+
+### ข้อจำกัด
+- รอบนี้ยังไม่สามารถรัน Jenkins pipeline จริงจาก environment นี้ได้
+- validation จะเป็น static/logic validation ของ Jenkinsfile และความสอดคล้องกับ `docker-compose.yml`
+
+### ผลการดำเนินการ (2026-07-13)
+- ปรับ `Jenkinsfile` ให้ bind Jenkins credentials `jventures-uat-ssh-key` และ `jventures-prod-ssh-key` ผ่าน `withCredentials`
+- สร้าง temp directory นอก workspace ที่ `/tmp/itportal_ssh_${BUILD_NUMBER}` และ copy key ไปเป็น `jventures-uat.pem` กับ `jventures-prod.pem`
+- เขียนค่า `SECRETS_PATH` ลง temp env file ที่ `/tmp/itportal_env_${BUILD_NUMBER}` แล้ว source ก่อน `docker-compose up -d --build`
+- คง contract เดิมของ container ที่ mount `${SECRETS_PATH}:/home/node/.ssh` จึงไม่ต้องแก้ `docker-compose.yml`
+- เปลี่ยน `post { success/failure }` จาก `sh` เป็น `echo` เพื่อลดความเสี่ยง `MissingContextVariableException` แบบเดิม
+- ตรวจ file-level validation ของ `Jenkinsfile` แล้วไม่พบ syntax error
+
+---
+
 # Request ใหม่: EC2 Search by Tag Across Prod and Nonprod (Waiting for Approval)
 
 สถานะ: รออนุมัติแผน

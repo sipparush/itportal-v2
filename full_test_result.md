@@ -221,6 +221,23 @@ All core operational features have been implemented and tested. The primary focu
 
 ---
 
+## 16. Developer Validation: Jenkins Credentials-based Deploy Preparation
+**Date:** 2026-07-13
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| JENK-DEV-001 | Jenkinsfile credentials binding | Pipeline ต้อง bind `jventures-uat-ssh-key` และ `jventures-prod-ssh-key` ได้ใน stage เตรียม deploy | `Jenkinsfile` ถูกปรับให้ใช้ `withCredentials([sshUserPrivateKey(...)])` สำหรับทั้งสอง credential | **Passed (Static Validation)** |
+| JENK-DEV-002 | Secrets path contract | Pipeline ต้องส่ง `SECRETS_PATH` ให้ `docker-compose.yml` โดยไม่ใช้ `secrets/` ใต้ workspace | `Jenkinsfile` สร้าง `/tmp/itportal_ssh_${BUILD_NUMBER}` และ source `/tmp/itportal_env_${BUILD_NUMBER}` ก่อน `docker-compose up` ซึ่งสอดคล้องกับ `${SECRETS_PATH}:/home/node/.ssh` ใน compose | **Passed (Static Validation)** |
+| JENK-DEV-003 | Post action safety | failure/success post actions ไม่ควรพึ่ง workspace shell context สำหรับการ log | `post { success/failure }` เปลี่ยนเป็น `echo` แล้ว ลดความเสี่ยง `MissingContextVariableException` แบบเดิม | **Passed (Static Validation)** |
+| JENK-DEV-004 | Jenkinsfile syntax check | ไฟล์ที่แก้ต้องไม่เกิด syntax error ระดับ editor validation | ตรวจ `Jenkinsfile` แล้วไม่พบ error | **Passed** |
+
+### Notes
+- รอบนี้ยังไม่ได้รัน Jenkins pipeline จริงจาก environment นี้ จึงยังไม่สามารถยืนยัน end-to-end deploy บน Jenkins server ได้
+- root cause เดิมจาก log คือ Jenkins ลบ workspace ไม่ได้เพราะไฟล์ `.pem` ใน `secrets/`; การแก้รอบนี้ออกแบบมาเพื่อตัด dependency ดังกล่าวออกจาก workspace path โดยตรง
+
+---
+
 ## 16. Developer Verification: EC2 Search by Tag Across Prod and Nonprod
 **Date:** 2026-07-10
 **Tested By:** Developer (GitHub Copilot)
