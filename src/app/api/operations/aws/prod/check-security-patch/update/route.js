@@ -4,12 +4,13 @@ import fs from 'fs';
 import path from 'path';
 
 // --- SSH config (ควร sync กับ route.js หลัก) ---
+const PROD_JUMP_HOST = process.env.PROD_SECURITY_PATCH_JUMP_HOST || '18.139.55.93';
 const SSH_KEY_CANDIDATES = [
-    process.env.NONPROD_SECURITY_PATCH_SSH_KEY_PATH,
-    '/home/node/.ssh/jventures-uat.pem',
-    path.join(process.env.HOME || '', '.ssh', 'jventures-uat.pem'),
-    '/app/jventures-uat.pem',
-    path.join(process.cwd(), 'jventures-uat.pem')
+    process.env.PROD_SECURITY_PATCH_SSH_KEY_PATH,
+    '/home/node/.ssh/jventures-prod.pem',
+    path.join(process.env.HOME || '', '.ssh', 'jventures-prod.pem'),
+    '/app/jventures-prod.pem',
+    path.join(process.cwd(), 'jventures-prod.pem')
 ].filter(Boolean);
 
 function getSshKeyPath() {
@@ -38,10 +39,11 @@ export async function POST(req) {
             '-o', 'UserKnownHostsFile=/dev/null',
             '-o', 'BatchMode=yes',
             '-o', 'IdentitiesOnly=yes',
+            '-o', 'LogLevel=ERROR',
             '-o', 'ConnectTimeout=10',
             '-i', sshKeyPath,
-            `${username}@${ip}`,
-            "sudo apt update && sudo unattended-upgrade -d"
+            `${username}@${PROD_JUMP_HOST}`,
+            `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o LogLevel=ERROR -o ConnectTimeout=10 ${username}@${ip} \"sudo apt update && sudo unattended-upgrade -d\"`
         ];
 
         return await new Promise((resolve) => {

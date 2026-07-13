@@ -1,4 +1,10 @@
-always explain in Thai.
+explain in Thai.
+
+no magic
+verify before done
+dissent
+scope drift
+explicit assumptions
 
 
 สร้างไฟล์ implement_plan.md ที่มีแผนที่จะดำเนินการ พร้อมทั้ง มี checklist เพื่อแสดงสถานะของ tasks  และรออนุมัติแผนก่อนดำเนินการ

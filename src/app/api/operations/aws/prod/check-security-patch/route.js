@@ -4,6 +4,7 @@ import util from 'util';
 import fs from 'fs/promises';
 import fsSync from 'fs';
 import path from 'path';
+import { randomUUID } from 'crypto';
 import { query } from '@/lib/postgres';
 import * as XLSX from 'xlsx';
 
@@ -14,6 +15,7 @@ const LOG_FILE = path.resolve(process.cwd(), 'scan_security_patch_prod.log');
 const TABLE_NAME = 'scan_security_patch_prod';
 const XLSX_SHEET_NAME = 'scan_security_patch_prod';
 const XLSX_FILE_PREFIX = 'scan_security_patch_prod';
+const PROD_JUMP_HOST = process.env.PROD_SECURITY_PATCH_JUMP_HOST || '18.139.55.93';
 const IPV4_PATTERN = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
 const SSH_KEY_CANDIDATES = [
     process.env.PROD_SECURITY_PATCH_SSH_KEY_PATH,
@@ -153,6 +155,7 @@ async function ensureScanSecurityPatchTable() {
             instance_id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             ip INET NOT NULL,
+            scan_batch_id TEXT,
             check_date TIMESTAMPTZ NOT NULL,
             security_patch_version TEXT NOT NULL,
             latest_status TEXT NOT NULL,
@@ -165,8 +168,18 @@ async function ensureScanSecurityPatchTable() {
     `);
 
     await query(`
+        ALTER TABLE ${TABLE_NAME}
+        ADD COLUMN IF NOT EXISTS scan_batch_id TEXT
+    `);
+
+    await query(`
         CREATE INDEX IF NOT EXISTS idx_${TABLE_NAME}_ip
         ON ${TABLE_NAME}(ip)
+    `);
+
+    await query(`
+        CREATE INDEX IF NOT EXISTS idx_${TABLE_NAME}_scan_batch_id
+        ON ${TABLE_NAME}(scan_batch_id)
     `);
 
     await query(`
@@ -185,6 +198,7 @@ function mapDatabaseRow(row) {
         instanceId: row.instance_id,
         name: row.name,
         ip: row.ip,
+        scanBatchId: row.scan_batch_id,
         checkDate: row.check_date,
         securityPatchVersion: row.security_patch_version,
         latestStatus: row.latest_status,
@@ -196,6 +210,66 @@ function mapDatabaseRow(row) {
     };
 }
 
+async function getExistingScanRecord({ instanceId, ip }) {
+    const params = [];
+    const conditions = [];
+
+    if (instanceId && instanceId !== 'manual') {
+        params.push(instanceId);
+        conditions.push(`instance_id = $${params.length}`);
+    }
+
+    if (ip && isValidIpv4(ip)) {
+        params.push(ip);
+        conditions.push(`ip = $${params.length}`);
+    }
+
+    if (conditions.length === 0) {
+        return null;
+    }
+
+    const { rows } = await query(`
+        SELECT
+            instance_id,
+            host(ip) AS ip,
+            name,
+            scan_batch_id,
+            check_date,
+            security_patch_version,
+            latest_status,
+            os_name,
+            patch_reference_date,
+            last_scan_date,
+            updated_at,
+            created_at
+        FROM ${TABLE_NAME}
+        WHERE ${conditions.join(' OR ')}
+        ORDER BY updated_at DESC
+        LIMIT 1
+    `, params);
+
+    if (rows.length === 0) {
+        return null;
+    }
+
+    return mapDatabaseRow(rows[0]);
+}
+
+function preserveExistingScanMetadata(scanResult, existingRecord) {
+    if (!existingRecord) {
+        return scanResult;
+    }
+
+    return {
+        ...scanResult,
+        osName: scanResult.osName === 'unknown' ? (existingRecord.osName || 'unknown') : scanResult.osName,
+        patchReferenceDate: scanResult.patchReferenceDate || existingRecord.patchReferenceDate || null,
+        securityPatchVersion: scanResult.securityPatchVersion === 'unknown'
+            ? (existingRecord.securityPatchVersion || 'unknown')
+            : scanResult.securityPatchVersion
+    };
+}
+
 async function getScanHistory({ page = 1, limit = 20 }) {
     const offset = (page - 1) * limit;
     // Query for paginated data
@@ -204,6 +278,7 @@ async function getScanHistory({ page = 1, limit = 20 }) {
             instance_id,
             host(ip) AS ip,
             name,
+            scan_batch_id,
             check_date,
             security_patch_version,
             latest_status,
@@ -227,11 +302,38 @@ async function getScanHistory({ page = 1, limit = 20 }) {
     };
 }
 
+async function getScanBatchHistory(scanBatchId) {
+    const { rows } = await query(`
+        SELECT
+            instance_id,
+            host(ip) AS ip,
+            name,
+            scan_batch_id,
+            check_date,
+            security_patch_version,
+            latest_status,
+            os_name,
+            patch_reference_date,
+            last_scan_date,
+            updated_at,
+            created_at
+        FROM ${TABLE_NAME}
+        WHERE scan_batch_id = $1
+        ORDER BY updated_at DESC
+    `, [scanBatchId]);
+
+    return {
+        history: rows.map(mapDatabaseRow),
+        totalRecords: rows.length,
+    };
+}
+
 function buildWorkbookRows(history) {
     return history.map((item) => ({
         instance_id: item.instanceId,
         name: item.name,
         ip: item.ip,
+        scan_batch_id: item.scanBatchId || '',
         os_name: item.osName || '',
         check_date: item.checkDate,
         last_scan_date: item.lastScanDate || '',
@@ -249,6 +351,7 @@ async function upsertScanResult(scanResult) {
             instance_id,
             name,
             ip,
+            scan_batch_id,
             check_date,
             security_patch_version,
             latest_status,
@@ -257,11 +360,12 @@ async function upsertScanResult(scanResult) {
             last_scan_date,
             updated_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW())
         ON CONFLICT (instance_id)
         DO UPDATE SET
             name = EXCLUDED.name,
             ip = EXCLUDED.ip,
+            scan_batch_id = EXCLUDED.scan_batch_id,
             check_date = EXCLUDED.check_date,
             security_patch_version = EXCLUDED.security_patch_version,
             latest_status = EXCLUDED.latest_status,
@@ -273,6 +377,7 @@ async function upsertScanResult(scanResult) {
         scanResult.instanceId,
         scanResult.name,
         scanResult.ip,
+        scanResult.scanBatchId || null,
         scanResult.checkDate,
         scanResult.securityPatchVersion,
         scanResult.latestStatus,
@@ -359,13 +464,16 @@ async function resolveInstanceByIp(ip) {
     };
 }
 
-async function runRemoteScan(target) {
+async function runRemoteScan(target, scanBatchId) {
+    const existingRecord = await getExistingScanRecord(target);
+
     if (!isValidIpv4(target.ip)) {
-        const result = {
+        const result = preserveExistingScanMetadata({
             success: false,
             instanceId: target.instanceId,
             name: target.name,
             ip: target.ip,
+            scanBatchId,
             checkDate: new Date().toISOString(),
             lastScanDate: await getLastScanDate(target.instanceId, target.ip),
             osName: 'unknown',
@@ -373,7 +481,7 @@ async function runRemoteScan(target) {
             securityPatchVersion: 'unknown',
             latestStatus: 'invalid-ip',
             error: 'Invalid IPv4 address'
-        };
+        }, existingRecord);
 
         await appendLogLine(result);
         await upsertScanResult(result);
@@ -390,7 +498,7 @@ async function runRemoteScan(target) {
             throw new Error(`SSH key not found. Checked: ${SSH_KEY_CANDIDATES.join(', ')}`);
         }
 
-        const sshCommand = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=10 -i ${sshKeyPath} jventures@${target.ip} 'bash -s' <<'EOF'\n${REMOTE_SCAN_SCRIPT}\nEOF`;
+        const sshCommand = `ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o IdentitiesOnly=yes -o LogLevel=ERROR -o ConnectTimeout=10 -i ${sshKeyPath} jventures@${PROD_JUMP_HOST} "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o LogLevel=ERROR -o ConnectTimeout=10 jventures@${target.ip} 'bash -s'" <<'EOF'\n${REMOTE_SCAN_SCRIPT}\nEOF`;
         const { stdout, stderr } = await execPromise(sshCommand, { maxBuffer: 1024 * 1024 });
 
         const parsed = parseRemoteOutput(stdout || '');
@@ -399,6 +507,7 @@ async function runRemoteScan(target) {
             instanceId: target.instanceId,
             name: target.name,
             ip: target.ip,
+            scanBatchId,
             checkDate,
             lastScanDate,
             osName: parsed.osName,
@@ -414,11 +523,12 @@ async function runRemoteScan(target) {
 
         return result;
     } catch (error) {
-        const result = {
+        const result = preserveExistingScanMetadata({
             success: false,
             instanceId: target.instanceId,
             name: target.name,
             ip: target.ip,
+            scanBatchId,
             checkDate,
             lastScanDate,
             osName: 'unknown',
@@ -427,7 +537,7 @@ async function runRemoteScan(target) {
             latestStatus: 'scan-failed',
             sshKeyPath,
             error: error.stderr?.trim() || error.message
-        };
+        }, existingRecord);
 
         await appendLogLine(result);
         await upsertScanResult(result);
@@ -477,17 +587,37 @@ export async function POST(request) {
             }, { status: 404 });
         }
 
+        const scanBatchId = randomUUID();
         const results = [];
         for (const target of targets) {
-            results.push(await runRemoteScan(target));
+            results.push(await runRemoteScan(target, scanBatchId));
         }
 
         const successCount = results.filter((item) => item.success).length;
         const failedCount = results.length - successCount;
 
+        if (mode === 'ip' && failedCount > 0) {
+            const firstFailure = results.find((item) => !item.success);
+
+            return NextResponse.json({
+                success: false,
+                mode,
+                scanBatchId,
+                logFile: LOG_FILE,
+                message: firstFailure?.error || firstFailure?.latestStatus || 'Security patch scan failed',
+                summary: {
+                    checked: results.length,
+                    success: successCount,
+                    failed: failedCount
+                },
+                results
+            }, { status: 502 });
+        }
+
         return NextResponse.json({
             success: true,
             mode,
+            scanBatchId,
             logFile: LOG_FILE,
             summary: {
                 checked: results.length,
@@ -509,11 +639,14 @@ export async function GET(request) {
         await ensureScanSecurityPatchTable();
 
         const { searchParams } = new URL(request.url);
+        const batchId = searchParams.get('batchId')?.trim() || '';
         const limitParam = Number.parseInt(searchParams.get('limit') || '20', 10);
         const pageParam = Number.parseInt(searchParams.get('page') || '1', 10);
         const limit = Number.isNaN(limitParam) ? 20 : Math.min(Math.max(limitParam, 1), 100);
         const page = Number.isNaN(pageParam) ? 1 : Math.max(pageParam, 1);
-        const { history, totalRecords } = await getScanHistory({ page, limit });
+        const { history, totalRecords } = batchId
+            ? await getScanBatchHistory(batchId)
+            : await getScanHistory({ page, limit });
         const format = searchParams.get('format');
 
         if (format === 'xlsx') {
@@ -535,6 +668,7 @@ export async function GET(request) {
 
         return NextResponse.json({
             success: true,
+            batchId: batchId || null,
             history,
             totalRecords,
         });

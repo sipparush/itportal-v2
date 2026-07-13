@@ -1,202 +1,46 @@
-# Request ใหม่: AWS Prod Map URL รองรับค้นหา Service/Route ด้วยชื่อเพื่อ Edit/Delete (Approved)
+# Request ใหม่: EC2 Search by Tag Across Prod and Nonprod (Waiting for Approval)
 
-สถานะ: implement เสร็จและทดสอบ local แล้ว (อัปเดตเงื่อนไขค้นหาแล้ว)
-
-รายละเอียดคำขอ:
-- ศึกษาโครงสร้างเดิมของ `http://localhost:3000/operations/aws/prod/mapurl`
-- ปรับเพิ่มให้สามารถดึง `services` และ `routes` ด้วยชื่อโดยตรง
-- นำข้อมูลที่ดึงได้มาใช้สำหรับ `edit` และ `delete`
-
-### ข้อค้นพบเบื้องต้น
-- หน้า `src/app/operations/aws/prod/mapurl/page.js` ปัจจุบันรองรับเฉพาะ create flow
-- route `src/app/api/operations/aws/prod/mapurl/route.js` ปัจจุบันสร้าง service/route ใหม่ผ่าน Kong admin ด้วย `curl` command เท่านั้น
-- pattern ที่ใกล้เคียงที่สุดคือ `src/app/operations/byteplus/edit-map-url/page.js` และ `src/app/api/operations/byteplus/edit-map-url/route.js` ซึ่งรองรับ `fetch`, `edit`, `delete`
-- รอบแรกผู้ใช้ยืนยันให้ค้นหาด้วย `service name` และ `route name` โดยตรง ไม่ใช้ FQDN เป็นตัวค้นหาหลัก
-- request ล่าสุดปรับเงื่อนไขค้นหาให้ใช้ `service name` หรือ `route name` อย่างใดอย่างหนึ่งได้ ไม่ต้องกรอกทั้งคู่
-
-### แผนดำเนินการรอบนี้
-- [x] อัปเดต API `src/app/api/operations/aws/prod/mapurl/route.js` ให้รองรับ `fetch`, `edit`, `delete` โดยคง `create` เดิมไว้
-- [x] เพิ่ม helper สำหรับ normalize/validate `serviceName`, `routeName`, `endpoint`, `path` และ parse response จาก Kong admin
-- [x] ปรับ UI `src/app/operations/aws/prod/mapurl/page.js` ให้มีส่วน Load by Name สำหรับ `service name` และ `route name`
-- [x] เพิ่ม form/state สำหรับ edit endpoint/path หลังโหลดข้อมูลสำเร็จ
-- [x] เพิ่มปุ่ม delete mapping และ feedback state แยกจาก create flow เดิม
-- [x] ทดสอบ validation เฉพาะจุดสำหรับไฟล์ที่แก้
-- [x] ทดสอบ local flow ในส่วน page render, create validation และ fetch validation
-- [x] อัปเดต `full_test_result.md` หลังได้ผลทดสอบจริง
-- [x] อัปเดต `implement_plan.md` ด้วยผลการดำเนินการรอบนี้
-- [ ] ทดสอบ Docker flow ของงานนี้
-- [ ] ทดสอบ fetch/edit/delete กับ resource จริงบน Kong prod ตามชื่อที่อนุมัติ
-
-### หมายเหตุ
-- รอบนี้เริ่ม implement แล้วตามการอนุมัติล่าสุดจากผู้ใช้
-- จะทดสอบตามลำดับ local ก่อน แล้วค่อยพิจารณา Docker ตาม workflow ของ repo
-
-### ผลการดำเนินการ (2026-05-28)
-- ปรับ `src/app/api/operations/aws/prod/mapurl/route.js` ให้รองรับ action `fetch`, `edit`, `delete` โดย resolve จาก `serviceName` หรือ `routeName` อย่างใดอย่างหนึ่งได้
-- คง create flow เดิมไว้ เมื่อ request ไม่มี `action`
-- เพิ่ม validation สำหรับ `serviceName`, `routeName`, `destinationIp`, `destinationPort`, `scheme` และ `path`
-- ปรับ `src/app/operations/aws/prod/mapurl/page.js` ให้มีส่วน `Search Existing Mapping` และ form สำหรับ `Edit Mapping` กับ `Delete Mapping` พร้อมรองรับการกรอก `serviceName` หรือ `routeName` อย่างใดอย่างหนึ่ง
-- local page `GET http://localhost:3000/operations/aws/prod/mapurl` ตอบ `200` และ render ข้อความ `Search Existing Mapping`
-- local API smoke test ผ่านตามคาด:
-    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch"}` ตอบ `400 Missing required fields: provide serviceName, routeName, or both`
-    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","serviceName":"bad name"}` ตอบ `400 Invalid serviceName or routeName format`
-    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","serviceName":"svc_not_exists_for_smoke_test_20260528"}` ตอบ `404 Fetch service failed: Not found`
-    - `POST /api/operations/aws/prod/mapurl` ด้วย `{"action":"fetch","routeName":"route_not_exists_for_smoke_test_20260528"}` ตอบ `404 Fetch route failed: Not found`
-    - `POST /api/operations/aws/prod/mapurl` ด้วย payload create ที่ไม่ครบ ตอบ `400 Missing required fields`
-- `npx eslint src/app/api/operations/aws/prod/mapurl/route.js src/app/operations/aws/prod/mapurl/page.js` ผ่าน
-- `npm run build` ผ่าน
-
-### ข้อจำกัดของรอบนี้
-- ยังไม่ได้ทดสอบ Docker เพราะ environment ปัจจุบันไม่มีคำสั่ง `docker` ใน WSL distro นี้
-- ยังไม่ได้ยิง `fetch/edit/delete` กับ resource จริงบน Kong prod เพราะต้องใช้ชื่อ resource ที่มีอยู่จริงและการทดสอบ `edit/delete` จะมีผลกับ production mapping
-
----
-
-# Request ใหม่: เตรียมคำสั่ง apply ตารางเข้า PostgreSQL volume เดิม (Approved)
-
-สถานะ: apply และ verify บน PostgreSQL volume เดิมแล้ว
+สถานะ: รออนุมัติแผน
 
 รายละเอียดคำขอ:
-- เตรียมคำสั่งสำหรับ apply ตาราง `scan_security_patch_prod` เข้า PostgreSQL volume เดิม
-- ใช้กับกรณีที่ volume ถูกสร้างไปแล้วและ `docker-entrypoint-initdb.d` จะไม่ถูกรันซ้ำ
-- ต้องการคำสั่งที่นำไปใช้ได้กับ environment ปัจจุบันของโปรเจกต์นี้
+- เพิ่มฟังก์ชันหลังลิงก์ `List EC2 Instances by Tagged` ให้เปิดหน้าใหม่
+- หน้าใหม่ต้องรับค่า tag จากผู้ใช้ แล้วค้นหา EC2 ทั้ง `prod` และ `nonprod`
+- ผลลัพธ์ต้องแสดงรวมใน result panel พร้อมแยก environment ให้ชัดเจน
+- local ต้องใช้ AWS profile `aws_prod` สำหรับ prod และ `aws_nonprod` สำหรับ nonprod
+- ต้องออกแบบการจัดการ AWS credential ให้ deploy ไป server อื่นได้โดยไม่ hardcode เฉพาะเครื่อง local
 
-### ข้อค้นพบเบื้องต้น
-- ใน `docker-compose.yml` service `postgres` ใช้ named volume `itportalv2_postgres_data` และ mount `./backend/init` ไปที่ `/docker-entrypoint-initdb.d`
-- ไฟล์ `backend/init/003_scan_security_patch_prod.sql` พร้อมแล้วสำหรับสร้างตาราง `scan_security_patch_prod` และ index แบบ `IF NOT EXISTS`
-- สำหรับ volume เดิม แนวทางที่ตรงที่สุดคือ execute SQL file นี้เข้า container `postgres` โดยตรงผ่าน `psql`
-- จุดที่ต้องยืนยันก่อนออกคำสั่งจริงคือชื่อ database/user ที่อ่านจาก `.env` และชื่อ compose service/container ที่ใช้งานจริง
-
-### แผนดำเนินการรอบนี้
-- [x] ตรวจค่าที่เกี่ยวข้องกับ PostgreSQL connection จากไฟล์ config ที่มีอยู่ เช่น `.env` หรือ `DATABASE_URL`
-- [x] จัดชุดคำสั่งสำหรับ apply `backend/init/003_scan_security_patch_prod.sql` เข้า database บน volume เดิม
-- [x] แยกคำสั่งเป็นกรณี `docker compose exec postgres psql ... -f ...` และกรณี fallback หากต้องใช้ `psql` จากภายนอก container
-- [x] เพิ่มคำสั่งตรวจสอบผลหลัง apply เช่น `\dt` หรือ query จาก `information_schema.tables`
-- [x] อัปเดต `implement_plan.md` หลังสรุปคำสั่งพร้อมใช้งาน
-
-### หมายเหตุ
-- ระหว่างรัน `docker compose` มี warning ว่า field `version` ใน `docker-compose.yml` obsolete แต่ไม่ block การ apply SQL
-
-### คำสั่งที่แนะนำ
-
-ใช้จาก root ของโปรเจกต์ `itportal-v2`
-
-1. ตรวจว่า service `postgres` ทำงานอยู่
-```bash
-docker compose ps postgres
-```
-
-2. apply ตาราง `scan_security_patch_prod` เข้า volume เดิมผ่าน container `postgres`
-```bash
-docker compose exec -T postgres sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/003_scan_security_patch_prod.sql'
-```
-
-3. ตรวจว่าตารางถูกสร้างแล้ว
-```bash
-docker compose exec -T postgres sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT tablename FROM pg_tables WHERE schemaname = '\''public'\'' AND tablename = '\''scan_security_patch_prod'\'';"'
-```
-
-4. ตรวจ index ที่เกี่ยวข้อง
-```bash
-docker compose exec -T postgres sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT indexname FROM pg_indexes WHERE schemaname = '\''public'\'' AND tablename = '\''scan_security_patch_prod'\'' ORDER BY indexname;"'
-```
-
-### Fallback กรณีใช้ `psql` จาก host
-
-หากเครื่อง host มี `psql` และต้องการยิงเข้า database โดยตรงผ่าน `DATABASE_URL`
-```bash
-psql "$DATABASE_URL" -f backend/init/003_scan_security_patch_prod.sql
-```
-
-ตรวจผลหลัง apply
-```bash
-psql "$DATABASE_URL" -c "SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename = 'scan_security_patch_prod';"
-```
-
-### ผลการดำเนินการ (2026-05-28)
-- ตรวจจาก `.env` พบว่าค่าเชื่อมต่อปัจจุบันสอดคล้องกับ `POSTGRES_USER`, `POSTGRES_DB` และ `DATABASE_URL` ที่ใช้กับโปรเจกต์นี้
-- ยืนยันจาก `docker-compose.yml` ว่า service ที่ต้องใช้คือ `postgres` และไฟล์ SQL ถูก mount เข้า container ที่ path `/docker-entrypoint-initdb.d/003_scan_security_patch_prod.sql`
-- สรุปคำสั่งหลักสำหรับ apply ผ่าน `docker compose exec -T postgres ... psql -f ...`
-- สรุปคำสั่ง fallback สำหรับกรณีใช้ `psql` จาก host ผ่าน `DATABASE_URL`
-- รัน `docker compose exec -T postgres ... psql -f /docker-entrypoint-initdb.d/003_scan_security_patch_prod.sql` กับ volume เดิมจริง และ PostgreSQL ตอบ `CREATE TABLE`, `CREATE INDEX`, `CREATE INDEX`, `CREATE INDEX`
-- รัน query ตรวจสอบหลัง apply แล้วพบตาราง `scan_security_patch_prod` ใน schema `public`
-- รัน query ตรวจ index หลัง apply แล้วพบ `scan_security_patch_prod_pkey`, `idx_scan_security_patch_prod_ip`, `idx_scan_security_patch_prod_check_date`, และ `idx_scan_security_patch_prod_latest_status`
-
----
-
-# Request ใหม่: เพิ่มคำสั่งเตรียมฐานข้อมูลกรณีไม่มี table ไว้ใน backend/init (Approved)
-
-สถานะ: ดำเนินการแล้ว และตรวจ validation เฉพาะจุดแล้ว
-
-รายละเอียดคำขอ:
-- เพิ่มคำสั่งสำหรับเตรียม database กรณีที่ยังไม่มี table
-- วางไว้ในโฟลเดอร์ `backend/init`
-- ต้องรองรับการ bootstrap database ตอน container เริ่มทำงาน
-
-### ข้อค้นพบเบื้องต้น
-- ปัจจุบันใน `backend/init` มี `002_scan_security_patch.sql` ที่สร้างเฉพาะตาราง `scan_security_patch`
-- ใน `docker-compose.yml` service `postgres` mount โฟลเดอร์ `./backend/init` ไปที่ `/docker-entrypoint-initdb.d` ดังนั้นไฟล์ SQL ในโฟลเดอร์นี้จะถูกรันเฉพาะตอน PostgreSQL data directory ถูกสร้างใหม่
-- ถ้าต้องรองรับกรณี database มีอยู่แล้วแต่ยังขาดบาง table คำสั่งใน init script ต้องเป็นแบบ `IF NOT EXISTS` เพื่อรันซ้ำได้อย่างปลอดภัย
-- สมมติฐานการแก้: เพิ่ม SQL script ใน `backend/init` สำหรับ table ที่จำเป็นแต่ยังอาจไม่มี โดยใช้ `CREATE TABLE IF NOT EXISTS` และ `CREATE INDEX IF NOT EXISTS`
+### สมมติฐานเฉพาะจุด
+- ฟีเจอร์นี้ควรใช้หน้าใหม่ในฝั่ง `src/app/operations/...` และ API route ใหม่ใน `src/app/api/operations/...`
+- route ควรเรียก AWS CLI แยกสองโปรไฟล์แล้วรวมผลลัพธ์เป็น response เดียว เพื่อให้ behavior ตรงกับ requirement และ reuse รูปแบบที่มีอยู่ใน codebase
+- สำหรับ deploy server อื่น ควรใช้ environment variables เป็นตัว override profile/credential/region แทน hardcode path หรือ credential ลงใน source code
 
 ### แผนดำเนินการรอบนี้
-- [x] ตรวจว่าฟีเจอร์ใดบ้างยังพึ่งพา table ที่ไม่ได้ถูกเตรียมไว้ใน `backend/init`
-- [x] เพิ่ม SQL script ใน `backend/init` สำหรับสร้าง table ที่ต้องมีเมื่อยังไม่พบในฐานข้อมูล
-- [x] ใช้คำสั่งแบบ idempotent เช่น `CREATE TABLE IF NOT EXISTS` และ `CREATE INDEX IF NOT EXISTS`
-- [x] ตรวจความสอดคล้องกับ route ฝั่ง application ที่คาดหวังชื่อตารางเหล่านั้น
-- [x] รัน validation แบบเฉพาะจุดโดย review diff และ syntax ของไฟล์ SQL ที่เพิ่ม
-- [x] อัปเดต `implement_plan.md` และ `full_test_result.md` หลังดำเนินการ
+- [x] ตรวจรูปแบบหน้า UI และ route ที่ใกล้เคียงที่สุดเพื่อใช้เป็นฐาน implementation
+- [x] เพิ่มหน้าใหม่สำหรับกรอก tag value และแสดงผลลัพธ์การค้นหา
+- [x] เพิ่ม API route สำหรับค้นหา EC2 จาก `aws_prod` และ `aws_nonprod` แล้วรวมผล
+- [x] เพิ่มการรองรับ environment variables สำหรับ profile/credential/region เพื่อใช้ตอน deploy เครื่องอื่น
+- [x] เชื่อมลิงก์ `List EC2 Instances by Tagged` ให้เปิดหน้าใหม่
+- [x] ทดสอบเฉพาะจุดด้วย lint หรือ validation ที่แคบที่สุดสำหรับไฟล์ที่แก้
+- [x] อัปเดต `full_test_result.md` หลังทดสอบ
+- [x] รออนุมัติก่อนดำเนินการแก้โค้ดตามขั้นตอนของโปรเจกต์
+
+### ผลการดำเนินการ (2026-07-10)
+- เพิ่มหน้า `src/app/operations/aws/ec2-by-tag/page.js` สำหรับกรอก `tagValue` และ `region` พร้อม result panel แยก Production/Non-Production
+- เพิ่ม route `src/app/api/operations/aws/ec2-by-tag/route.js` เพื่อค้นหา EC2 ผ่าน AWS CLI สอง environment และรวมผลลัพธ์
+- local default ใช้ `aws_prod` และ `aws_nonprod` ตาม requirement
+- เพิ่ม env override `AWS_PROD_PROFILE`, `AWS_NONPROD_PROFILE`, `AWS_EC2_TAG_SEARCH_REGION` เพื่อให้ deploy ไป server อื่นได้โดยไม่ผูกกับ local profile name อย่างเดียว
+- ปรับลิงก์ `List EC2 Instances by Tagged` ในหน้า Operations ให้เปิดหน้าใหม่
+- รัน focused lint กับไฟล์ที่แก้แล้วผ่านทั้งหมด
+- รัน local functional test ผ่าน `POST /api/operations/aws/ec2-by-tag` ด้วย payload `{"tagValue":"non-Kidd-pah","region":"ap-southeast-1"}` และได้ผลลัพธ์รวม 11 instances จากทั้ง prod และ nonprod
+- ปรับ result panel ให้แสดงเป็นตารางรวมเดียว พร้อม summary ต่อ environment เพื่อให้ตรวจค่ากับคอลัมน์ได้ง่ายขึ้น และ retest local ผ่านเหมือนเดิม
+
+### ข้อจำกัด
+- ยังไม่ได้ทำ docker test และ uat test ตามลำดับ environment ใน process ของโปรเจกต์
+- หาก server ปลายทางไม่มี shared AWS config/profile ต้อง provision credential เพิ่ม เช่นผ่าน IAM role, shared credentials file, หรือ env AWS มาตรฐาน
 
 ### หมายเหตุ
-- หากต้องให้ script นี้ทำงานกับ database volume เดิมที่ถูกสร้างไปแล้ว อาจต้องมีขั้นตอน apply migration เพิ่มเติม เพราะ `/docker-entrypoint-initdb.d` จะไม่ถูกรันซ้ำอัตโนมัติบน volume เดิม
-
-### ผลการดำเนินการ (2026-05-28)
-- เพิ่มไฟล์ `backend/init/003_scan_security_patch_prod.sql` เพื่อสร้างตาราง `scan_security_patch_prod` และ index ที่จำเป็นแบบ `IF NOT EXISTS`
-- ปรับ `src/app/api/operations/aws/prod/check-security-patch/route.js` ให้ใช้ตาราง `scan_security_patch_prod` สำหรับ create/select/count/upsert และ export ชื่อไฟล์/worksheet ให้สอดคล้องกับตารางใหม่
-- ปรับ `src/app/api/operations/aws/prod/check-security-patch/delete/route.js` ให้ลบข้อมูลจากตาราง `scan_security_patch_prod`
-- ปรับ `src/app/operations/aws/prod/check-security-patch/page.js` ให้แสดงชื่อตารางและชื่อไฟล์ export เป็น `scan_security_patch_prod`
-- ตรวจซ้ำด้วย search ใต้ path `src/app/api/operations/aws/prod/check-security-patch/**` แล้วไม่พบ query ที่ยังอ้างตารางรวม `scan_security_patch`
-- ตรวจ editor diagnostics และรัน `npx eslint` เฉพาะไฟล์ที่แก้ผ่าน
-
----
-
-# Request ใหม่: AWS Prod Check Security Patch ใช้ตารางแยกของตัวเอง (Approved)
-
-สถานะ: แก้ไขและตรวจ validation เฉพาะจุดแล้ว
-
-รายละเอียดคำขอ:
-- ตรวจฟังก์ชัน `/operations/aws/prod/check-security-patch`
-- ให้ฝั่ง `prod` สร้างและใช้งานตารางฐานข้อมูลของตัวเอง
-- ห้ามใช้ตารางร่วมกับ `nonprod`
-
-### ข้อค้นพบเบื้องต้น
-- route หลัก `src/app/api/operations/aws/prod/check-security-patch/route.js` ยังสร้างและอ่านข้อมูลจากตาราง `scan_security_patch`
-- route ย่อย `src/app/api/operations/aws/prod/check-security-patch/delete/route.js` ยังลบข้อมูลจากตาราง `scan_security_patch`
-- ฝั่ง `nonprod` ก็ใช้ตารางชื่อเดียวกัน ทำให้ข้อมูล scan ของ `prod` และ `nonprod` ปนกันในฐานข้อมูล
-- สมมติฐานการแก้: ถ้าแยกฝั่ง `prod` ไปใช้ตารางเฉพาะ เช่น `scan_security_patch_prod` ครบทุก query path ข้อมูลของ `prod` จะไม่ปนกับ `nonprod`
-
-### แผนดำเนินการรอบนี้
-- [x] ปรับ route หลัก `src/app/api/operations/aws/prod/check-security-patch/route.js` ให้สร้างและใช้งานตารางเฉพาะของ `prod`
-- [x] ปรับ route ย่อย `src/app/api/operations/aws/prod/check-security-patch/delete/route.js` ให้ลบจากตารางเฉพาะของ `prod`
-- [x] ตรวจ route ย่อย `update` และข้อความบนหน้า UI ที่เกี่ยวข้อง เพื่อให้สอดคล้องกับตารางใหม่ของ `prod`
-- [x] ตรวจซ้ำแบบเฉพาะจุดว่า query ใต้ path `src/app/api/operations/aws/prod/check-security-patch/**` ไม่อ้างตารางรวมเดิม
-- [x] รัน lint เฉพาะไฟล์ที่แก้
-- [x] อัปเดต `full_test_result.md` หลังทดสอบเสร็จ
-- [x] อัปเดต `implement_plan.md` ด้วยผลการดำเนินการรอบนี้
-
-### หมายเหตุ
-- หากต้องย้ายข้อมูล `prod` เดิมออกจากตารางรวม อาจต้องมี migration/backfill เพิ่มในรอบถัดไป
-
-### ผลการดำเนินการ (2026-05-28)
-- ปรับ `src/app/api/operations/aws/prod/check-security-patch/route.js` ให้ใช้ตาราง `scan_security_patch_prod` แทน `scan_security_patch`
-- เพิ่ม index creation ใน route ฝั่ง `prod` แบบ `IF NOT EXISTS` เพื่อรองรับกรณี runtime เชื่อมต่อ database ที่ยังไม่มีตารางนี้
-- ปรับ `src/app/api/operations/aws/prod/check-security-patch/delete/route.js` ให้ลบจาก `scan_security_patch_prod`
-- ปรับ `src/app/operations/aws/prod/check-security-patch/page.js` ให้แสดงชื่อ table/export file ของ `prod` ให้ตรงกับ behavior ใหม่
-- เพิ่ม init script `backend/init/003_scan_security_patch_prod.sql` สำหรับ bootstrap database ใหม่ผ่าน Docker/Postgres init flow
-- validation ที่ผ่านในรอบนี้:
-    - search ใต้ path `src/app/api/operations/aws/prod/check-security-patch/**` ไม่พบ query ที่ยังชี้ไปตารางรวมเดิม
-    - editor diagnostics ของไฟล์ที่แก้ไม่พบ error
-    - `npx eslint src/app/api/operations/aws/prod/check-security-patch/route.js src/app/api/operations/aws/prod/check-security-patch/delete/route.js src/app/operations/aws/prod/check-security-patch/page.js` ผ่าน
+- รอบนี้ยังไม่แก้โค้ดตามกติกาใน `.github/copilot-instructions.md` เพราะต้องรออนุมัติแผนก่อน
+- หากอนุมัติแล้วจะเริ่มจาก implementation ที่เล็กที่สุด: API route + หน้า form + link wiring แล้วจึงทดสอบเฉพาะจุด
 
 ---
 
@@ -396,9 +240,6 @@ psql "$DATABASE_URL" -c "SELECT tablename FROM pg_tables WHERE schemaname = 'pub
 
 ### แผนดำเนินการรอบนี้
 - [x] ระบุ payload สำหรับ Docker functional test ให้ชัดเจน
-
----
-
 - [x] ตรวจความพร้อมของ target IP/credential ที่จะใช้ใน Docker test
 - [x] รัน `POST /api/operations/aws/nonprod/adduser` ใน Docker ด้วย payload ที่อนุมัติ
 - [x] เก็บ response และ log ที่เกี่ยวข้องเพื่อแยกสาเหตุให้ชัดเจน
@@ -418,6 +259,8 @@ psql "$DATABASE_URL" -c "SELECT tablename FROM pg_tables WHERE schemaname = 'pub
 - ไม่พบ error เดิม `No such file or directory` หรือปัญหา `chmod` บน path ที่ไม่มีไฟล์อีกแล้ว
 - failure ปัจจุบันเป็นที่ชั้น SSH: `ssh: connect to host 127.0.0.1 port 22: Connection refused`
 - จาก log ล่าสุดใน container ยังมีอีกเคสที่เคยยิงไปยัง `10.240.1.220` และจบที่ `Permission denied (publickey,password)` ซึ่งชี้ว่าหากจะทดสอบกับเครื่องจริงใน Docker ต่อ ต้องตรวจ credential/authorized key เพิ่ม
+
+---
 
 # Request ใหม่: AWS Non-Prod Add User ล้มเหลวใน Docker Runtime (Waiting for Approval)
 

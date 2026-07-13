@@ -34,15 +34,16 @@ export default function ByteplusMapUrlPage() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [result, setResult] = useState(null);
-    const [formData, setFormData] = useState({ fqdn: '' });
     const [isAddingToCf, setIsAddingToCf] = useState(false);
     const [cfResult, setCfResult] = useState(null);
 
     const handleAddUrlToCf = async () => {
-        if (!formData.fqdn.trim()) {
+        const fqdn = url.trim();
+
+        if (!fqdn) {
             setCfResult({
                 success: false,
-                message: 'กรุณากรอก FQDN ก่อนเพิ่มข้อมูลเข้า Cloudflare'
+                message: 'กรุณากรอก URL หรือ FQDN ก่อนเพิ่มข้อมูลเข้า Cloudflare'
             });
             return;
         }
@@ -57,7 +58,7 @@ export default function ByteplusMapUrlPage() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    fqdn: formData.fqdn,
+                    fqdn,
                     proxied: true,
                 }),
             });
@@ -235,13 +236,13 @@ export default function ByteplusMapUrlPage() {
                             <div>
                                 <p className="text-sm font-medium text-emerald-800">Cloudflare DNS</p>
                                 <p className="text-xs text-emerald-700">
-                                    ปุ่มนี้จะสร้าง/อัปเดต A record ไปที่ 52.220.167.209 และเปิด proxy ให้อัตโนมัติ
+                                    ปุ่มนี้จะสร้าง/อัปเดต A record ไปที่ 207.166.170.163 และเปิด proxy ให้อัตโนมัติ
                                 </p>
                             </div>
                             <button
                                 type="button"
                                 onClick={handleAddUrlToCf}
-                                disabled={isAddingToCf || !formData.fqdn.trim()}
+                                disabled={isAddingToCf || !url.trim()}
                                 className="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md !text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
                             >
                                 {isAddingToCf ? 'Adding to Cloudflare...' : 'addURLToCF'}

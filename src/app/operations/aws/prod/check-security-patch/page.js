@@ -3,16 +3,25 @@
 import { useEffect, useState } from 'react';
 
 export default function CheckSecurityPatchPage() {
+    const getStatusBadgeClasses = (latestStatus) => {
+        if (latestStatus === 'up-to-date') {
+            return 'bg-green-100 text-green-700';
+        }
+
+        if (latestStatus === 'scan-failed' || latestStatus === 'invalid-ip') {
+            return 'bg-red-100 text-red-700';
+        }
+
+        return 'bg-amber-100 text-amber-700';
+    };
+
     // เรียก backend เพื่อ update security patch
     const handleUpdatePatch = async (item) => {
         setError('');
         setIsUpdating(true);
         setUpdatingId(item.instanceId);
 
-        console.log(item)
-
         try {
-            // TODO: เปลี่ยน endpoint ให้ตรงกับ backend จริง
             const response = await fetch('/api/operations/aws/prod/check-security-patch/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -21,6 +30,10 @@ export default function CheckSecurityPatchPage() {
             const data = await response.json();
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'Update security patch failed');
+            }
+
+            if (result?.scanBatchId) {
+                await loadScanResultBatch(result.scanBatchId, result);
             }
             await loadHistory();
         } catch (err) {
@@ -34,10 +47,7 @@ export default function CheckSecurityPatchPage() {
     const handleDeletePatch = async (item) => {
         setError('');
 
-        // console.log(item)
-
         try {
-            // TODO: เปลี่ยน endpoint ให้ตรงกับ backend จริง
             const response = await fetch('/api/operations/aws/prod/check-security-patch/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,6 +56,10 @@ export default function CheckSecurityPatchPage() {
             const data = await response.json();
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'Delete security patch failed');
+            }
+
+            if (result?.scanBatchId) {
+                await loadScanResultBatch(result.scanBatchId, result);
             }
             await loadHistory();
         } catch (err) {
@@ -76,6 +90,54 @@ export default function CheckSecurityPatchPage() {
     const [updatingId, setUpdatingId] = useState(null); // instanceId ที่กำลังอัปเดต
     const [recheckingId, setRecheckingId] = useState(null); // instanceId ที่กำลัง re-check
 
+    const loadScanResultBatch = async (scanBatchId, scanMeta = null) => {
+        const response = await fetch(`/api/operations/aws/prod/check-security-patch?batchId=${encodeURIComponent(scanBatchId)}`, {
+            cache: 'no-store'
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || 'Failed to load scan result batch');
+        }
+
+        setResult((previousResult) => ({
+            ...(scanMeta || previousResult || {}),
+            scanBatchId,
+            results: data.history || []
+        }));
+    };
+
+    const renderActionButtons = (item) => (
+        <div className="flex flex-wrap gap-2">
+            {item.latestStatus !== 'up-to-date' && (
+                <button
+                    type="button"
+                    className="px-2 py-1 bg-orange-500 text-white rounded text-xs disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={() => handleUpdatePatch(item)}
+                    disabled={isUpdating && updatingId === item.instanceId}
+                >
+                    {isUpdating && updatingId === item.instanceId ? 'Updating...' : 'Update'}
+                </button>
+            )}
+            <button
+                type="button"
+                className="px-2 py-1 bg-blue-500 text-white rounded text-xs disabled:opacity-60 disabled:cursor-not-allowed"
+                onClick={() => handleRecheck(item)}
+                disabled={recheckingId === item.instanceId}
+            >
+                {recheckingId === item.instanceId ? 'Re-checking...' : 'Re-check'}
+            </button>
+            <button
+                type="button"
+                className="px-2 py-1 bg-red-500 text-white rounded text-xs disabled:opacity-60 disabled:cursor-not-allowed"
+                onClick={() => handleDeletePatch(item)}
+                disabled={isUpdating && updatingId === item.instanceId}
+            >
+                Delete
+            </button>
+        </div>
+    );
+
     const handleRecheck = async (item) => {
         setError('');
         setRecheckingId(item.instanceId);
@@ -88,6 +150,10 @@ export default function CheckSecurityPatchPage() {
             const data = await response.json();
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'Re-check failed');
+            }
+
+            if (data.scanBatchId) {
+                await loadScanResultBatch(data.scanBatchId, data);
             }
             await loadHistory();
         } catch (err) {
@@ -161,7 +227,7 @@ export default function CheckSecurityPatchPage() {
                 throw new Error(data.message || 'Security patch scan failed');
             }
 
-            setResult(data);
+            await loadScanResultBatch(data.scanBatchId, data);
             await loadHistory();
         } catch (scanError) {
             setError(scanError.message);
@@ -313,6 +379,7 @@ export default function CheckSecurityPatchPage() {
                                     <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Last Scan</th>
                                     <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Patch Version</th>
                                     <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 bg-white">
@@ -325,12 +392,15 @@ export default function CheckSecurityPatchPage() {
                                         <td className="px-4 py-3 font-mono text-gray-500">{item.lastScanDate || '-'}</td>
                                         <td className="px-4 py-3 font-mono text-gray-700">{item.securityPatchVersion}</td>
                                         <td className="px-4 py-3">
-                                            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${item.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getStatusBadgeClasses(item.latestStatus)}`}>
                                                 {item.latestStatus}
                                             </span>
                                             {item.error && (
                                                 <p className="mt-2 text-xs text-red-600 whitespace-pre-wrap">{item.error}</p>
                                             )}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {renderActionButtons(item)}
                                         </td>
                                     </tr>
                                 ))}
@@ -377,12 +447,13 @@ export default function CheckSecurityPatchPage() {
                                 <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Check Date</th>
                                 <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Patch Version</th>
                                 <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {history.length === 0 && (
                                 <tr>
-                                    <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
+                                    <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
                                         {isLoadingHistory ? 'Loading scan history...' : 'No scan history found in database'}
                                     </td>
                                 </tr>
@@ -395,43 +466,13 @@ export default function CheckSecurityPatchPage() {
                                     <td className="px-4 py-3 text-gray-700">{item.osName || '-'}</td>
                                     <td className="px-4 py-3 font-mono text-gray-700">{item.checkDate}</td>
                                     <td className="px-4 py-3 font-mono text-gray-700">{item.securityPatchVersion}</td>
-
-
                                     <td className="px-4 py-3">
-                                        <span className="inline-flex rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getStatusBadgeClasses(item.latestStatus)}`}>
                                             {item.latestStatus}
                                         </span>
-                                        {item.latestStatus !== 'up-to-date' && (
-                                            <button
-                                                type="button"
-                                                className="ml-2 px-2 py-1 bg-orange-500 text-white rounded text-xs"
-                                                onClick={() => handleUpdatePatch(item)}
-                                                disabled={isUpdating && updatingId === item.instanceId}
-                                            >
-                                                {isUpdating && updatingId === item.instanceId ? 'Updating...' : 'Update'}
-                                            </button>
-                                        )}
-                                    </td>
-
-                                    <td className="px-4 py-3">
-                                        <button
-                                            type="button"
-                                            className="ml-2 px-2 py-1 bg-blue-300 text-white rounded text-xs"
-                                            onClick={() => handleRecheck(item)}
-                                            disabled={recheckingId === item.instanceId}
-                                        >
-                                            {recheckingId === item.instanceId ? 'Re-checking...' : 'Re-check'}
-                                        </button>
                                     </td>
                                     <td className="px-4 py-3">
-                                        <button
-                                            type="button"
-                                            className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
-                                            onClick={() => handleDeletePatch(item)}
-
-                                        >
-                                            Delete
-                                        </button>
+                                        {renderActionButtons(item)}
                                     </td>
 
                                 </tr>
