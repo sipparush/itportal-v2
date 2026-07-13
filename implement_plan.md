@@ -30,7 +30,13 @@
 - เขียนค่า `SECRETS_PATH` ลง temp env file ที่ `/tmp/itportal_env_${BUILD_NUMBER}` แล้ว source ก่อน `docker-compose up -d --build`
 - คง contract เดิมของ container ที่ mount `${SECRETS_PATH}:/home/node/.ssh` จึงไม่ต้องแก้ `docker-compose.yml`
 - เปลี่ยน `post { success/failure }` จาก `sh` เป็น `echo` เพื่อลดความเสี่ยง `MissingContextVariableException` แบบเดิม
+- ตัด `post { always { sh ... } }` ออกอีกชั้น หลังพบจาก Jenkins log ว่า post shell cleanup ยังทำให้เกิด `MissingContextVariableException` ได้เมื่อ checkout ล้มก่อนเข้า workspace
 - ตรวจ file-level validation ของ `Jenkinsfile` แล้วไม่พบ syntax error
+
+### สถานะล่าสุดหลัง push ทดสอบ
+- Jenkins ยังล้มในขั้น `Declarative: Checkout SCM` ก่อนอ่าน pipeline definition ที่แก้แล้วเสร็จครบทุก stage
+- root cause ปัจจุบันยังเป็น workspace เก่าบน Jenkins host ที่มี `/var/jenkins_home/workspace/bomb-deploy-itportal/secrets/jventures-uat.pem` และ Jenkins ไม่มีสิทธิ์ลบ
+- ต้องแก้ที่ Jenkins host/job workspace ก่อน จึงจะทดสอบผลของ Jenkinsfile ใหม่ได้จริง
 
 ---
 

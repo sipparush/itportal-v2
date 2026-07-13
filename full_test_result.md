@@ -235,6 +235,9 @@ All core operational features have been implemented and tested. The primary focu
 ### Notes
 - รอบนี้ยังไม่ได้รัน Jenkins pipeline จริงจาก environment นี้ จึงยังไม่สามารถยืนยัน end-to-end deploy บน Jenkins server ได้
 - root cause เดิมจาก log คือ Jenkins ลบ workspace ไม่ได้เพราะไฟล์ `.pem` ใน `secrets/`; การแก้รอบนี้ออกแบบมาเพื่อตัด dependency ดังกล่าวออกจาก workspace path โดยตรง
+- หลัง push Jenkinsfile เวอร์ชันใหม่ไปแล้ว Jenkins ยัง fail ก่อน checkout สำเร็จ จึงยังไม่เข้าสู่ stage ที่ใช้ credentials flow ใหม่
+- Jenkins log ล่าสุดยังชี้ไฟล์เดิมบน host: `/var/jenkins_home/workspace/bomb-deploy-itportal/secrets/jventures-uat.pem: Operation not permitted`
+- พบ secondary issue จาก `post { always { sh ... } }` เมื่อ checkout fail; ได้ตัด block ดังกล่าวออกจาก `Jenkinsfile` แล้วเพื่อไม่ให้มี error ซ้ำในรอบถัดไป
 
 ---
 

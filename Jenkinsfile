@@ -71,8 +71,5 @@ pipeline {
         failure {
             echo 'failure'
         }
-        always {
-            sh 'rm -rf /tmp/itportal_ssh_* /tmp/itportal_env_* || true'
-        }
     }
 }
