@@ -241,6 +241,23 @@ All core operational features have been implemented and tested. The primary focu
 
 ---
 
+## 17. Developer Validation: Jenkins Temporary .env Generation
+**Date:** 2026-07-13
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| JENK-DEV-005 | Workspace inspection on Jenkins host | ยืนยันสาเหตุล่าสุดว่าขาด `.env` ไม่ใช่ปัญหา `secrets/` ค้าง | ตรวจ workspace บน `10.240.1.220` แล้วไม่พบ `.env` และไม่พบ `secrets/` | **Passed** |
+| JENK-DEV-006 | Jenkinsfile temporary `.env` generation | Pipeline ต้องสร้าง `.env` ขั้นต่ำใน workspace ก่อน `docker-compose up` | `Jenkinsfile` ถูกปรับให้เขียน `.env` ระหว่าง stage `Prepare SSH Credentials` | **Passed (Static Validation)** |
+| JENK-DEV-007 | Database URL for Compose network | `DATABASE_URL` ต้องชี้ service `postgres` ไม่ใช่ `localhost` | `.env` ที่ generate ใช้ `postgresql://it_user:it_password@postgres:5432/itportal_db` | **Passed (Static Validation)** |
+| JENK-DEV-008 | Jenkinsfile syntax check after env fix | ไฟล์ที่แก้ต้องไม่เกิด syntax error | ตรวจ `Jenkinsfile` แล้วไม่พบ error | **Passed** |
+
+### Notes
+- รอบนี้ยังไม่ได้เห็นผล Jenkins run หลังแก้ `.env` generation จริง จึงยังไม่ใช่ end-to-end deploy confirmation
+- การแก้รอบนี้ตั้งใจปลด blocker ล่าสุดจาก log: `Couldn't find env file: /var/jenkins_home/workspace/bomb-deploy-itportal/.env`
+
+---
+
 ## 16. Developer Verification: EC2 Search by Tag Across Prod and Nonprod
 **Date:** 2026-07-10
 **Tested By:** Developer (GitHub Copilot)

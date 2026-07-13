@@ -40,6 +40,39 @@
 
 ---
 
+# Request ใหม่: Jenkins Generate .env During Pipeline (Approved)
+
+สถานะ: อนุมัติแล้ว กำลังดำเนินการ
+
+รายละเอียดคำขอ:
+- หลังปลด blocker เรื่อง workspace cleanup แล้ว Jenkins checkout ผ่าน
+- pipeline ล่าสุด fail ที่ `docker-compose up -d --build` เพราะหา `.env` ไม่เจอใน workspace
+- ยืนยันจาก Jenkins host แล้วว่า workspace ไม่มี `.env` และไม่มี `secrets/` ค้างอยู่
+
+### สมมติฐานเฉพาะจุด
+- `docker-compose.yml` บังคับใช้ `env_file: .env` ทั้ง `postgres` และ `app` จึงต้องมีไฟล์ `.env` ก่อน `docker-compose up`
+- `.env` ไม่ควรถูก commit เพราะไฟล์ local มี secret จริงอยู่แล้ว
+- ทางแก้ที่เล็กที่สุดคือให้ Jenkins สร้าง `.env` ชั่วคราวใน workspace จากค่าขั้นต่ำที่จำเป็นต่อ runtime และใช้ `SECRETS_PATH` จาก stage credentials เดิม
+
+### แผนดำเนินการรอบนี้
+- [x] บันทึก approval และแผนการแก้ `.env` generation รอบนี้
+- [x] ปรับ `Jenkinsfile` ให้สร้าง `.env` ชั่วคราวก่อน `docker-compose up`
+- [x] ตั้งค่า `DATABASE_URL` ให้ชี้ `postgres` service แทน `localhost`
+- [x] ตรวจ syntax/logic ของ Jenkinsfile หลังแก้
+- [x] อัปเดตผลใน `full_test_result.md` ตามสิ่งที่ตรวจได้จากฝั่ง developer
+
+### ข้อจำกัด
+- รอบนี้ยัง validate ได้เพียง static/logic verification จาก workspace ปัจจุบัน
+- หาก production flow ต้องใช้ secret เพิ่ม เช่น `CF_API_TOKEN` ต้อง provision ผ่าน Jenkins credentials แยก ไม่ใช่ใส่ลง repo
+
+### ผลการดำเนินการ (2026-07-13)
+- ปรับ `Jenkinsfile` ให้สร้าง `.env` ชั่วคราวใน workspace ระหว่าง stage `Prepare SSH Credentials`
+- ค่า `.env` ขั้นต่ำที่สร้างมี `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `DATABASE_URL`, `AWS_REGION`, `AWS_OUTPUT`, และ `SECRETS_PATH`
+- ตั้ง `DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db` เพื่อให้ app container ชี้ไปยัง service `postgres` ใน compose network แทน `localhost`
+- ตรวจ `Jenkinsfile` หลังแก้แล้วไม่พบ syntax error และ logic ตรงกับ requirement ของ `docker-compose.yml` ที่บังคับ `env_file: .env`
+
+---
+
 # Request ใหม่: EC2 Search by Tag Across Prod and Nonprod (Waiting for Approval)
 
 สถานะ: รออนุมัติแผน

@@ -32,6 +32,15 @@ pipeline {
                         chmod 600 "$JENKINS_SSH_DIR/jventures-prod.pem"
 
                         printf 'SECRETS_PATH=%s\n' "$JENKINS_SSH_DIR" > /tmp/itportal_env_${BUILD_NUMBER}
+                        cat > .env <<EOF
+POSTGRES_USER=it_user
+POSTGRES_PASSWORD=it_password
+POSTGRES_DB=itportal_db
+DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db
+AWS_REGION=ap-southeast-1
+AWS_OUTPUT=json
+SECRETS_PATH=$JENKINS_SSH_DIR
+EOF
                     '''
                 }
             }
