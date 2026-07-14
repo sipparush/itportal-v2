@@ -74,8 +74,8 @@ EOF
                     docker-compose down || true
                     docker-compose up -d --build
 
-                    test -s "$JENKINS_SSH_DIR/jventures-uat.pem"
-                    test -s "$JENKINS_SSH_DIR/jventures-prod.pem"
+                    test -s "$SECRETS_PATH/jventures-uat.pem"
+                    test -s "$SECRETS_PATH/jventures-prod.pem"
                     docker-compose exec -T app sh -lc 'test -r /home/node/.ssh/jventures-uat.pem && test -r /home/node/.ssh/jventures-prod.pem && ls -l /home/node/.ssh'
                 '''
             }

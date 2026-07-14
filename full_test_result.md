@@ -478,6 +478,21 @@ All core operational features have been implemented and tested. The primary focu
 - การแก้รอบนี้มุ่งแก้ root cause ที่ runtime ก่อนหน้าเห็น `SECRETS_PATH` แล้วแต่ `/home/node/.ssh` ใน container ว่าง
 - หาก Jenkins ใช้ Docker daemon คนละ host/context กับ workspace แม้ย้ายจาก `/tmp` มา `$WORKSPACE` แล้ว ก็ควรตรวจ path mapping ของ agent/daemon ต่อในรอบ functional test จริง
 
+---
+
+## 24. Developer Fix: Jenkins Post-Deploy Verification Variable Scope
+**Date:** 2026-07-14
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| JENK-SSH-007 | Post-deploy verification shell scope | stage `Setup Postgres` ต้องอ้างตัวแปรที่มีอยู่จริงใน shell ปัจจุบัน | จาก Jenkins log พบ `JENKINS_SSH_DIR: parameter not set`; ปรับให้ใช้ `SECRETS_PATH` ที่ source มาจาก `/tmp/itportal_env_${BUILD_NUMBER}` แทน | **Passed (Code Review)** |
+| JENK-SSH-008 | Focused Jenkinsfile Validation | หลังแก้ variable scope แล้ว Jenkinsfile ต้องไม่เกิด editor error | ตรวจ `Jenkinsfile` แล้วไม่พบ error และยืนยันว่ามี `test -s "$SECRETS_PATH/jventures-uat.pem"` ใน stage deploy | **Passed** |
+
+### Notes
+- defect รอบนี้ไม่ใช่เรื่อง mount ล้มเหลวใหม่ แต่เป็น bug ใน verification step ที่อ้าง `JENKINS_SSH_DIR` ข้าม stage
+- `SECRETS_PATH` เป็นตัวแปรที่ถูก source ใน shell ของ stage deploy จริง จึงเป็นตัวอ้างอิงที่ถูกต้องกว่าในจุดนี้
+
 **Developer Verdict:** การระบุ SSH identity file แบบ explicit แก้ root cause ของ Docker auth failure ได้ และเคส `usera` บน `10.240.1.220` ผ่านแล้ว
 
 ---

@@ -494,6 +494,7 @@
 - เพิ่ม post-start verification หลัง `docker-compose up -d --build` เพื่อเช็กว่า container อ่าน `/home/node/.ssh/jventures-uat.pem` และ `/home/node/.ssh/jventures-prod.pem` ได้จริง
 - ตรวจ editor errors ของ `Jenkinsfile` และ `docker-compose.yml` แล้วไม่พบ error
 - ตรวจ compose YAML ด้วย `python3` parse ผ่าน (`compose-yaml-ok`)
+- แก้ defect ต่อเนื่องจาก Jenkins run จริง: เปลี่ยน verification ใน stage deploy จาก `JENKINS_SSH_DIR` เป็น `SECRETS_PATH` เพราะ shell ของ stage นี้ source ตัวแปรหลังจากอ่าน `/tmp/itportal_env_${BUILD_NUMBER}` แล้ว
 
 รายละเอียดคำขอ:
 - หน้า `src/app/operations/byteplus/manageUser/page.js` ทำงานในส่วน BytePlus แต่ยังเรียก `POST /api/operations/aws/nonprod/manageUser`
