@@ -495,6 +495,9 @@
 - ตรวจ editor errors ของ `Jenkinsfile` และ `docker-compose.yml` แล้วไม่พบ error
 - ตรวจ compose YAML ด้วย `python3` parse ผ่าน (`compose-yaml-ok`)
 - แก้ defect ต่อเนื่องจาก Jenkins run จริง: เปลี่ยน verification ใน stage deploy จาก `JENKINS_SSH_DIR` เป็น `SECRETS_PATH` เพราะ shell ของ stage นี้ source ตัวแปรหลังจากอ่าน `/tmp/itportal_env_${BUILD_NUMBER}` แล้ว
+- แก้ permission ของไฟล์ key ที่ Jenkins copy มาเป็น `644` และเพิ่ม verification output (`id`, `ls -ld`, `ls -l`) เพื่อให้ container user `node` อ่าน bind-mounted key ได้จริง
+- ทดสอบบน UAT host `10.240.1.220` แล้วพบว่า container อ่าน `/home/node/.ssh/jventures-uat.pem` และ `/home/node/.ssh/jventures-prod.pem` ได้จริง
+- ยิง functional test ของ `POST /api/operations/aws/nonprod/adduser` บน UAT แล้วได้ `success: true` พร้อม execution log ว่า `Successfully processed usera on 10.240.1.220`
 
 รายละเอียดคำขอ:
 - หน้า `src/app/operations/byteplus/manageUser/page.js` ทำงานในส่วน BytePlus แต่ยังเรียก `POST /api/operations/aws/nonprod/manageUser`

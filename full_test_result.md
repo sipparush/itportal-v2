@@ -493,6 +493,24 @@ All core operational features have been implemented and tested. The primary focu
 - defect รอบนี้ไม่ใช่เรื่อง mount ล้มเหลวใหม่ แต่เป็น bug ใน verification step ที่อ้าง `JENKINS_SSH_DIR` ข้าม stage
 - `SECRETS_PATH` เป็นตัวแปรที่ถูก source ใน shell ของ stage deploy จริง จึงเป็นตัวอ้างอิงที่ถูกต้องกว่าในจุดนี้
 
+---
+
+## 25. UAT Functional Test: AWS Non-Prod Add User on Deployed Jenkins Environment
+**Date:** 2026-07-14
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-UAT-001 | Mounted Key Availability in Running Container | deployed app container ต้องอ่าน `jventures-uat.pem` และ `jventures-prod.pem` ได้ | ตรวจบน `10.240.1.220` ผ่าน `docker exec` แล้วพบ `/home/node/.ssh/jventures-uat.pem` และ `/home/node/.ssh/jventures-prod.pem` พร้อม `UAT_OK` และ `PROD_OK` | **Passed** |
+| AWNU-UAT-002 | UAT Add User API Execution | `POST /api/operations/aws/nonprod/adduser` บนเครื่อง deploy จริงต้องประมวลผลสำเร็จ | ยิง `POST http://localhost:3000/api/operations/aws/nonprod/adduser` บน `10.240.1.220` ด้วย payload `{"serverIps":"10.240.1.220","users":[{"username":"usera","email":"usera@example.com"}]}` แล้วได้ `success: true` | **Passed** |
+| AWNU-UAT-003 | Remote Script Outcome | script ต้องสร้าง user และ copy private key ตาม flow เดิม | execution log แสดง `Copied private key to 10.240.1.220:/home/jventures/usera_itportal-as-dv-u01.pem` และ `Successfully processed usera on 10.240.1.220` | **Passed** |
+| AWNU-UAT-004 | Container Log Regression Check | หลัง deploy ล่าสุดต้องไม่ย้อนกลับไป error เรื่อง missing key | `docker logs --tail 120 bomb-deploy-itportal_app_1` แสดง route รัน script สำเร็จ และไม่พบ `SSH key not found` หรือ `Permission denied (publickey)` | **Passed** |
+
+### Notes
+- รอบนี้เป็น UAT functional verification บน host `10.240.1.220` หลังแก้ Jenkins credential mount flow
+- route ฝั่ง add user, Jenkins credential binding, และ volume mount ของ key ถูกยืนยันว่าทำงานร่วมกันได้ครบ end-to-end แล้ว
+- container log ยังมี warning จาก SSH เรื่อง `Pseudo-terminal will not be allocated` และ `post-quantum key exchange` แต่ไม่กระทบผลสำเร็จของ flow รอบนี้
+
 **Developer Verdict:** การระบุ SSH identity file แบบ explicit แก้ root cause ของ Docker auth failure ได้ และเคส `usera` บน `10.240.1.220` ผ่านแล้ว
 
 ---
