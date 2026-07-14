@@ -359,6 +359,24 @@ All core operational features have been implemented and tested. The primary focu
 | AWNU-RT-002 | Docker API Flow after Fix | `POST /api/operations/aws/nonprod/adduser` ต้องไม่ fail ด้วย `No such file or directory` หรือ `chmod` บน path ที่ไม่มีไฟล์ | ยิง `POST` ไปที่ `http://localhost:3000/api/operations/aws/nonprod/adduser` ด้วย payload ทดสอบแล้ว route ไปถึงชั้นรัน script/SSH และจบที่ `ssh: connect to host 127.0.0.1 port 22: Connection refused` แทน | **Passed** |
 | AWNU-RT-003 | Local Dev Fallback Path | local dev mode ต้องยัง resolve script จาก source tree ได้ | รัน `PORT=3001 npm run dev` แล้วทดสอบ `POST /api/operations/aws/nonprod/adduser` สำเร็จถึงชั้นรัน script ที่ path `src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh` | **Passed** |
 
+---
+
+## 19. Developer Validation: AWS UAT Add User SSH Key Pre-check
+**Date:** 2026-07-14
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| AWNU-KEY-001 | SSH Key Pre-check Before Script Execution | route ต้องตรวจ key path ก่อนรัน script เพื่อไม่ให้ไป fail ด้วย `Permission denied (publickey)` จาก missing identity file | ปรับ `POST /api/operations/aws/nonprod/adduser` ให้ตรวจ candidate paths ล่วงหน้าและหยุดด้วย config error หากไม่พบ key | **Passed (Code Review)** |
+| AWNU-KEY-002 | Actionable Error Details | เมื่อ key ไม่พร้อม response ต้องบอก `checkedPaths` และ env ที่เกี่ยวข้องได้ | route คืน `message: SSH key not found for AWS nonprod add user` พร้อม `checkedPaths`, `requiredEnv`, และ `mountHint` | **Passed (Code Review)** |
+| AWNU-KEY-003 | Preserve Existing Success Path | เมื่อ key พร้อม route ต้องยังส่ง path ที่ resolve ได้เข้า script เหมือนเดิม | route ส่ง `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` เข้า child process ผ่าน `env` โดยไม่เปลี่ยน contract ของ script | **Passed (Code Review)** |
+| AWNU-KEY-004 | Focused Static Validation | ไฟล์ที่แก้ต้องไม่เกิด syntax/lint error | ตรวจ editor errors และรัน `npx eslint src/app/api/operations/aws/nonprod/adduser/route.js` แล้วไม่พบ error | **Passed** |
+
+### Notes
+- รอบนี้เป็น developer validation ระดับ static/file-level จาก environment ปัจจุบัน ยังไม่ได้ retest functional บน UAT runtime ที่มี `SECRETS_PATH` จริง
+- จุดประสงค์ของการแก้คือเปลี่ยน failure mode จาก SSH auth error ที่กำกวม ให้เป็น configuration error ที่ actionable ก่อนรัน ssh
+- functional retest ถัดไปควรยืนยันว่า container มีไฟล์ `jventures-uat.pem` จริงใต้ mount path หรือกำหนด `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` ให้ตรงกับ key file ที่ใช้งานได้จริง
+
 ### Notes
 - รอบนี้เป็น targeted smoke test เพื่อยืนยันว่าปัญหาเดิมเรื่อง script path ใน Docker runtime ถูกแก้แล้ว
 - ยังไม่ได้ยืนยัน success path กับ remote host จริง เพราะใช้ payload จำลอง `127.0.0.1` เพื่อทดสอบเฉพาะ execution path หลังแก้

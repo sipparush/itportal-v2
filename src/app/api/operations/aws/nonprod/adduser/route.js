@@ -12,6 +12,13 @@ const SCRIPT_CANDIDATE_PATHS = [
     '/app/scripts/aws/nonprod/adduser/adduservendor.sh',
     path.resolve('./src/app/api/operations/aws/nonprod/adduser/script/adduservendor.sh')
 ].filter(Boolean);
+const SSH_KEY_CANDIDATE_PATHS = [
+    process.env.AWS_NONPROD_ADDUSER_SSH_KEY_PATH,
+    '/home/node/.ssh/jventures-uat.pem',
+    path.join(process.env.HOME || '', '.ssh', 'jventures-uat.pem'),
+    '/app/jventures-uat.pem',
+    path.join(process.cwd(), 'jventures-uat.pem')
+].filter(Boolean);
 
 async function resolveScriptPath() {
     for (const candidate of SCRIPT_CANDIDATE_PATHS) {
@@ -33,6 +40,19 @@ async function ensureScriptExecutable(scriptPath) {
     } catch {
         await execPromise(`chmod +x "${scriptPath}"`);
     }
+}
+
+async function resolveSshKeyPath() {
+    for (const candidate of SSH_KEY_CANDIDATE_PATHS) {
+        try {
+            await fs.access(candidate, constants.R_OK);
+            return candidate;
+        } catch {
+            continue;
+        }
+    }
+
+    return null;
 }
 
 export async function POST(request) {
@@ -65,6 +85,19 @@ export async function POST(request) {
         const ipFilePath = path.join(tmpDir, `ips_${jobId}.txt`);
         const userFilePath = path.join(tmpDir, `users_${jobId}.txt`);
         const scriptPath = await resolveScriptPath();
+        const sshKeyPath = await resolveSshKeyPath();
+
+        if (!sshKeyPath) {
+            return NextResponse.json({
+                success: false,
+                message: 'SSH key not found for AWS nonprod add user.',
+                details: {
+                    checkedPaths: SSH_KEY_CANDIDATE_PATHS,
+                    requiredEnv: 'AWS_NONPROD_ADDUSER_SSH_KEY_PATH',
+                    mountHint: 'Ensure SECRETS_PATH mounts a directory containing jventures-uat.pem to /home/node/.ssh.'
+                }
+            }, { status: 500 });
+        }
 
         let scriptOutput = '';
         let emailLog = '';
@@ -78,9 +111,14 @@ export async function POST(request) {
             // Make script executable only when the current runtime cannot execute it yet.
             await ensureScriptExecutable(scriptPath);
 
+            const env = {
+                ...process.env,
+                AWS_NONPROD_ADDUSER_SSH_KEY_PATH: sshKeyPath
+            };
+
             // Execute script
             console.log(`Executing: ${scriptPath} ${ipFilePath} ${userFilePath}`);
-            const { stdout, stderr } = await execPromise(`"${scriptPath}" "${ipFilePath}" "${userFilePath}"`);
+            const { stdout, stderr } = await execPromise(`"${scriptPath}" "${ipFilePath}" "${userFilePath}"`, { env });
 
             scriptOutput = stdout;
             if (stderr) console.error('Script stderr:', stderr);

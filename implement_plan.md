@@ -418,6 +418,43 @@
 
 สถานะ: อนุมัติแล้ว
 
+---
+
+# Request ใหม่: AWS UAT Add User Docker Log Failure on Missing `jventures-uat.pem` (Waiting for Approval)
+
+สถานะ: รออนุมัติแผน
+
+รายละเอียดคำขอ:
+- ผู้ใช้พบ docker log จาก flow `AWS UAT Add User` ว่า script `adduservendor.sh` รันไม่สำเร็จ
+- error หลักคือ `Warning: Identity file /home/node/.ssh/jventures-uat.pem not accessible: No such file or directory`
+- ตามด้วย `Permission denied (publickey)` ตอน SSH ไป `jventures@10.240.1.90`
+
+### สมมติฐานเฉพาะจุด
+- route `src/app/api/operations/aws/nonprod/adduser/route.js` เรียก script path ถูกแล้ว และ script ฝั่ง `nonprod` default ไปใช้ `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` หรือ `/home/node/.ssh/jventures-uat.pem`
+- `docker-compose.yml` mount `${SECRETS_PATH}:/home/node/.ssh` อยู่แล้ว ดังนั้น root cause มีแนวโน้มสูงว่า runtime UAT ไม่มีไฟล์ `jventures-uat.pem` ใน `SECRETS_PATH` หรือไม่ได้ตั้ง env/path ให้ตรงกับไฟล์จริง
+- การแก้ที่เล็กและตรงจุดที่สุดคือเพิ่ม pre-check key path ใน route ให้ fail ด้วย configuration error ที่ชัดเจนก่อนยิง SSH และรองรับ env override สำหรับ path ของ key เพื่อให้ deploy environment ต่างกันได้
+
+### แผนดำเนินการรอบนี้
+- [x] ตรวจ code path ของ `nonprod adduser` และยืนยัน path/compose contract ที่เกี่ยวกับ SSH key
+- [x] เพิ่ม pre-check หา SSH key ก่อน execute script ใน `src/app/api/operations/aws/nonprod/adduser/route.js`
+- [x] คืน error message ที่ actionable โดยระบุ checked path หรือ env ที่ต้องตั้งค่า แทนการปล่อย `Permission denied (publickey)` จาก ssh โดยตรง
+- [x] คง behavior เดิมของ script เมื่อ key พร้อม เพื่อไม่กระทบ flow ที่เคยทดสอบผ่านแล้ว
+- [x] รัน focused validation สำหรับไฟล์ที่แก้
+- [x] อัปเดต `full_test_result.md` หลังแก้และทดสอบ
+- [x] ดำเนินการแก้โค้ดตามแผนที่อนุมัติแล้ว
+
+### ข้อเสนอแนะด้าน environment ที่คาดว่าจะต้องทำควบคู่
+- ตรวจว่า UAT runtime ตั้ง `SECRETS_PATH` ไปยัง directory ที่มีไฟล์ `jventures-uat.pem` จริง
+- หากไม่ต้องการใช้ชื่อไฟล์ default ให้ตั้ง `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` ชี้ไปยัง key file ที่ถูกต้องใน container
+- ตรวจ permission ของ key file ให้ process ใน container อ่านได้
+
+### ผลการดำเนินการ (2026-07-14)
+- ปรับ `src/app/api/operations/aws/nonprod/adduser/route.js` ให้ตรวจ candidate paths ของ SSH key ก่อนรัน script
+- หากไม่พบ key route จะตอบ `500` พร้อม `checkedPaths`, `requiredEnv`, และ `mountHint` เพื่อชี้ไปที่ configuration ที่ต้องแก้
+- เมื่อพบ key แล้ว route จะส่ง path ที่ resolve ได้เข้า child process ผ่าน `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` เพื่อคง behavior เดิมของ script
+- ตรวจ editor errors และรัน focused lint กับ route ที่แก้แล้วไม่พบ error
+- รอบนี้ยังไม่ได้ทำ UAT functional retest จริง เพราะ environment ปัจจุบันไม่ได้ยืนยันไฟล์ key ใน runtime container
+
 รายละเอียดคำขอ:
 - หน้า `src/app/operations/byteplus/manageUser/page.js` ทำงานในส่วน BytePlus แต่ยังเรียก `POST /api/operations/aws/nonprod/manageUser`
 - ต้องตรวจสอบและแยกการทำงานให้ชัดว่า BytePlus ควรใช้ API ของตัวเอง หรือควรเปลี่ยนชื่อ/หน้าให้ตรงกับระบบที่เรียกจริง
