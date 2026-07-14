@@ -458,6 +458,26 @@ All core operational features have been implemented and tested. The primary focu
 - ใช้ payload `{"serverIps":"10.240.1.220","users":[{"username":"usera","email":"usera@example.com"}]}`
 - หลังปรับ explicit identity file แล้ว ไม่พบ `Permission denied (publickey,password)` อีกในรอบนี้
 
+---
+
+## 23. Developer Validation: Jenkins SSH Credential Mount Hardening
+**Date:** 2026-07-14
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| JENK-SSH-001 | Secret Directory Location | Jenkins ต้องเตรียม secret dir ใน path ที่ Docker daemon มองเห็นร่วมกับ workspace ได้ชัดเจนกว่า `/tmp` | ปรับ `Jenkinsfile` ให้ใช้ `$WORKSPACE/.jenkins-secrets` แทน `/tmp/itportal_ssh_*` | **Passed (Code Review)** |
+| JENK-SSH-002 | Preflight Key Checks | pipeline ต้อง fail เร็วถ้า key file ที่ bind จาก credentials ไม่มีจริงหรือว่าง | เพิ่ม `test -s` สำหรับ `jventures-uat.pem` และ `jventures-prod.pem` ก่อน deploy | **Passed (Code Review)** |
+| JENK-SSH-003 | Explicit Runtime Key Path | app runtime ต้องได้รับ env path ที่ชี้ key ชัดเจน | `.env` ที่ Jenkins สร้างเพิ่ม `AWS_NONPROD_ADDUSER_SSH_KEY_PATH=/home/node/.ssh/jventures-uat.pem` และ `AWS_PROD_ADDUSER_SSH_KEY_PATH=/home/node/.ssh/jventures-prod.pem` | **Passed (Code Review)** |
+| JENK-SSH-004 | Read-only Secret Mount | secrets mount ใน compose ควรเป็น read-only | ปรับ `docker-compose.yml` เป็น `${SECRETS_PATH}:/home/node/.ssh:ro` | **Passed (Code Review)** |
+| JENK-SSH-005 | Post-start Verification | pipeline ต้องตรวจได้ว่า container มองเห็น key หลัง `docker-compose up` | เพิ่ม `docker-compose exec -T app sh -lc 'test -r /home/node/.ssh/jventures-uat.pem && test -r /home/node/.ssh/jventures-prod.pem'` | **Passed (Code Review)** |
+| JENK-SSH-006 | Focused Static Validation | ไฟล์ที่แก้ต้องไม่เกิด editor error และ compose YAML ต้อง parse ได้ | ตรวจ editor errors ไม่พบ และรัน `python3` parse `docker-compose.yml` ผ่าน (`compose-yaml-ok`) | **Passed** |
+
+### Notes
+- รอบนี้ยังไม่ได้รัน Jenkins pipeline จริงจาก environment นี้ จึงยังไม่ยืนยัน end-to-end deploy บน Jenkins host
+- การแก้รอบนี้มุ่งแก้ root cause ที่ runtime ก่อนหน้าเห็น `SECRETS_PATH` แล้วแต่ `/home/node/.ssh` ใน container ว่าง
+- หาก Jenkins ใช้ Docker daemon คนละ host/context กับ workspace แม้ย้ายจาก `/tmp` มา `$WORKSPACE` แล้ว ก็ควรตรวจ path mapping ของ agent/daemon ต่อในรอบ functional test จริง
+
 **Developer Verdict:** การระบุ SSH identity file แบบ explicit แก้ root cause ของ Docker auth failure ได้ และเคส `usera` บน `10.240.1.220` ผ่านแล้ว
 
 ---

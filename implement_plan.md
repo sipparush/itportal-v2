@@ -455,6 +455,46 @@
 - ตรวจ editor errors และรัน focused lint กับ route ที่แก้แล้วไม่พบ error
 - รอบนี้ยังไม่ได้ทำ UAT functional retest จริง เพราะ environment ปัจจุบันไม่ได้ยืนยันไฟล์ key ใน runtime container
 
+---
+
+# Request ใหม่: Jenkins UAT Container Mounts Empty `/home/node/.ssh` (Waiting for Approval)
+
+สถานะ: อนุมัติแล้ว กำลังดำเนินการ
+
+รายละเอียดคำขอ:
+- หลัง deploy แล้ว route ตอบ `SSH key not found for AWS nonprod add user`
+- ผู้ใช้ตรวจใน container แล้วพบ `SECRETS_PATH=/tmp/itportal_ssh_44`
+- แต่ directory `/home/node/.ssh` ใน container ว่าง ไม่มี `jventures-uat.pem`
+
+### สมมติฐานเฉพาะจุด
+- `docker-compose.yml` mount `${SECRETS_PATH}:/home/node/.ssh` ถูกต้องตาม contract แล้ว
+- `docker-entrypoint.sh` ไม่ได้ล้าง `/home/node/.ssh` ทิ้งหลัง container start
+- root cause ที่ใกล้ที่สุดคือ Jenkins เตรียม source directory สำหรับ bind mount ไม่สำเร็จใน context ที่ Docker ใช้งานจริง หรือ path มีอยู่แต่ไม่มีไฟล์ `.pem` ตอน `docker-compose up`
+
+### แผนดำเนินการรอบนี้
+- [x] ยืนยันจาก runtime ว่า `/home/node/.ssh` ใน container ว่างจริง
+- [x] ตรวจ compose, Dockerfile, entrypoint และ Jenkinsfile เพื่อหาจุดที่ควบคุม mount นี้
+- [x] ย้าย Jenkins secret directory จาก `/tmp/itportal_ssh_*` ไป path ใต้ workspace ที่ Docker daemon มองเห็นร่วมกันได้แน่นอน
+- [x] เพิ่ม Jenkins preflight check ก่อน `docker-compose up` ให้ fail ทันทีถ้า `$JENKINS_SSH_DIR` ไม่มี `jventures-uat.pem` และ `jventures-prod.pem`
+- [x] ตั้ง `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` และ `AWS_PROD_ADDUSER_SSH_KEY_PATH` ใน `.env` ที่ pipeline สร้าง
+- [x] เปลี่ยน volume mount ของ secrets ให้เป็น read-only ผ่าน compose
+- [x] เพิ่ม post-start verification หลัง `docker-compose up` ว่า container มองเห็น `/home/node/.ssh/jventures-uat.pem` จริง
+- [x] รัน focused validation ของ `Jenkinsfile` และ `docker-compose.yml`
+- [x] อัปเดต `full_test_result.md`
+
+### ข้อเสนอแนะ
+- หาก Jenkins ใช้ Docker daemon แยก host/context จาก shell ที่สร้าง `/tmp/itportal_ssh_${BUILD_NUMBER}` อาจต้องย้าย temp dir ไป path ที่ daemon มองเห็นร่วมกันแน่นอน
+- หาก mount source เป็น directory ว่าง Docker จะสร้างปลายทางเป็น directory ว่างใน container ซึ่งตรงกับอาการที่พบตอนนี้
+
+### ผลการดำเนินการ (2026-07-14)
+- ปรับ `Jenkinsfile` ให้ใช้ `$WORKSPACE/.jenkins-secrets` แทน `/tmp/itportal_ssh_*` สำหรับไฟล์ key ที่ bind มาจาก Jenkins credentials
+- เพิ่ม preflight `test -s` เพื่อให้ pipeline fail ทันทีถ้า `jventures-uat.pem` หรือ `jventures-prod.pem` ไม่มีหรือว่าง
+- เพิ่มค่า `AWS_NONPROD_ADDUSER_SSH_KEY_PATH` และ `AWS_PROD_ADDUSER_SSH_KEY_PATH` ใน `.env` ที่ Jenkins สร้าง
+- ปรับ `docker-compose.yml` ให้ mount secrets เป็น read-only ที่ `/home/node/.ssh:ro`
+- เพิ่ม post-start verification หลัง `docker-compose up -d --build` เพื่อเช็กว่า container อ่าน `/home/node/.ssh/jventures-uat.pem` และ `/home/node/.ssh/jventures-prod.pem` ได้จริง
+- ตรวจ editor errors ของ `Jenkinsfile` และ `docker-compose.yml` แล้วไม่พบ error
+- ตรวจ compose YAML ด้วย `python3` parse ผ่าน (`compose-yaml-ok`)
+
 รายละเอียดคำขอ:
 - หน้า `src/app/operations/byteplus/manageUser/page.js` ทำงานในส่วน BytePlus แต่ยังเรียก `POST /api/operations/aws/nonprod/manageUser`
 - ต้องตรวจสอบและแยกการทำงานให้ชัดว่า BytePlus ควรใช้ API ของตัวเอง หรือควรเปลี่ยนชื่อ/หน้าให้ตรงกับระบบที่เรียกจริง

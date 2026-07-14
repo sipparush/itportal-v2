@@ -27,7 +27,7 @@ services:
     volumes:
       - ./backupec2_state.json:/app/backupec2_state.json
       - ./raw-data:/app/raw-data
-      - ${SECRETS_PATH}:/home/node/.ssh
+      - ${SECRETS_PATH}:/home/node/.ssh:ro
 
     environment:
       - NODE_ENV=production

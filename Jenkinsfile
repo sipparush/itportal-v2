@@ -21,8 +21,8 @@ pipeline {
                     sh '''
                         set -eu
 
-                        rm -rf /tmp/itportal_ssh_*
-                        export JENKINS_SSH_DIR="/tmp/itportal_ssh_${BUILD_NUMBER}"
+                        export JENKINS_SSH_DIR="$WORKSPACE/.jenkins-secrets"
+                        rm -rf "$JENKINS_SSH_DIR"
                         mkdir -p "$JENKINS_SSH_DIR"
 
                         cp "$UAT_KEY_FILE" "$JENKINS_SSH_DIR/jventures-uat.pem"
@@ -30,6 +30,9 @@ pipeline {
 
                         chmod 600 "$JENKINS_SSH_DIR/jventures-uat.pem"
                         chmod 600 "$JENKINS_SSH_DIR/jventures-prod.pem"
+
+                        test -s "$JENKINS_SSH_DIR/jventures-uat.pem"
+                        test -s "$JENKINS_SSH_DIR/jventures-prod.pem"
 
                         printf 'SECRETS_PATH=%s\n' "$JENKINS_SSH_DIR" > /tmp/itportal_env_${BUILD_NUMBER}
                         cat > .env <<EOF
@@ -40,6 +43,8 @@ DATABASE_URL=postgresql://it_user:it_password@postgres:5432/itportal_db
 AWS_REGION=ap-southeast-1
 AWS_OUTPUT=json
 SECRETS_PATH=$JENKINS_SSH_DIR
+AWS_NONPROD_ADDUSER_SSH_KEY_PATH=/home/node/.ssh/jventures-uat.pem
+AWS_PROD_ADDUSER_SSH_KEY_PATH=/home/node/.ssh/jventures-prod.pem
 EOF
                     '''
                 }
@@ -68,6 +73,10 @@ EOF
 
                     docker-compose down || true
                     docker-compose up -d --build
+
+                    test -s "$JENKINS_SSH_DIR/jventures-uat.pem"
+                    test -s "$JENKINS_SSH_DIR/jventures-prod.pem"
+                    docker-compose exec -T app sh -lc 'test -r /home/node/.ssh/jventures-uat.pem && test -r /home/node/.ssh/jventures-prod.pem && ls -l /home/node/.ssh'
                 '''
             }
         }
