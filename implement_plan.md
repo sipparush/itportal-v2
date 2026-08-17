@@ -339,6 +339,39 @@
 
 # Request ใหม่: AWS Non-Prod Add User ล้มเหลวใน Docker Runtime (Waiting for Approval)
 
+---
+
+# Request ใหม่: ปรับ AWS Nonprod Create EC2 ให้ใช้วิธีเชื่อมต่อ AWS แบบเดียวกับ EC2-by-Tag (Waiting for Approval)
+
+สถานะ: แก้ไขและทดสอบผ่านแล้ว
+
+รายละเอียดคำขอ:
+- หน้า `src/app/operations/aws/nonprod/deploy-uat/page.js` สร้าง EC2 แล้ว error `The config profile (aws_nonprod) could not be found`
+- ต้องปรับวิธีเชื่อมต่อ AWS ของ flow นี้ให้เหมือน `operations/aws/ec2-by-tag`
+- เป้าหมายคือไม่ผูกกับ `--profile aws_nonprod` แบบ hardcoded ใน command string อย่างเดียว
+
+### สมมติฐานเฉพาะจุด
+- route `src/app/api/operations/aws/nonprod/createec2/route.js` เป็นจุดที่ตัดสิน behavior เพราะยังใช้ `exec` กับ command string ที่ฝัง `--profile aws_nonprod`
+- route `src/app/api/operations/aws/ec2-by-tag/route.js` ใช้ pattern ที่ deploy-safe กว่า คือ `execFile('aws', args, { env })` และ set `AWS_PROFILE` ผ่าน environment แทนการ hardcode ลง command string
+- การแก้ที่เล็กและตรง root cause ที่สุดคือปรับ `nonprod/createec2` ให้ใช้ helper สร้าง AWS env/args แบบเดียวกัน และเปิดทางให้ override ผ่าน env vars
+
+### แผนดำเนินการรอบนี้
+- [x] ปรับ `src/app/api/operations/aws/nonprod/createec2/route.js` ให้ใช้ `execFile` และ env-based AWS profile แบบเดียวกับ `ec2-by-tag`
+- [x] เพิ่ม env override ที่จำเป็นสำหรับ profile และ region โดยคง default เดิมสำหรับ local
+- [x] คง validation และ response shape เดิมของ create EC2 เท่าที่ทำได้ เพื่อไม่ให้กระทบหน้า UI
+- [x] รัน focused validation ที่แคบที่สุดสำหรับ route ที่แก้
+- [x] อัปเดต `full_test_result.md` ตามผลทดสอบจากฝั่ง developer
+- [x] อัปเดต `implement_plan.md` หลังแก้เสร็จ
+
+### Cheap Check หลังแก้
+- route ต้องไม่สร้าง command ที่มี `--profile aws_nonprod` ตายตัวอีกต่อไป
+- focused validation ต้องยืนยันว่าไฟล์ไม่มี syntax error และ behavior path ใช้ env-based AWS config
+
+### หมายเหตุ
+- route `nonprod/createec2` ถูกปรับให้ใช้ `execFile('aws', args, { env })` และ `AWS_PROFILE` ผ่าน environment helper แล้ว
+- default local ยังเป็น `AWS_NONPROD_PROFILE || aws_nonprod` และ `AWS_NONPROD_CREATEEC2_REGION || ap-southeast-1`
+- รัน focused lint ด้วย `npx eslint src/app/api/operations/aws/nonprod/createec2/route.js` แล้วผ่าน
+
 สถานะ: แก้ไขและทดสอบ local/docker แล้ว
 
 รายละเอียดคำขอ:
@@ -407,6 +440,35 @@
 - ยืนยันแล้วว่าไฟล์ `/home/sipparush/sipparush.la-jvc_bp_10.224.100.21.pem` มีอยู่จริงในเครื่องที่รัน API
 
 ### ผลทดสอบรอบนี้ (2026-04-27)
+
+---
+
+# Request ใหม่: SQL Injection Test via curl to 35.240.199.123 (Approved)
+
+สถานะ: อนุมัติแล้ว กำลังทดสอบ
+
+รายละเอียดคำขอ:
+- ต้องการทดสอบ SQL injection ด้วยคำสั่ง `curl http://35.240.199.123 -d "email=admin&password=123or '1'='1'"`
+
+### สมมติฐานเฉพาะจุด
+- cheap check ที่แยกได้เร็วที่สุดคือยิง request ตาม payload ที่ให้มาแล้วบันทึก HTTP status, response body, และพฤติกรรมการ login ของปลายทาง
+- หากปลายทางตอบ bypass auth, SQL error, หรือข้อความผิดปกติ จะถือเป็นหลักฐานเชิงพฤติกรรมของช่องโหว่หรือการป้องกันที่มีอยู่
+
+### แผนดำเนินการรอบนี้
+- [x] เพิ่มคำขอใหม่ลง `implement_plan.md`
+- [x] รออนุมัติแผนจากผู้ใช้ก่อนเริ่มทดสอบ
+- [x] ยิง `curl` ตาม payload ที่ผู้ใช้ระบุไปยัง `http://35.240.199.123`
+- [x] บันทึก HTTP status, response body, และข้อสังเกตด้านพฤติกรรม
+- [x] อัปเดต `full_test_result.md` ตามผลทดสอบ
+
+### ข้อจำกัด
+- การทดสอบรอบนี้เป็น external endpoint check จาก environment ปัจจุบัน จึงยืนยันได้เฉพาะ behavior ที่ปลายทางตอบกลับมาจริงในเวลาทดสอบ
+
+### ผลการทดสอบรอบนี้ (2026-07-24)
+- `POST http://35.240.199.123` ด้วย payload `email=admin&password=123or '1'='1'` ตอบกลับหน้า login HTML ปกติด้วย `HTTP 200` เพราะ root page แสดงฟอร์มและไม่ได้ประมวลผล login โดยตรง
+- cheap disconfirming check โดยยิง `POST http://35.240.199.123/login.php` ด้วย payload เดียวกัน พบ `HTTP 200` พร้อม response body เป็น SQL error จาก MySQL
+- error ที่ได้คือ `You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1'='1'' LIMIT 1' at line 1`
+- สรุปเชิงพฤติกรรม: application ส่ง database error กลับถึง client โดยตรงเมื่อรับ payload SQL injection ทำให้ยืนยันได้ว่ามี input handling ที่ไม่ปลอดภัยอย่างน้อยในเส้นทาง login และมี information disclosure จากข้อความ error
 - `POST /api/operations/byteplus/manageUser` ด้วย payload `{"action":"create","account":"user01","remoteIps":["10.224.100.21"]}` ได้ `200 OK`
 - response มี `downloadUrl` เป็น `/api/operations/byteplus/manageUser?file=user01_10.224.100.21.pem`
 - `GET /api/operations/byteplus/manageUser?file=user01_10.224.100.21.pem` ได้ `200 OK`

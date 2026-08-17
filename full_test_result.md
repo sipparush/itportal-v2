@@ -198,6 +198,22 @@ All core operational features have been implemented and tested. The primary focu
 
 ### Fix Verified
 - เพิ่ม pre-check หา key file ก่อนรัน SSH
+
+---
+
+## 15. Developer Validation: AWS Non-Prod Create EC2 Credential Strategy Alignment
+**Date:** 2026-08-17
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| EC2-NP-CR-001 | Route credential strategy | `POST /api/operations/aws/nonprod/createec2` ต้องไม่ hardcode `--profile aws_nonprod` ใน command string | ปรับ route ให้ใช้ `execFile('aws', args, { env })` และ set `AWS_PROFILE` ผ่าน env helper แบบเดียวกับ EC2-by-tag | **Passed** |
+| EC2-NP-CR-002 | Local defaults | local ยังต้องมี default profile/region เดิม | route ใช้ default `AWS_NONPROD_PROFILE || aws_nonprod` และ `AWS_NONPROD_CREATEEC2_REGION || ap-southeast-1` | **Passed** |
+| EC2-NP-CR-003 | Focused lint | ไฟล์ที่แก้ต้องผ่าน lint | รัน `npx eslint src/app/api/operations/aws/nonprod/createec2/route.js` แล้วผ่าน exit code `0` | **Passed** |
+
+### Notes
+- รอบนี้เป็น developer-side code and lint validation เท่านั้น ยังไม่ได้ยิง AWS จริงจาก environment นี้
+- root cause ที่แก้คือการผูก AWS credential ผ่าน CLI flag `--profile` แบบตายตัว ซึ่งทำให้ล้มใน environment ที่ไม่มี shared config profile ชื่อนั้น
 - รองรับ env `BACKUP_READINESS_SSH_KEY_PATH` และ fallback path มาตรฐาน
 - เปลี่ยน failure mode จาก SSH auth error ที่กำกวม เป็น configuration error ที่ actionable
 
@@ -248,6 +264,26 @@ All core operational features have been implemented and tested. The primary focu
 | ID | Test Case | Expected Result | Actual Result | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | JENK-DEV-005 | Workspace inspection on Jenkins host | ยืนยันสาเหตุล่าสุดว่าขาด `.env` ไม่ใช่ปัญหา `secrets/` ค้าง | ตรวจ workspace บน `10.240.1.220` แล้วไม่พบ `.env` และไม่พบ `secrets/` | **Passed** |
+
+---
+
+## 18. Targeted External Security Test: SQL Injection on SECPlayground Login
+**Date:** 2026-07-24
+**Tested By:** Developer (GitHub Copilot)
+
+| ID | Test Case | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| SEC-SQLI-001 | POST to root path with supplied payload | ตรวจว่าปลายทาง root path ประมวลผล login หรือไม่ | `POST /` คืนหน้า login HTML ปกติด้วย `HTTP 200`; form action ชี้ไป `login.php` | **Passed (Routing Evidence)** |
+| SEC-SQLI-002 | POST SQLi payload to `login.php` | ระบบที่ปลอดภัยควร reject input โดยไม่เผย SQL internals | `POST /login.php` ด้วย `email=admin&password=123 or '1'='1'` ได้ `HTTP 200` พร้อมข้อความ `You have an error in your SQL syntax ... near '1'='1'' LIMIT 1` | **Failed (Vulnerability Evidence)** |
+
+### Findings
+- root path ไม่ใช่ login execution endpoint; เป็นเพียงหน้าแสดงฟอร์ม login
+- เมื่อยิง payload ไปยัง `login.php` โดยตรง แอปพลิเคชันส่ง SQL error จาก MySQL กลับถึง client โดยไม่ sanitize output
+- พฤติกรรมนี้ยืนยันได้อย่างน้อย 2 ประเด็น: input handling ใน login path ไม่ปลอดภัย และมี information disclosure จาก error message ระดับฐานข้อมูล
+
+### QA / Developer Verdict
+- **Failed** สำหรับ security expectation ของ login flow
+- ควรแก้ที่ query construction/parameterization และปิดการแสดง database error ต่อ client ก่อน retest
 | JENK-DEV-006 | Jenkinsfile temporary `.env` generation | Pipeline ต้องสร้าง `.env` ขั้นต่ำใน workspace ก่อน `docker-compose up` | `Jenkinsfile` ถูกปรับให้เขียน `.env` ระหว่าง stage `Prepare SSH Credentials` | **Passed (Static Validation)** |
 | JENK-DEV-007 | Database URL for Compose network | `DATABASE_URL` ต้องชี้ service `postgres` ไม่ใช่ `localhost` | `.env` ที่ generate ใช้ `postgresql://it_user:it_password@postgres:5432/itportal_db` | **Passed (Static Validation)** |
 | JENK-DEV-008 | Jenkinsfile syntax check after env fix | ไฟล์ที่แก้ต้องไม่เกิด syntax error | ตรวจ `Jenkinsfile` แล้วไม่พบ error | **Passed** |
